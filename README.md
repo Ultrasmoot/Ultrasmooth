@@ -68,7 +68,7 @@ Full sprint details, Gantt charts, retrospective, and the risk register are incl
 ## Project Structure
 
 - [README.md](README.md)
-- .gitignore
+- [.gitignore](.gitignore)
 - **docs/**
   - [SRS.pdf](docs/SRS.pdf)
   - [Software-Proposal.pdf](docs/Software-Proposal.pdf)
