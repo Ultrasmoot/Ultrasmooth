@@ -1,0 +1,97 @@
+{
+  "version": "31.3.2",
+  "pages": [
+    {
+      "id": "GTqsQTVXMhUFmv_cg2Qx",
+      "name": "AD-6",
+      "cells": [
+        {
+          "id": "1",
+          "type": "layer"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-1",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-2",
+          "type": "edge",
+          "parent": "1",
+          "source": "HzEojpcfMShcTjqB88pl-3"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-3",
+          "type": "node",
+          "parent": "1",
+          "label": "Display dashboard"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-6",
+          "type": "edge",
+          "parent": "1",
+          "source": "HzEojpcfMShcTjqB88pl-7",
+          "target": "HzEojpcfMShcTjqB88pl-9"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-7",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-8",
+          "type": "edge",
+          "parent": "1",
+          "source": "HzEojpcfMShcTjqB88pl-9",
+          "target": "HzEojpcfMShcTjqB88pl-11"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-9",
+          "type": "node",
+          "parent": "1",
+          "label": "User opens dashboard"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-10",
+          "type": "edge",
+          "parent": "1",
+          "source": "HzEojpcfMShcTjqB88pl-11"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-11",
+          "type": "node",
+          "parent": "1",
+          "label": "User selects time period",
+          "html": "<div>User selects time period</div>"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-43",
+          "type": "edge",
+          "parent": "1",
+          "source": "HzEojpcfMShcTjqB88pl-13",
+          "target": "HzEojpcfMShcTjqB88pl-41"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-13",
+          "type": "node",
+          "parent": "1",
+          "label": "Calculate summary (totals, active bookings, open issues)",
+          "html": "<div>Calculate summary (totals, active bookings, open issues)</div>"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-42",
+          "type": "edge",
+          "parent": "1",
+          "source": "HzEojpcfMShcTjqB88pl-41",
+          "target": "HzEojpcfMShcTjqB88pl-3"
+        },
+        {
+          "id": "HzEojpcfMShcTjqB88pl-41",
+          "type": "node",
+          "parent": "1",
+          "label": "System calculates usage by category"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "version": "31.3.2",
+  "pages": [
+    {
+      "id": "6G6U_SVC3VAtvRUy-GFS",
+      "name": "AD-4",
+      "cells": [
+        {
+          "id": "1",
+          "type": "layer"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-1",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-40",
+          "type": "edge",
+          "parent": "1",
+          "source": "adVwGBOW7ZA0Pr6ElKIo-3",
+          "target": "adVwGBOW7ZA0Pr6ElKIo-35"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-3",
+          "type": "node",
+          "parent": "1",
+          "label": "System save issue &amp; Maintenance record"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-37",
+          "type": "edge",
+          "parent": "1",
+          "source": "adVwGBOW7ZA0Pr6ElKIo-5",
+          "target": "adVwGBOW7ZA0Pr6ElKIo-11"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-5",
+          "type": "node",
+          "parent": "1",
+          "label": "Show validation message"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-28",
+          "type": "edge",
+          "parent": "1",
+          "source": "adVwGBOW7ZA0Pr6ElKIo-7",
+          "target": "adVwGBOW7ZA0Pr6ElKIo-9"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-7",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-8",
+          "type": "edge",
+          "parent": "1",
+          "source": "adVwGBOW7ZA0Pr6ElKIo-9",
+          "target": "adVwGBOW7ZA0Pr6ElKIo-11"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-9",
+          "type": "node",
+          "parent": "1",
+          "label": "Staff selects a resource"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-30",
+          "type": "edge",
+          "parent": "1",
+          "source": "adVwGBOW7ZA0Pr6ElKIo-11",
+          "target": "adVwGBOW7ZA0Pr6ElKIo-29"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-11",
+          "type": "node",
+          "parent": "1",
+          "label": "Staff reports issue",
+          "html": "<div>Staff reports issue</div>"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-31",
+          "type": "edge",
+          "parent": "1",
+          "source": "adVwGBOW7ZA0Pr6ElKIo-29",
+          "target": "adVwGBOW7ZA0Pr6ElKIo-3"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-36",
+          "type": "edge",
+          "parent": "1",
+          "source": "adVwGBOW7ZA0Pr6ElKIo-29",
+          "target": "adVwGBOW7ZA0Pr6ElKIo-5"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-29",
+          "type": "node",
+          "parent": "1",
+          "label": "Required fields valid"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-44",
+          "type": "edge",
+          "parent": "1",
+          "source": "adVwGBOW7ZA0Pr6ElKIo-34",
+          "target": "adVwGBOW7ZA0Pr6ElKIo-42"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-34",
+          "type": "node",
+          "parent": "1",
+          "label": "Prevent new bookings"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-41",
+          "type": "edge",
+          "parent": "1",
+          "source": "adVwGBOW7ZA0Pr6ElKIo-35",
+          "target": "adVwGBOW7ZA0Pr6ElKIo-34"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-35",
+          "type": "node",
+          "parent": "1",
+          "label": "Change status to Under Maintenance"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-38",
+          "type": "node",
+          "parent": "1",
+          "label": "No"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-39",
+          "type": "node",
+          "parent": "1",
+          "label": "Yes"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-48",
+          "type": "edge",
+          "parent": "1",
+          "source": "adVwGBOW7ZA0Pr6ElKIo-42",
+          "target": "adVwGBOW7ZA0Pr6ElKIo-46"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-42",
+          "type": "node",
+          "parent": "1",
+          "label": "Staff marks issue as resolved"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-49",
+          "type": "edge",
+          "parent": "1",
+          "source": "adVwGBOW7ZA0Pr6ElKIo-46",
+          "target": "adVwGBOW7ZA0Pr6ElKIo-1"
+        },
+        {
+          "id": "adVwGBOW7ZA0Pr6ElKIo-46",
+          "type": "node",
+          "parent": "1",
+          "label": "Change status to Available"
+        }
+      ]
+    }
+  ]
+}

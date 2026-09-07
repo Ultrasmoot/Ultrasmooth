@@ -1,0 +1,201 @@
+{
+  "version": "31.3.2",
+  "pages": [
+    {
+      "id": "I1m66XUneNePdqcx7py3",
+      "name": "Page-1",
+      "cells": [
+        {
+          "id": "1",
+          "type": "layer"
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-6",
+          "type": "edge",
+          "parent": "1",
+          "source": "_MSJgTmmE7tXURs9wEug-3",
+          "target": "_MSJgTmmE7tXURs9wEug-5"
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-3",
+          "type": "node",
+          "parent": "1",
+          "label": "Lab member submits request"
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-9",
+          "type": "edge",
+          "parent": "1",
+          "source": "_MSJgTmmE7tXURs9wEug-5"
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-5",
+          "type": "node",
+          "parent": "1",
+          "label": "System set status to notifies\nstaff",
+          "html": "System set status to notifies<div>staff</div>"
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-73",
+          "type": "edge",
+          "parent": "1",
+          "source": "_MSJgTmmE7tXURs9wEug-68",
+          "target": "_MSJgTmmE7tXURs9wEug-72"
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-79",
+          "type": "edge",
+          "parent": "1",
+          "source": "_MSJgTmmE7tXURs9wEug-68",
+          "target": "_MSJgTmmE7tXURs9wEug-78"
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-68",
+          "type": "node",
+          "parent": "1",
+          "label": "Staff Approves?"
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-77",
+          "type": "edge",
+          "parent": "1",
+          "source": "_MSJgTmmE7tXURs9wEug-72",
+          "target": "_MSJgTmmE7tXURs9wEug-76"
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-72",
+          "type": "node",
+          "parent": "1",
+          "label": "Set status \"Approved\""
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-74",
+          "type": "node",
+          "parent": "1",
+          "label": "Yes"
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-76",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-81",
+          "type": "edge",
+          "parent": "1",
+          "source": "_MSJgTmmE7tXURs9wEug-78",
+          "target": "_MSJgTmmE7tXURs9wEug-76"
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-78",
+          "type": "node",
+          "parent": "1",
+          "label": "Set status \"Rejected\""
+        },
+        {
+          "id": "_MSJgTmmE7tXURs9wEug-80",
+          "type": "node",
+          "parent": "1",
+          "label": "No"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-6",
+          "type": "edge",
+          "parent": "1",
+          "source": "45srLFa_6t5H7ucbhJuP-5",
+          "target": "_MSJgTmmE7tXURs9wEug-68"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-5",
+          "type": "node",
+          "parent": "1",
+          "label": "Lab staff view pending request"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-13",
+          "type": "edge",
+          "parent": "1",
+          "source": "45srLFa_6t5H7ucbhJuP-7",
+          "target": "45srLFa_6t5H7ucbhJuP-9"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-7",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-8",
+          "type": "edge",
+          "parent": "1",
+          "source": "45srLFa_6t5H7ucbhJuP-9",
+          "target": "45srLFa_6t5H7ucbhJuP-11"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-9",
+          "type": "node",
+          "parent": "1",
+          "label": "Lab member submits request"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-16",
+          "type": "edge",
+          "parent": "1",
+          "source": "45srLFa_6t5H7ucbhJuP-11",
+          "target": "45srLFa_6t5H7ucbhJuP-15"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-11",
+          "type": "node",
+          "parent": "1",
+          "label": "System set status to notifies\nstaff",
+          "html": "System set status to notifies<div>staff</div>"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-18",
+          "type": "edge",
+          "parent": "1",
+          "source": "45srLFa_6t5H7ucbhJuP-15",
+          "target": "45srLFa_6t5H7ucbhJuP-17"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-20",
+          "type": "edge",
+          "parent": "1",
+          "source": "45srLFa_6t5H7ucbhJuP-15",
+          "target": "_MSJgTmmE7tXURs9wEug-3"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-15",
+          "type": "node",
+          "parent": "1",
+          "label": "Conflict found"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-19",
+          "type": "edge",
+          "parent": "1",
+          "source": "45srLFa_6t5H7ucbhJuP-17",
+          "target": "45srLFa_6t5H7ucbhJuP-9"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-17",
+          "type": "node",
+          "parent": "1",
+          "label": "System returns filtered results"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-21",
+          "type": "node",
+          "parent": "1",
+          "label": "No"
+        },
+        {
+          "id": "45srLFa_6t5H7ucbhJuP-22",
+          "type": "node",
+          "parent": "1",
+          "label": "Yes"
+        }
+      ]
+    }
+  ]
+}

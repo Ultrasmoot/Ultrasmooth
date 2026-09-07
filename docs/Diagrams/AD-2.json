@@ -1,0 +1,144 @@
+{
+  "version": "31.3.2",
+  "pages": [
+    {
+      "id": "laK59ILUh5ItZAFomTtR",
+      "name": "Page-2",
+      "cells": [
+        {
+          "id": "1",
+          "type": "layer"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-11",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-38",
+          "type": "edge",
+          "parent": "1",
+          "source": "BaYIfVTw5A9GiCWK6J9R-13",
+          "target": "BaYIfVTw5A9GiCWK6J9R-37"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-13",
+          "type": "node",
+          "parent": "1",
+          "label": "System returns filtered results"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-45",
+          "type": "edge",
+          "parent": "1",
+          "source": "BaYIfVTw5A9GiCWK6J9R-16",
+          "target": "BaYIfVTw5A9GiCWK6J9R-37"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-16",
+          "type": "node",
+          "parent": "1",
+          "label": "System show full list"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-17",
+          "type": "edge",
+          "parent": "1",
+          "source": "BaYIfVTw5A9GiCWK6J9R-18",
+          "target": "BaYIfVTw5A9GiCWK6J9R-20"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-18",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-19",
+          "type": "edge",
+          "parent": "1",
+          "source": "BaYIfVTw5A9GiCWK6J9R-20",
+          "target": "BaYIfVTw5A9GiCWK6J9R-22"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-20",
+          "type": "node",
+          "parent": "1",
+          "label": "User opens resource \nlist",
+          "html": "User opens resource&nbsp;<div>l<span style=\"background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));\">ist</span></div>"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-21",
+          "type": "edge",
+          "parent": "1",
+          "source": "BaYIfVTw5A9GiCWK6J9R-22"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-22",
+          "type": "node",
+          "parent": "1",
+          "label": "Loading resources from the main server",
+          "html": "<div>Loading resources from the main server</div>"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-32",
+          "type": "edge",
+          "parent": "1",
+          "source": "BaYIfVTw5A9GiCWK6J9R-30",
+          "target": "BaYIfVTw5A9GiCWK6J9R-31"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-30",
+          "type": "node",
+          "parent": "1",
+          "label": "The user adds search filters (optional)",
+          "html": "<div>The user adds search filters (optional)</div>"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-35",
+          "type": "edge",
+          "parent": "1",
+          "source": "BaYIfVTw5A9GiCWK6J9R-31",
+          "target": "BaYIfVTw5A9GiCWK6J9R-16"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-36",
+          "type": "edge",
+          "parent": "1",
+          "source": "BaYIfVTw5A9GiCWK6J9R-31",
+          "target": "BaYIfVTw5A9GiCWK6J9R-13"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-31",
+          "type": "node",
+          "parent": "1",
+          "label": "Filter applied"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-40",
+          "type": "edge",
+          "parent": "1",
+          "source": "BaYIfVTw5A9GiCWK6J9R-37",
+          "target": "BaYIfVTw5A9GiCWK6J9R-11"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-37",
+          "type": "node",
+          "parent": "1",
+          "label": "User view resource details"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-42",
+          "type": "node",
+          "parent": "1",
+          "label": "No"
+        },
+        {
+          "id": "BaYIfVTw5A9GiCWK6J9R-43",
+          "type": "node",
+          "parent": "1",
+          "label": "Yes"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "version": "31.3.2",
+  "pages": [
+    {
+      "id": "upviM5pqsgagQR7W3Bhe",
+      "name": "Page-3",
+      "cells": [
+        {
+          "id": "1",
+          "type": "layer"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-1",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-2",
+          "type": "edge",
+          "parent": "1",
+          "source": "WmPJBUfGYacq8Fh61D_C-3"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-3",
+          "type": "node",
+          "parent": "1",
+          "label": "Display activity list"
+        },
+        {
+          "id": "vupNTZ35bPMKi9pDocd3-3",
+          "type": "edge",
+          "parent": "1",
+          "source": "WmPJBUfGYacq8Fh61D_C-5",
+          "target": "WmPJBUfGYacq8Fh61D_C-1"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-5",
+          "type": "node",
+          "parent": "1",
+          "label": "Show no record message"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-6",
+          "type": "edge",
+          "parent": "1",
+          "source": "WmPJBUfGYacq8Fh61D_C-7",
+          "target": "WmPJBUfGYacq8Fh61D_C-9"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-7",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-8",
+          "type": "edge",
+          "parent": "1",
+          "source": "WmPJBUfGYacq8Fh61D_C-9",
+          "target": "WmPJBUfGYacq8Fh61D_C-11"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-9",
+          "type": "node",
+          "parent": "1",
+          "label": "User opens activity history view",
+          "html": "<div>User opens activity history view</div>"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-10",
+          "type": "edge",
+          "parent": "1",
+          "source": "WmPJBUfGYacq8Fh61D_C-11"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-11",
+          "type": "node",
+          "parent": "1",
+          "label": "User applies filter"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-12",
+          "type": "edge",
+          "parent": "1",
+          "source": "WmPJBUfGYacq8Fh61D_C-13",
+          "target": "WmPJBUfGYacq8Fh61D_C-16"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-13",
+          "type": "node",
+          "parent": "1",
+          "label": "Fetch matching log entries"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-14",
+          "type": "edge",
+          "parent": "1",
+          "source": "WmPJBUfGYacq8Fh61D_C-16",
+          "target": "WmPJBUfGYacq8Fh61D_C-5"
+        },
+        {
+          "id": "vupNTZ35bPMKi9pDocd3-2",
+          "type": "edge",
+          "parent": "1",
+          "source": "WmPJBUfGYacq8Fh61D_C-16",
+          "target": "WmPJBUfGYacq8Fh61D_C-3"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-16",
+          "type": "node",
+          "parent": "1",
+          "label": "Matching records found"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-19",
+          "type": "node",
+          "parent": "1",
+          "label": "No"
+        },
+        {
+          "id": "WmPJBUfGYacq8Fh61D_C-20",
+          "type": "node",
+          "parent": "1",
+          "label": "Yes"
+        }
+      ]
+    }
+  ]
+}
