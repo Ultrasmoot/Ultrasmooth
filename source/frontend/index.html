@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VASE — Lab Data Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F2EA;
+    --panel:#FFFFFF;
+    --ink:#16233F;
+    --ink-soft:#57607A;
+    --ink-faint:#8A92A6;
+    --line:rgba(22,35,63,0.14);
+    --grid:rgba(22,35,63,0.055);
+    --green:#2F6F4F;
+    --green-bg:#E4EFE7;
+    --amber:#95651C;
+    --amber-bg:#F3E7D3;
+    --rust:#A03B2A;
+    --rust-bg:#F3E0DB;
+    --blue:#2C5F8A;
+    --blue-bg:#E1EBF2;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/28px 28px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/28px 28px,
+      var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--green); color:#fff;}
+  a, button{font-family:inherit;}
