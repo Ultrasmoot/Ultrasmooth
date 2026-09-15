@@ -19,30 +19,40 @@ class UserModel:
     def _hash_password(password: str) -> str:
         return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-# check password
-@staticmethod
-def _check_password(password: str, password_hash: str) -> bool:
-    if not password_hash:
-        return False
-    return bcrypt.checkpw(password.encode("utf-8"), password_hash.encode("utf-8"))
+    # check password
+    @staticmethod
+    def _check_password(password: str, password_hash: str) -> bool:
+        if not password_hash:
+            return False
+        return bcrypt.checkpw(password.encode("utf-8"), password_hash.encode("utf-8"))
 
-# lookups
-@staticmethod
-def find_by_email(email: str):
-    conn = get_connection()
-    try:
-        cur = conn.cursor(dictionary=True)
-        cur.execute("SELECT * FROM users WHERE email = %s", (email,))
-        return cur.fetchone()
-    finally:
-        conn.close()
+    # lookups
+    @staticmethod
+    def find_by_email(email: str):
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            cur.execute("SELECT * FROM users WHERE email = %s", (email,))
+            return cur.fetchone()
+        finally:
+            conn.close()
 
-@staticmethod
-def find_by_google_sub(sub: str):
-    conn = get_connection()
-    try:
-        cur = conn.cursor(dictionary=True)
-        cur.execute("SELECT * FROM users WHERE google_sub = %s", (sub,))
-        return cur.fetchone()
-    finally:
-        conn.close()
+    @staticmethod
+    def find_by_google_sub(sub: str):
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            cur.execute("SELECT * FROM users WHERE google_sub = %s", (sub,))
+            return cur.fetchone()
+        finally:
+            conn.close()
+            
+    @staticmethod
+    def find_by_id(user_id: int):
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            cur.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+            return cur.fetchone()
+        finally:
+            conn.close()
