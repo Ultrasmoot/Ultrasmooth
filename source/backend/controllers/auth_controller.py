@@ -26,3 +26,13 @@ def google_complete_profile(): # Finishes a first-time Google sign-up once the u
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"token": _issue_token(user), "user": _public_user(user)}), 201
+
+# me/end point
+@auth_bp.get("/me")
+def me():
+    from middleware.auth_middleware import get_current_user
+
+    user = get_current_user()
+    if not user:
+        return jsonify({"error": "Not authenticated."}), 401
+    return jsonify({"user": _public_user(user)}), 200
