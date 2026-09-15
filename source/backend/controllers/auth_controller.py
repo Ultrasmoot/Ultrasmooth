@@ -7,6 +7,24 @@ from config import Config
 from models.user_model import UserModel, ValidationError
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
+def _issue_token(user: dict) -> str:
+    payload = {
+        "sub": user["id"],
+        "email": user["email"],
+        "role": user["role"],
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=Config.JWT_EXPIRES_HOURS),
+    }
+    return jwt.encode(payload, Config.SECRET_KEY, algorithm="HS256")
+
+
+def _public_user(user: dict) -> dict:
+    return {
+        "id": user["id"],
+        "email": user["email"],
+        "full_name": user["full_name"],
+        "role": user["role"],
+    }
+
 # sign up
 @auth_bp.post("/signup")
 def signup(): # Create-account screen: students only, admin/professor added later (SRS-11, URS-9)
