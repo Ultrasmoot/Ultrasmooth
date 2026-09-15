@@ -17,6 +17,22 @@ def signup(): # Create-account screen: students only, admin/professor added late
         return jsonify({"error": str(e)}), 400
     return jsonify({"token": _issue_token(user), "user": _public_user(user)}), 201
 
+# login
+@auth_bp.post("/login")
+def login():
+    # email-password login (SRS-11)
+    data = request.get_json(silent=True) or {}
+    email = data.get("email")
+    password = data.get("password")
+    if not email or not password:
+        return jsonify({"error": "Email and password are required."}), 400
+
+    user = UserModel.authenticate(email, password)
+    if not user:
+        return jsonify({"error": "Invalid email or password."}), 401
+
+    return jsonify({"token": _issue_token(user), "user": _public_user(user)}), 200
+
 # google complete profile
 @auth_bp.post("/google/complete-profile")
 def google_complete_profile(): # Finishes a first-time Google sign-up once the user picks a role
