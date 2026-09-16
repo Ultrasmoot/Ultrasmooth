@@ -431,9 +431,127 @@
         <h1 id="page-title">Home</h1>
         <div class="desc" id="page-desc">You're signed in — more features arrive in later iterations</div>
       </div>
-
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="role-select" id="role-select">
+          <div class="role-chip" id="role-chip">
+            <div class="av" id="role-av">SA</div>
+            <div class="rt"><b id="role-name">System Admin</b><span id="role-label">Administrator</span></div>
+            <svg class="caret" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.4"/></svg>
+          </div>
+          <div class="role-menu" id="role-menu">
+            <div class="eyebrow">View as</div>
+            <button data-role="user"><b>Napakhet</b><span>Lab User (Student)</span></button>
+            <button data-role="professor"><b>Aj. Somchai</b><span>Professor (view-only)</span></button>
+            <button data-role="admin" class="active"><b>System Admin</b><span>Administrator</span></button>
+          </div>
+        </div>
+      </div>
     </div>
+
+      <!-- HOME (placeholder — Dashboard itself is built in a later iteration) -->
+    <section class="view active" id="view-home">
+      <div class="panel">
+        <div class="panel-head"><h2>Signed in</h2></div>
+        <p class="note" style="margin:0;">You're logged in to VASE. For this iteration, we're focusing on Login and Role-based Access (US-11, US-12). Other features, including resources, bookings, maintenance, and the operations dashboard, will be developed in later iterations.</p>
+      </div>
+    </section>
+
+    <!-- USER & ACCESS (Admin only) — access control demo for US-12; account management (US-13) not built yet -->
+    <section class="view" id="view-access">
+      <div class="panel">
+        <div class="panel-head"><h2>User & Access</h2></div>
+        <p class="note" style="margin:0;"> Restricted area — Administrators only. This section is currently limited to administrators. User account management, such as creating, editing, and deactivating accounts, will be added in a later iteration.</p>
+      </div>
+    </section>
   </main>
 </div>
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal-backdrop"><div class="modal-box" id="modal-box"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+  /* ---------------- Roles — Jirat ---------------- */
+  const ROLES = {
+    user:      { label:'Lab User',      name:'Napakhet',    initials:'NP', canManage:false, canApprove:false },
+    professor: { label:'Professor',     name:'Aj. Somchai',  initials:'AS', canManage:false, canApprove:false },
+    admin:     { label:'Administrator', name:'System Admin', initials:'SA', canManage:true,  canApprove:true  }
+  };
+  let currentRole = 'admin';
+  let roleLocked = false; // true once a real backend login happens — no more "view as" switching
+
+  function applyRole(key){
+    currentRole = key;
+    document.body.dataset.role = key;
+    const r = ROLES[key];
+    document.getElementById('role-av').textContent = r.initials;
+    document.getElementById('role-name').textContent = r.name;
+    document.getElementById('role-label').textContent = r.label;
+    document.querySelectorAll('#role-menu button').forEach(b=>b.classList.toggle('active', b.dataset.role===key));
+    document.getElementById('role-menu').classList.remove('open');
+  }
+
+  function lockRoleSwitcher(){
+    // Once a real user is authenticated, the role shown must come from the
+    // backend (SRS-12) — the "view as" options were a pre-backend demo aid
+    // and shouldn't let anyone browse other roles' views after real login.
+    // The chip stays clickable, but its dropdown now offers only Log out.
+    roleLocked = true;
+    const menu = document.getElementById('role-menu');
+    menu.innerHTML = `
+      <div class="eyebrow">Account</div>
+      <button type="button" class="menu-logout" id="menu-logout"><b>Log out</b></button>
+    `;
+    document.getElementById('menu-logout').addEventListener('click', signOut);
+  }
+
+  document.getElementById('role-chip').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    document.getElementById('role-menu').classList.toggle('open');
+  });
+  document.querySelectorAll('#role-menu button').forEach(b=>{
+    b.addEventListener('click', ()=> applyRole(b.dataset.role));
+  });
+  document.addEventListener('click', ()=> document.getElementById('role-menu').classList.remove('open'));
+
+  /* ---------------- Nav — Jirat (access-check tied to backend) ---------------- */
+  const titles = {
+    home: ["Home", "You're signed in — more features arrive in later iterations"],
+    access: ["User & Access", "Manage accounts, roles, and permissions"]
+  };
+  document.querySelectorAll('.nav-item').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const key = btn.dataset.view;
+
+      // SRS-12: deny out-of-role access attempts for all roles.
+      // Real enforcement now lives on the backend (role_required("admin") on
+      // /api/admin/access-check) — this call is what's actually authoritative;
+      // the currentRole check above was only ever a UI convenience and could
+      // be bypassed by editing the DOM/JS, since it never asked the server.
+      if(key === 'access'){
+        const {ok} = await apiAuthGet('/api/admin/access-check');
+        if(!ok){
+          toast('Access denied — Administrator role required');
+          return;
+        }
+      }
+
+      document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      document.getElementById('view-'+key).classList.add('active');
+      document.getElementById('page-title').textContent = titles[key][0];
+      document.getElementById('page-desc').textContent = titles[key][1];
+    });
+  });
+
+  /* ---------------- Toast ---------------- */
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(()=> t.classList.remove('show'), 2600);
+  }
+</script>
+
 
 </html>
