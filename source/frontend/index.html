@@ -39,3 +39,20 @@
   }
   ::selection{background:var(--green); color:#fff;}
   a, button{font-family:inherit;}
+
+  /* role-based visibility */
+  body[data-role="user"] .req-staff, body[data-role="professor"] .req-staff{display:none !important;}
+  .req-user-note{display:none;}
+  body[data-role="user"] .req-user-note, body[data-role="professor"] .req-user-note{display:inline-flex !important;}
+  .req-admin{display:none !important;}
+  body[data-role="admin"] .req-admin{display:inline-flex !important;}
+  /* professor is read-only: can view everything, cannot submit/act */
+  body[data-role="professor"] .req-submit{display:none !important;}
+  .professor-note{display:none;}
+  body[data-role="professor"] .professor-note{display:inline-flex !important;}
+  .nav-item.req-admin-nav{display:none !important;}
+  body[data-role="admin"] .nav-item.req-admin-nav{display:flex !important;}
+</style>
+</head>
+
+</html>
