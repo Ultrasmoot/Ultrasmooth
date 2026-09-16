@@ -384,4 +384,31 @@
     <div class="switch-form">already have an account? <a onclick="showAuthView('login')">Log in</a></div>
   </div>
 
+  <!-- complete proflie markup -->
+  <div class="auth-card" id="complete-profile-view">
+    <div class="auth-brand">
+      <div class="stamp-badge">V</div>
+      <div class="name">VASE</div>
+      <div class="sub">Software Eng. Lab</div>
+    </div>
+    <h2>Complete your profile</h2>
+    <p class="auth-hint" style="margin-top:-10px;">Signed in as <b id="g-profile-name">—</b> (<span id="g-profile-email">—</span>). This is your first time signing in — tell us your role to finish setting up your account.</p>
+
+    <form id="complete-profile-form">
+      <div class="field">
+        <label>I am a</label>
+        <select id="complete-profile-role" required>
+          <option value="" disabled selected>Select your role</option>
+          <option value="phd_student">Ph.D. Student</option>
+          <option value="undergrad_student">Undergraduate Student</option>
+        </select>
+      </div>
+      <div class="auth-hint">Lab Admin and Professor accounts can only be created or assigned by a Lab Manager/Administrator afterward (SRS-11 / URS-9).</div>
+      <button class="btn-primary" type="submit">Continue</button>
+    </form>
+  </div>
+
+</div>
+
+
 </html>
