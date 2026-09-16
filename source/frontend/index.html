@@ -600,6 +600,117 @@
     localStorage.removeItem('vase_user');
     window.location.reload();
   }
+
+  async function apiPost(path, body){
+    const res = await fetch(API_BASE + path, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+    const data = await res.json().catch(()=>({}));
+    return {ok: res.ok, status: res.status, data};
+  }
+  // Check the current session using the stored token
+  async function apiAuthGet(path){
+    const token = localStorage.getItem('vase_token');
+    const res = await fetch(path, {
+      headers: token ? {'Authorization': 'Bearer ' + token} : {}
+    });
+    const data = await res.json().catch(()=>({}));
+    return {ok: res.ok, status: res.status, data};
+  }
+  // Restore the session when the page is refreshed
+  async function restoreSession(){
+    const token = localStorage.getItem('vase_token');
+    if(!token) return;
+    const {ok, data} = await apiAuthGet(API_BASE + '/me');
+    if(!ok || !data.user){
+      localStorage.removeItem('vase_token');
+      localStorage.removeItem('vase_user');
+      return;
+    }
+    signIn(token, data.user);
+  }
+  // Google Sign-In
+  let pendingGoogleProfile = null;
+
+  async function handleGoogleCredential(response){
+    loginError.classList.remove('show');
+
+  const {ok, data} = await apiPost('/google', {
+    credential: response.credential
+  });
+    
+  if(!ok){
+    showLoginError(data.error || 'Google sign-in failed.');
+    return;
+  }
+  if(data.needs_role){
+    pendingGoogleProfile = data;
+    document.getElementById('g-profile-name').textContent =
+      data.full_name || data.email;
+    document.getElementById('g-profile-email').textContent = data.email;
+
+    showAuthView('complete-profile');
+    return;
+  }
+  signIn(data.token, data.user);
+}
+
+window.addEventListener('load', () => {
+  if(!window.google || !google.accounts){
+    return;
+  }
+
+  google.accounts.id.initialize({
+    client_id: '{{ google_client_id }}',
+    callback: handleGoogleCredential
+  });
+});
+
+document.getElementById('btn-google-login').addEventListener('click', () => {
+  if(!window.google || !google.accounts){
+    showLoginError('Google Sign-In script did not load. Check your connection and try again.');
+    return;
+  }
+  google.accounts.id.prompt();
+});
+
+
+
+  
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  loginError.classList.remove('show');
+
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+
+  if(!email || !password){
+    showLoginError('Email and password are required.');
+    return;
+  }
+
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+
+  try{
+    const {ok, data} = await apiPost('/login', {email, password});
+
+    if(!ok){
+      showLoginError(data.error || 'Invalid email or password.');
+      return;
+    }
+
+    signIn(data.token, data.user);
+  } catch(err){
+    showLoginError('Could not reach the server. Is the backend running?');
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
+
   
 </script>
 </html>
