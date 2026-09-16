@@ -1,0 +1,160 @@
+{
+  "version": "31.3.2",
+  "pages": [
+    {
+      "id": "7Lz-1riRuMtd8xXtfXSZ",
+      "name": "AD-7",
+      "cells": [
+        {
+          "id": "1",
+          "type": "layer"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-1",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-20",
+          "type": "edge",
+          "parent": "1",
+          "source": "3prwb0SgZ4OBs3JOQRLS-3",
+          "target": "3prwb0SgZ4OBs3JOQRLS-1"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-3",
+          "type": "node",
+          "parent": "1",
+          "label": "Update status to in use and record timestamp"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-28",
+          "type": "edge",
+          "parent": "1",
+          "source": "3prwb0SgZ4OBs3JOQRLS-5",
+          "target": "3prwb0SgZ4OBs3JOQRLS-1"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-5",
+          "type": "node",
+          "parent": "1",
+          "label": "Reject with error message"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-6",
+          "type": "edge",
+          "parent": "1",
+          "source": "3prwb0SgZ4OBs3JOQRLS-7",
+          "target": "3prwb0SgZ4OBs3JOQRLS-9"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-7",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-8",
+          "type": "edge",
+          "parent": "1",
+          "source": "3prwb0SgZ4OBs3JOQRLS-9",
+          "target": "3prwb0SgZ4OBs3JOQRLS-11"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-9",
+          "type": "node",
+          "parent": "1",
+          "label": "User scans/enters resource code",
+          "html": "<div>User scans/enters resource code</div>"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-10",
+          "type": "edge",
+          "parent": "1",
+          "source": "3prwb0SgZ4OBs3JOQRLS-11"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-11",
+          "type": "node",
+          "parent": "1",
+          "label": "System verifies active"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-12",
+          "type": "edge",
+          "parent": "1",
+          "target": "3prwb0SgZ4OBs3JOQRLS-16"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-15",
+          "type": "edge",
+          "parent": "1",
+          "source": "3prwb0SgZ4OBs3JOQRLS-16",
+          "target": "3prwb0SgZ4OBs3JOQRLS-3"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-23",
+          "type": "edge",
+          "parent": "1",
+          "source": "3prwb0SgZ4OBs3JOQRLS-16",
+          "target": "3prwb0SgZ4OBs3JOQRLS-22"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-16",
+          "type": "node",
+          "parent": "1",
+          "label": "Status"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-17",
+          "type": "node",
+          "parent": "1",
+          "label": "No"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-18",
+          "type": "node",
+          "parent": "1",
+          "label": "Yes"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-21",
+          "type": "edge",
+          "parent": "1",
+          "source": "3prwb0SgZ4OBs3JOQRLS-19",
+          "target": "3prwb0SgZ4OBs3JOQRLS-5"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-19",
+          "type": "node",
+          "parent": "1",
+          "label": "Valid booking match"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-27",
+          "type": "edge",
+          "parent": "1",
+          "source": "3prwb0SgZ4OBs3JOQRLS-22",
+          "target": "3prwb0SgZ4OBs3JOQRLS-1"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-22",
+          "type": "node",
+          "parent": "1",
+          "label": "Update status to available and record timestamp"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-24",
+          "type": "node",
+          "parent": "1",
+          "label": "Check out"
+        },
+        {
+          "id": "3prwb0SgZ4OBs3JOQRLS-25",
+          "type": "node",
+          "parent": "1",
+          "label": "Check in"
+        }
+      ]
+    }
+  ]
+}

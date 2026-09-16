@@ -1,0 +1,263 @@
+{
+  "version": "31.3.2",
+  "pages": [
+    {
+      "id": "Md55-XhNz9ZQtC4xZjkQ",
+      "name": "AD-8",
+      "cells": [
+        {
+          "id": "1",
+          "type": "layer"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-9",
+          "type": "edge",
+          "parent": "1",
+          "source": "IjHNnLYoFr3Fxn0lIjMF-2",
+          "target": "3GTJxzHVfdBlVu_GWLJJ-2"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-2",
+          "type": "node",
+          "parent": "1",
+          "label": "Lab member submits request"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-21",
+          "type": "edge",
+          "parent": "1",
+          "source": "IjHNnLYoFr3Fxn0lIjMF-4",
+          "target": "IjHNnLYoFr3Fxn0lIjMF-16"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-4",
+          "type": "node",
+          "parent": "1",
+          "label": "Access Management Module"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-5",
+          "type": "edge",
+          "parent": "1",
+          "source": "IjHNnLYoFr3Fxn0lIjMF-7",
+          "target": "IjHNnLYoFr3Fxn0lIjMF-9"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-6",
+          "type": "edge",
+          "parent": "1",
+          "source": "IjHNnLYoFr3Fxn0lIjMF-7",
+          "target": "IjHNnLYoFr3Fxn0lIjMF-13"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-7",
+          "type": "node",
+          "parent": "1",
+          "label": "Data vaild?"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-8",
+          "type": "edge",
+          "parent": "1",
+          "source": "IjHNnLYoFr3Fxn0lIjMF-9",
+          "target": "IjHNnLYoFr3Fxn0lIjMF-11"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-9",
+          "type": "node",
+          "parent": "1",
+          "label": "Save databasse &amp; Update permissions"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-10",
+          "type": "node",
+          "parent": "1",
+          "label": "Yes"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-11",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-25",
+          "type": "edge",
+          "parent": "1",
+          "source": "IjHNnLYoFr3Fxn0lIjMF-13",
+          "target": "IjHNnLYoFr3Fxn0lIjMF-4"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-13",
+          "type": "node",
+          "parent": "1",
+          "label": "Validation Error"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-14",
+          "type": "node",
+          "parent": "1",
+          "label": "No"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-15",
+          "type": "edge",
+          "parent": "1",
+          "source": "IjHNnLYoFr3Fxn0lIjMF-16",
+          "target": "IjHNnLYoFr3Fxn0lIjMF-7"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-16",
+          "type": "node",
+          "parent": "1",
+          "label": "Input details &amp; assign Role"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-17",
+          "type": "edge",
+          "parent": "1",
+          "source": "IjHNnLYoFr3Fxn0lIjMF-18"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-18",
+          "type": "node",
+          "parent": "1"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-23",
+          "type": "edge",
+          "parent": "1",
+          "source": "IjHNnLYoFr3Fxn0lIjMF-25"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-24",
+          "type": "edge",
+          "parent": "1",
+          "source": "IjHNnLYoFr3Fxn0lIjMF-25",
+          "target": "IjHNnLYoFr3Fxn0lIjMF-2"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-25",
+          "type": "node",
+          "parent": "1",
+          "label": "Conflict found"
+        },
+        {
+          "id": "IjHNnLYoFr3Fxn0lIjMF-28",
+          "type": "node",
+          "parent": "1",
+          "label": "Sign in"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-4",
+          "type": "edge",
+          "parent": "1",
+          "source": "3GTJxzHVfdBlVu_GWLJJ-2",
+          "target": "3GTJxzHVfdBlVu_GWLJJ-3"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-8",
+          "type": "edge",
+          "parent": "1",
+          "source": "3GTJxzHVfdBlVu_GWLJJ-2",
+          "target": "3GTJxzHVfdBlVu_GWLJJ-7"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-2",
+          "type": "node",
+          "parent": "1",
+          "label": "Chooses Auth Method"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-27",
+          "type": "edge",
+          "parent": "1",
+          "source": "3GTJxzHVfdBlVu_GWLJJ-3",
+          "target": "IjHNnLYoFr3Fxn0lIjMF-25"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-3",
+          "type": "node",
+          "parent": "1",
+          "label": "Email &amp; Password"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-15",
+          "type": "edge",
+          "parent": "1",
+          "source": "3GTJxzHVfdBlVu_GWLJJ-7",
+          "target": "IjHNnLYoFr3Fxn0lIjMF-25"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-7",
+          "type": "node",
+          "parent": "1",
+          "label": "Lab member submits request"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-11",
+          "type": "node",
+          "parent": "1",
+          "label": "Google auth"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-13",
+          "type": "node",
+          "parent": "1",
+          "label": "Fail"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-14",
+          "type": "node",
+          "parent": "1",
+          "label": "Success"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-18",
+          "type": "edge",
+          "parent": "1",
+          "source": "3GTJxzHVfdBlVu_GWLJJ-16",
+          "target": "3GTJxzHVfdBlVu_GWLJJ-17"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-20",
+          "type": "edge",
+          "parent": "1",
+          "source": "3GTJxzHVfdBlVu_GWLJJ-16",
+          "target": "IjHNnLYoFr3Fxn0lIjMF-4"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-16",
+          "type": "node",
+          "parent": "1",
+          "label": "Dashboard access"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-24",
+          "type": "edge",
+          "parent": "1",
+          "source": "3GTJxzHVfdBlVu_GWLJJ-17",
+          "target": "IjHNnLYoFr3Fxn0lIjMF-11"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-17",
+          "type": "node",
+          "parent": "1",
+          "label": "Access standard features"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-19",
+          "type": "node",
+          "parent": "1",
+          "label": "Student/ Professor"
+        },
+        {
+          "id": "3GTJxzHVfdBlVu_GWLJJ-23",
+          "type": "node",
+          "parent": "1",
+          "label": "Lab Manager/\nAdmin",
+          "html": "Lab Manager/<div>Admin</div>"
+        }
+      ]
+    }
+  ]
+}
