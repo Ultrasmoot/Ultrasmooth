@@ -147,3 +147,23 @@ def find_or_create_google_user(cls, google_sub: str, email: str, full_name: str)
         return cls.find_by_id(user["id"]), False
 
     return None, True
+
+    @classmethod
+    def complete_google_signup(cls, google_sub: str, email: str, full_name: str, role: str):
+        if role not in STUDENT_ROLES:
+            raise ValidationError("New Google sign-ups can only register with a student role.")
+        conn = get_connection()
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                """INSERT INTO users (full_name, email, google_sub, role)
+                   VALUES (%s, %s, %s, %s)""",
+                (full_name, (email or "").strip().lower(), google_sub, role),
+            )
+            conn.commit()
+            return cls.find_by_id(cur.lastrowid)
+        except mysql.connector.IntegrityError:
+            conn.rollback()
+            raise ValidationError("An account with this email already exists.")
+        finally:
+            conn.close()
