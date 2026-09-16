@@ -46,7 +46,8 @@ class UserModel:
             return cur.fetchone()
         finally:
             conn.close()
-            
+    
+    # section that use in middleware    
     @staticmethod
     def find_by_id(user_id: int):
         conn = get_connection()
