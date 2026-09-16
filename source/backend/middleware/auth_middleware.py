@@ -1,11 +1,8 @@
 from functools import wraps
-
-import jwt
-from flask import g, jsonify, request
-
 from config import Config
 from models.user_model import UserModel
-
+import jwt
+from flask import g, jsonify, request
 
 def _decode_token():
     auth_header = request.headers.get("Authorization", "")
@@ -16,7 +13,6 @@ def _decode_token():
         return jwt.decode(token, Config.SECRET_KEY, algorithms=["HS256"])
     except jwt.PyJWTError:
         return None
-
 
 def get_current_user():
     """Cached per-request lookup of the authenticated user (or None)."""
@@ -30,16 +26,13 @@ def get_current_user():
     g.current_user = user if user and user["is_active"] else None
     return g.current_user
 
-
 def login_required(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
         if not get_current_user():
             return jsonify({"error": "Authentication required."}), 401
         return fn(*args, **kwargs)
-
     return wrapper
-
 
 def role_required(*allowed_roles):
     def decorator(fn):
@@ -51,7 +44,5 @@ def role_required(*allowed_roles):
             if user["role"] not in allowed_roles:
                 return jsonify({"error": "Access denied for your role."}), 403
             return fn(*args, **kwargs)
-
         return wrapper
-
     return decorator
