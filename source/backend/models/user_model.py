@@ -56,3 +56,58 @@ class UserModel:
             return cur.fetchone()
         finally:
             conn.close()
+
+    # email-password login (US-11)
+    @classmethod
+    def create_student_account(cls, data: dict):
+        role = (data.get("role") or "").strip()
+        if role not in STUDENT_ROLES:
+            raise ValidationError("Self sign-up is only available for Ph.D. and Undergraduate students.")
+
+        student_id = (data.get("student_id") or "").strip()
+        if not re.fullmatch(r"\d{10}", student_id):
+            raise ValidationError("Student ID must be exactly 10 digits.")
+
+        full_name = (data.get("full_name") or "").strip()
+        if not full_name:
+            raise ValidationError("Full name is required.")
+
+        email = (data.get("email") or "").strip().lower()
+        if "@" not in email:
+            raise ValidationError("Please enter a valid email address.")
+
+        allowed_domain = Config.ALLOWED_EMAIL_DOMAIN
+        if allowed_domain and not email.endswith("@" + allowed_domain):
+            raise ValidationError(f"Sign-up is only available for @{allowed_domain} email addresses.")
+
+        password = data.get("password") or ""
+        if len(password) < 8:
+            raise ValidationError("Password must be at least 8 characters.")
+
+        if cls.find_by_email(email):
+            raise ValidationError("An account with this email already exists.")
+
+        conn = get_connection()
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                """INSERT INTO users
+                   (student_id, full_name, email, password_hash, role, faculty, major)
+                   VALUES (%s, %s, %s, %s, %s, %s, %s)""",
+                (
+                    student_id,
+                    full_name,
+                    email,
+                    cls._hash_password(password),
+                    role,
+                    data.get("faculty"),
+                    data.get("major"),
+                ),
+            )
+            conn.commit()
+            return cls.find_by_id(cur.lastrowid)
+        except mysql.connector.IntegrityError:
+            conn.rollback()
+            raise ValidationError("This Student ID or email is already registered.")
+        finally:
+            conn.close()
