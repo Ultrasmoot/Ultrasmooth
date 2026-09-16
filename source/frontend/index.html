@@ -53,7 +53,7 @@
   .nav-item.req-admin-nav{display:none !important;}
   body[data-role="admin"] .nav-item.req-admin-nav{display:flex !important;}
 
-/* ---------- Shell ---------- */
+  /* ---------- Shell ---------- */
   .shell{display:grid; grid-template-columns:216px 1fr; min-height:100vh;}
 
   /* ---------- Rail ---------- */
@@ -551,7 +551,55 @@
     clearTimeout(t._timer);
     t._timer = setTimeout(()=> t.classList.remove('show'), 2600);
   }
+
+  /* Login (US-11 / SRS-11) — wired to real backend */
+  const API_BASE = '/api/auth';
+  // Backend roles (phd_student/undergrad_student/professor/admin) map
+  // onto the frontend's display roles (user/professor/admin).
+  const BACKEND_TO_UI_ROLE = {phd_student: 'user', undergrad_student: 'user',
+    professor: 'professor', admin: 'admin'};
+  const loginError = document.getElementById('login-error');
+  const loginErrorText = document.getElementById('login-error-text');
+  const createError = document.getElementById('create-error');
+  const createErrorText = document.getElementById('create-error-text');
+
+  function showLoginError(msg){
+    loginErrorText.textContent = msg;
+    loginError.classList.add('show');
+  }
+  function showCreateError(msg){
+    createErrorText.textContent = msg;
+    createError.classList.add('show');
+  }
+
+  function applyRealUser(user){
+    const uiRole = BACKEND_TO_UI_ROLE[user.role] || 'user';
+    ROLES[uiRole] = {
+      ...ROLES[uiRole],
+      label: ROLES[uiRole].label,
+      name: user.full_name || user.email,
+      initials: (user.full_name || user.email).split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()
+    };
+    applyRole(uiRole);
+    lockRoleSwitcher();
+  }
+
+  function signIn(token, user){
+    localStorage.setItem('vase_token', token);
+    localStorage.setItem('vase_user', JSON.stringify(user));
+    loginError.classList.remove('show');
+    createError.classList.remove('show');
+    document.body.classList.add('authed');
+    applyRealUser(user);
+  }
+
+  function signOut(){
+    // JWTs are stateless, so logging out is just discarding the token
+    // client-side; reloading resets all in-memory app state cleanly.
+    localStorage.removeItem('vase_token');
+    localStorage.removeItem('vase_user');
+    window.location.reload();
+  }
+  
 </script>
-
-
 </html>
