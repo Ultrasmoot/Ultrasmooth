@@ -112,3 +112,38 @@ class UserModel:
             raise ValidationError("This Student ID or email is already registered.")
         finally:
             conn.close()
+
+# email login (US-11)
+@classmethod
+def authenticate(cls, email: str, password: str):
+    user = cls.find_by_email((email or "").strip().lower())
+    if not user or not user["is_active"]:
+        return None
+    if not cls._check_password(password, user["password_hash"]):
+        return None
+    return user
+
+
+# Google login (US-11)
+@classmethod
+def find_or_create_google_user(cls, google_sub: str, email: str, full_name: str):
+    # find existing Google user or return a new user.
+    user = cls.find_by_google_sub(google_sub)
+    if user:
+        return user, False
+
+    user = cls.find_by_email(email)
+    if user:
+        conn = get_connection()
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                "UPDATE users SET google_sub = %s WHERE id = %s"
+                (google_sub, user["id"]),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+        return cls.find_by_id(user["id"]), False
+
+    return None, True
