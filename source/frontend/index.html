@@ -41,7 +41,6 @@
   a, button{font-family:inherit;}
 
   /* role-based visibility */
-  body[data-role="user"] .req-staff, body[data-role="professor"] .req-staff{display:none !important;}
   .req-user-note{display:none;}
   body[data-role="user"] .req-user-note, body[data-role="professor"] .req-user-note{display:inline-flex !important;}
   .req-admin{display:none !important;}
@@ -53,10 +52,10 @@
   .nav-item.req-admin-nav{display:none !important;}
   body[data-role="admin"] .nav-item.req-admin-nav{display:flex !important;}
 
-  /* ---------- Shell ---------- */
+  /* Shell */
   .shell{display:grid; grid-template-columns:216px 1fr; min-height:100vh;}
 
-  /* ---------- Rail ---------- */
+  /* Rail */
   .rail{border-right:1px solid var(--line); padding:20px 14px; display:flex; flex-direction:column; background:rgba(255,255,255,0.55);}
   .stamp{display:flex; align-items:center; gap:10px; margin-bottom:26px; padding-bottom:16px; border-bottom:1px dashed var(--line);}
   .stamp-badge{width:38px; height:38px; border:2px solid var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:13px; letter-spacing:0.5px; flex-shrink:0; transform:rotate(-6deg);}
@@ -74,7 +73,7 @@
   .rail-foot{margin-top:auto; padding-top:16px; border-top:1px dashed var(--line); font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-faint); line-height:1.6;}
   .rail-foot .dot{color:var(--rust);}
 
-  /* ---------- Main ---------- */
+  /* Main */
   .main{padding:22px 30px 50px;}
   .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; gap:16px;}
   .topbar h1{font-family:'IBM Plex Mono', monospace; font-size:19px; font-weight:700; margin:0; letter-spacing:-0.2px;}
@@ -103,7 +102,7 @@
   .view{display:none;}
   .view.active{display:block;}
 
-  /* ---------- KPI cards ---------- */
+  /* KPI cards */
   .kpis{display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:18px;}
   .kpi{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; position:relative; overflow:hidden;}
   .kpi::before{content:""; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--accent, var(--ink));}
@@ -194,7 +193,7 @@
     .grid-2{grid-template-columns:1fr;}
   }
 
-  /* ---------- Login / Create account screens (US-11 / SRS-11) ---------- */
+  /* Login / Create account screens (US-11 / SRS-11) */
   .shell{display:none;}
   body.authed .shell{display:grid;}
   body.authed .auth-screen{display:none;}
@@ -261,7 +260,7 @@
   }
   .login-error.show{display:flex;}
 
-  /* ---------- Google account chooser (mock) ---------- */
+  /* Google account chooser (mock) */
   .g-backdrop{position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; align-items:center; justify-content:center; z-index:200; font-family:Roboto, Arial, sans-serif;}
   .g-backdrop.open{display:flex;}
   .g-card{background:#fff; border-radius:8px; width:400px; max-width:92vw; box-shadow:0 1px 3px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.15); overflow:hidden;}
@@ -284,7 +283,7 @@
 <!-- LOGIN / CREATE ACCOUNT SCREENS (US-11 / SRS-11) -->
 <div class="auth-screen" id="auth-screen">
 
-  <!-- login -->
+  <!-- LOG IN -->
   <div class="auth-card active" id="login-view">
     <div class="auth-brand">
       <div class="stamp-badge">V</div>
@@ -319,7 +318,7 @@
     <div class="switch-form">don't have account? <a onclick="showAuthView('create')">Create one</a></div>
   </div>
 
-  <!-- create account markup -->
+  <!-- CREATE ACCOUNT -->
   <div class="auth-card" id="create-view">
     <div class="auth-brand">
       <div class="stamp-badge">V</div>
@@ -383,8 +382,7 @@
 
     <div class="switch-form">already have an account? <a onclick="showAuthView('login')">Log in</a></div>
   </div>
-
-  <!-- complete proflie markup -->
+  <!-- COMPLETE PROFILE (first-time Google sign-in only) — Panyasiri -->
   <div class="auth-card" id="complete-profile-view">
     <div class="auth-brand">
       <div class="stamp-badge">V</div>
@@ -410,7 +408,7 @@
 
 </div>
 
-<div class="shell"> <!-- shell/nav -->
+<div class="shell"> 
 
   <aside class="rail">
     <div class="stamp">
@@ -422,7 +420,11 @@
         <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 7L8 2L14 7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 6V13.5H12.5V6" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
         Home
       </button>
-    </nav>=
+      <button class="nav-item req-admin-nav" data-view="access">
+        <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.7" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 14C2.9 10.8 5.1 9.2 8 9.2C10.9 9.2 13.1 10.8 13.5 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+        User & Access
+      </button>
+    </nav>
   </aside>
 
   <main class="main">
@@ -448,7 +450,8 @@
       </div>
     </div>
 
-      <!-- HOME (placeholder — Dashboard itself is built in a later iteration) -->
+
+    <!-- HOME (placeholder — Dashboard itself is built in a later iteration) -->
     <section class="view active" id="view-home">
       <div class="panel">
         <div class="panel-head"><h2>Signed in</h2></div>
@@ -456,20 +459,23 @@
       </div>
     </section>
 
-    <!-- USER & ACCESS (Admin only) — access control demo for US-12; account management (US-13) not built yet -->
+    <!-- USER & ACCESS (Admin only) access control demo for US-12; account management (US-13) not built yet -->
     <section class="view" id="view-access">
       <div class="panel">
         <div class="panel-head"><h2>User & Access</h2></div>
-        <p class="note" style="margin:0;"> Restricted area — Administrators only. This section is currently limited to administrators. User account management, such as creating, editing, and deactivating accounts, will be added in a later iteration.</p>
+        <p class="note" style="margin:0;">🔒 Restricted area — Administrators only. This section is currently limited to administrators. User account management, such as creating, editing, and deactivating accounts, will be added in a later iteration.</p>
       </div>
     </section>
+
   </main>
 </div>
+
 <!-- MODAL -->
 <div class="modal-backdrop" id="modal-backdrop"><div class="modal-box" id="modal-box"></div></div>
 <div class="toast" id="toast"></div>
+
 <script>
-  /* ---------------- Roles — Jirat ---------------- */
+  /* Roles */
   const ROLES = {
     user:      { label:'Lab User',      name:'Napakhet',    initials:'NP', canManage:false, canApprove:false },
     professor: { label:'Professor',     name:'Aj. Somchai',  initials:'AS', canManage:false, canApprove:false },
@@ -490,10 +496,7 @@
   }
 
   function lockRoleSwitcher(){
-    // Once a real user is authenticated, the role shown must come from the
-    // backend (SRS-12) — the "view as" options were a pre-backend demo aid
-    // and shouldn't let anyone browse other roles' views after real login.
-    // The chip stays clickable, but its dropdown now offers only Log out.
+    // view as
     roleLocked = true;
     const menu = document.getElementById('role-menu');
     menu.innerHTML = `
@@ -512,7 +515,7 @@
   });
   document.addEventListener('click', ()=> document.getElementById('role-menu').classList.remove('open'));
 
-  /* ---------------- Nav — Jirat (access-check tied to backend) ---------------- */
+  /* access-check tied to backend) */
   const titles = {
     home: ["Home", "You're signed in — more features arrive in later iterations"],
     access: ["User & Access", "Manage accounts, roles, and permissions"]
@@ -522,10 +525,6 @@
       const key = btn.dataset.view;
 
       // SRS-12: deny out-of-role access attempts for all roles.
-      // Real enforcement now lives on the backend (role_required("admin") on
-      // /api/admin/access-check) — this call is what's actually authoritative;
-      // the currentRole check above was only ever a UI convenience and could
-      // be bypassed by editing the DOM/JS, since it never asked the server.
       if(key === 'access'){
         const {ok} = await apiAuthGet('/api/admin/access-check');
         if(!ok){
@@ -543,7 +542,7 @@
     });
   });
 
-  /* ---------------- Toast ---------------- */
+  /* Toast */
   function toast(msg){
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -552,12 +551,15 @@
     t._timer = setTimeout(()=> t.classList.remove('show'), 2600);
   }
 
-  /* Login (US-11 / SRS-11) — wired to real backend */
+  /* Login (US-11 / SRS-11) wired to real backend */
   const API_BASE = '/api/auth';
   // Backend roles (phd_student/undergrad_student/professor/admin) map
-  // onto the frontend's display roles (user/professor/admin).
-  const BACKEND_TO_UI_ROLE = {phd_student: 'user', undergrad_student: 'user',
-    professor: 'professor', admin: 'admin'};
+  // onto the frontend's display roles (user/professor/admin)
+  const BACKEND_TO_UI_ROLE = {
+    phd_student: 'user', undergrad_student: 'user',
+    professor: 'professor', admin: 'admin'
+  };
+
   const loginError = document.getElementById('login-error');
   const loginErrorText = document.getElementById('login-error-text');
   const createError = document.getElementById('create-error');
@@ -610,7 +612,9 @@
     const data = await res.json().catch(()=>({}));
     return {ok: res.ok, status: res.status, data};
   }
-  // Check the current session using the stored token
+
+  // Generic authenticated GET, used for the /me restore check and for
+  // server-side-enforced role gates like /api/admin/access-check.
   async function apiAuthGet(path){
     const token = localStorage.getItem('vase_token');
     const res = await fetch(path, {
@@ -619,7 +623,9 @@
     const data = await res.json().catch(()=>({}));
     return {ok: res.ok, status: res.status, data};
   }
-  // Restore the session when the page is refreshed
+
+  // Restores the session on page load/refresh (fixes: user had to log in again every refresh). Re-validates the stored token against the
+  // backend rather than trusting the cached user blindly
   async function restoreSession(){
     const token = localStorage.getItem('vase_token');
     if(!token) return;
@@ -631,86 +637,172 @@
     }
     signIn(token, data.user);
   }
-  // Google Sign-In
-  let pendingGoogleProfile = null;
+
+  /* Google Sign-In (real, via Google Identity Services) */
+  let pendingGoogleProfile = null; // holds {google_sub, email, full_name} while a first-time Google user picks a role
 
   async function handleGoogleCredential(response){
     loginError.classList.remove('show');
-
-  const {ok, data} = await apiPost('/google', {
-    credential: response.credential
-  });
-    
-  if(!ok){
-    showLoginError(data.error || 'Google sign-in failed.');
-    return;
-  }
-  if(data.needs_role){
-    pendingGoogleProfile = data;
-    document.getElementById('g-profile-name').textContent =
-      data.full_name || data.email;
-    document.getElementById('g-profile-email').textContent = data.email;
-
-    showAuthView('complete-profile');
-    return;
-  }
-  signIn(data.token, data.user);
-}
-
-window.addEventListener('load', () => {
-  if(!window.google || !google.accounts){
-    return;
-  }
-
-  google.accounts.id.initialize({
-    client_id: '{{ google_client_id }}',
-    callback: handleGoogleCredential
-  });
-});
-
-document.getElementById('btn-google-login').addEventListener('click', () => {
-  if(!window.google || !google.accounts){
-    showLoginError('Google Sign-In script did not load. Check your connection and try again.');
-    return;
-  }
-  google.accounts.id.prompt();
-});
-
-
-
-  
-
-document.getElementById('login-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  loginError.classList.remove('show');
-
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-
-  if(!email || !password){
-    showLoginError('Email and password are required.');
-    return;
-  }
-
-  const submitBtn = e.target.querySelector('button[type="submit"]');
-  submitBtn.disabled = true;
-
-  try{
-    const {ok, data} = await apiPost('/login', {email, password});
-
+    const {ok, data} = await apiPost('/google', {credential: response.credential});
     if(!ok){
-      showLoginError(data.error || 'Invalid email or password.');
+      showLoginError(data.error || 'Google sign-in failed.');
+      return;
+    }
+    if(data.needs_role){
+      // First-time Google sign-in: no role on file yet (ask before creating the account)
+      pendingGoogleProfile = data;
+      document.getElementById('g-profile-name').textContent = data.full_name || data.email;
+      document.getElementById('g-profile-email').textContent = data.email;
+      showAuthView('complete-profile');
+      return;
+    }
+    signIn(data.token, data.user);
+  }
+
+  window.addEventListener('load', () => {
+    if(!window.google || !google.accounts){
+      // GSI script failed to load (leave the button inert rather than crash)
+      return;
+    }
+    google.accounts.id.initialize({
+      client_id: '{{ google_client_id }}',
+      callback: handleGoogleCredential
+    });
+  });
+
+  document.getElementById('btn-google-login').addEventListener('click', () => {
+    if(!window.google || !google.accounts){
+      showLoginError('Google Sign-In script did not load. Check your connection and try again.');
+      return;
+    }
+    google.accounts.id.prompt();
+  });
+
+  document.getElementById('complete-profile-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if(!pendingGoogleProfile) return;
+    const role = document.getElementById('complete-profile-role').value;
+    const {ok, data} = await apiPost('/google/complete-profile', {
+      google_sub: pendingGoogleProfile.google_sub,
+      email: pendingGoogleProfile.email,
+      full_name: pendingGoogleProfile.full_name,
+      role
+    });
+    if(!ok){
+      alert(data.error || 'Could not complete sign-up.');
+      return;
+    }
+    pendingGoogleProfile = null;
+    signIn(data.token, data.user);
+  });
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.classList.remove('show');
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+
+    if(!email || !password){
+      showLoginError('Email and password are required.');
       return;
     }
 
-    signIn(data.token, data.user);
-  } catch(err){
-    showLoginError('Could not reach the server. Is the backend running?');
-  } finally {
-    submitBtn.disabled = false;
-  }
-});
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try{
+      const {ok, data} = await apiPost('/login', {email, password});
+      if(!ok){
+        showLoginError(data.error || 'Invalid email or password.');
+        return;
+      }
+      signIn(data.token, data.user);
+    } catch(err){
+      showLoginError('Could not reach the server. Is the backend running?');
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
 
-  
+  function showAuthView(view){
+    document.getElementById('login-view').classList.toggle('active', view === 'login');
+    document.getElementById('create-view').classList.toggle('active', view === 'create');
+    document.getElementById('complete-profile-view').classList.toggle('active', view === 'complete-profile');
+  }
+
+  function togglePw(id){
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+  }
+
+  // Year only applies to undergraduate students
+  const STUDENT_ROLES = ['undergrad_student'];
+  document.getElementById('create-role').addEventListener('change', (e) => {
+    const isStudent = STUDENT_ROLES.includes(e.target.value);
+    document.getElementById('student-fields').style.display = isStudent ? 'block' : 'none';
+  });
+
+  const studentIdInput = document.getElementById('create-student-id');
+  studentIdInput.addEventListener('input', () => {
+    // Digits only, 10 characters max.
+    studentIdInput.value = studentIdInput.value.replace(/\D/g, '').slice(0, 10);
+  });
+
+  document.getElementById('create-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    createError.classList.remove('show');
+
+    const sid = studentIdInput.value;
+    if(sid.length !== 10){
+      showCreateError('Student ID must be exactly 10 digits.');
+      return;
+    }
+
+    const email = document.getElementById('create-email').value.trim();
+    if(!email.includes('@')){
+      showCreateError('Please enter a valid email address (must contain @).');
+      return;
+    }
+
+    const password = document.getElementById('create-password').value;
+    const confirmPassword = document.getElementById('create-confirm-password').value;
+    if(password !== confirmPassword){
+      showCreateError('Passwords do not match.');
+      return;
+    }
+
+    const firstName = document.getElementById('create-first-name').value.trim();
+    const lastName = document.getElementById('create-last-name').value.trim();
+    const role = document.getElementById('create-role').value;
+
+    const payload = {
+      student_id: sid,
+      full_name: `${firstName} ${lastName}`.trim(),
+      faculty: document.getElementById('create-faculty').value.trim(),
+      major: document.getElementById('create-major').value.trim(),
+      email, role, password
+    };
+
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try{
+      const {ok, data} = await apiPost('/signup', payload);
+      if(!ok){
+        showCreateError(data.error || 'Could not create account.');
+        return;
+      }
+      // Sign-up is limited to Ph.D./Undergraduate Student (see dropdown options)
+      // Lab Admin / Professor accounts are assigned later by an Administrator (SRS-11, URS-9)
+      signIn(data.token, data.user);
+    } catch(err){
+      showCreateError('Could not reach the server. Is the backend running?');
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  applyRole('admin'); // default demo state; overridden below if a real session restores
+  restoreSession();
 </script>
+
+</body>
 </html>
