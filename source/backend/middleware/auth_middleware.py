@@ -14,8 +14,7 @@ def _decode_token():
     except jwt.PyJWTError:
         return None
 
-def get_current_user():
-    """Cached per-request lookup of the authenticated user (or None)."""
+def get_current_user(): # Cached per-request lookup of the authenticated user (or None)
     if hasattr(g, "current_user"):
         return g.current_user
     claims = _decode_token()
