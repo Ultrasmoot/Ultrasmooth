@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VASE — Lab Data Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F2EA;
+    --panel:#FFFFFF;
+    --ink:#16233F;
+    --ink-soft:#57607A;
+    --ink-faint:#8A92A6;
+    --line:rgba(22,35,63,0.14);
+    --grid:rgba(22,35,63,0.055);
+    --green:#2F6F4F;
+    --green-bg:#E4EFE7;
+    --amber:#95651C;
+    --amber-bg:#F3E7D3;
+    --rust:#A03B2A;
+    --rust-bg:#F3E0DB;
+    --blue:#2C5F8A;
+    --blue-bg:#E1EBF2;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/28px 28px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/28px 28px,
+      var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--green); color:#fff;}
+  a, button{font-family:inherit;}
+
+  /* role-based visibility */
+  .req-user-note{display:none;}
+  body[data-role="user"] .req-user-note, body[data-role="professor"] .req-user-note{display:inline-flex !important;}
+  .req-admin{display:none !important;}
+  body[data-role="admin"] .req-admin{display:inline-flex !important;}
+  /* professor is read-only: can view everything, cannot submit/act */
+  body[data-role="professor"] .req-submit{display:none !important;}
+  .professor-note{display:none;}
+  body[data-role="professor"] .professor-note{display:inline-flex !important;}
+  .nav-item.req-admin-nav{display:none !important;}
+  body[data-role="admin"] .nav-item.req-admin-nav{display:flex !important;}
+
+  /* Shell */
+  .shell{display:grid; grid-template-columns:216px 1fr; min-height:100vh;}
+
+  /* Rail */
+  .rail{border-right:1px solid var(--line); padding:20px 14px; display:flex; flex-direction:column; background:rgba(255,255,255,0.55);}
+  .stamp{display:flex; align-items:center; gap:10px; margin-bottom:26px; padding-bottom:16px; border-bottom:1px dashed var(--line);}
+  .stamp-badge{width:38px; height:38px; border:2px solid var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:13px; letter-spacing:0.5px; flex-shrink:0; transform:rotate(-6deg);}
+  .stamp-text{line-height:1.15;}
+  .stamp-text .name{font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:14.5px; letter-spacing:0.5px;}
+  .stamp-text .sub{font-size:9.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:1px; margin-top:2px;}
+
+  .nav{display:flex; flex-direction:column; gap:2px;}
+  .nav-item{display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--radius); color:var(--ink-soft); font-size:13.5px; font-weight:500; cursor:pointer; border:1px solid transparent; background:none; text-align:left; width:100%;}
+  .nav-item .ico{width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:currentColor;}
+  .nav-item:hover{color:var(--ink); background:rgba(22,35,63,0.045);}
+  .nav-item.active{color:var(--ink); background:var(--panel); border:1px solid var(--line); font-weight:600;}
+  .nav-item.active::before{content:""; width:5px; height:5px; border-radius:50%; background:var(--green); margin-right:2px;}
+
+  .rail-foot{margin-top:auto; padding-top:16px; border-top:1px dashed var(--line); font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-faint); line-height:1.6;}
+  .rail-foot .dot{color:var(--rust);}
+
+  /* Main */
+  .main{padding:22px 30px 50px;}
+  .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; gap:16px;}
+  .topbar h1{font-family:'IBM Plex Mono', monospace; font-size:19px; font-weight:700; margin:0; letter-spacing:-0.2px;}
+  .topbar .desc{color:var(--ink-faint); font-size:12.5px; margin-top:3px;}
+  .search{display:flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--panel); padding:8px 12px; border-radius:var(--radius); min-width:230px;}
+  .search svg{color:var(--ink-faint); flex-shrink:0;}
+  .search input{border:none; outline:none; background:none; font-size:13px; width:100%; font-family:'IBM Plex Sans', sans-serif; color:var(--ink);}
+
+  .role-select{position:relative;}
+  .role-chip{display:flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--panel); padding:6px 10px 6px 6px; border-radius:20px; cursor:pointer;}
+  .role-chip .av{width:24px; height:24px; border-radius:50%; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono', monospace; font-size:10.5px; font-weight:700; flex-shrink:0;}
+  .role-chip .rt{font-size:12px; line-height:1.2;}
+  .role-chip .rt b{display:block; font-size:12.5px;}
+  .role-chip .rt span{color:var(--ink-faint); font-size:10.5px;}
+  .role-chip .caret{color:var(--ink-faint); margin-left:2px;}
+  .role-menu{position:absolute; top:calc(100% + 8px); right:0; background:var(--panel); border:1px solid var(--line); border-radius:4px; min-width:210px; box-shadow:0 10px 30px rgba(22,35,63,0.15); z-index:50; display:none; overflow:hidden;}
+  .role-menu.open{display:block;}
+  .role-menu .eyebrow{padding:9px 12px 6px; font-family:'IBM Plex Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--ink-faint);}
+  .role-menu button{width:100%; text-align:left; padding:9px 12px; border:none; background:none; cursor:pointer; display:flex; flex-direction:column; gap:1px;}
+  .role-menu button:hover{background:rgba(22,35,63,0.05);}
+  .role-menu button b{font-size:12.5px; color:var(--ink);}
+  .role-menu button span{font-size:10.5px; color:var(--ink-faint);}
+  .role-menu button.active{background:var(--green-bg);}
+  .role-menu button.active b{color:var(--green);}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* KPI cards */
+  .kpis{display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:18px;}
+  .kpi{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; position:relative; overflow:hidden;}
+  .kpi::before{content:""; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--accent, var(--ink));}
+  .kpi .lbl{font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:var(--ink-faint); font-weight:600;}
+  .kpi .val{font-family:'IBM Plex Mono', monospace; font-size:26px; font-weight:700; margin-top:6px;}
+  .kpi .cap{font-size:11px; color:var(--ink-soft); margin-top:3px;}
+
+  .grid-2{display:grid; grid-template-columns:1.3fr 1fr; gap:14px; align-items:start;}
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px 18px;}
+  .panel-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px; gap:10px; flex-wrap:wrap;}
+  .panel-head h2{font-family:'IBM Plex Mono', monospace; font-size:12.5px; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin:0; color:var(--ink);}
+  .panel-head .n{font-size:11px; color:var(--ink-faint);}
+
+  .util-row{margin-bottom:12px;}
+  .util-row:last-child{margin-bottom:0;}
+  .util-top{display:flex; justify-content:space-between; font-size:12px; margin-bottom:5px;}
+  .util-top b{font-weight:600;}
+  .util-top span{color:var(--ink-faint); font-family:'IBM Plex Mono', monospace; font-size:11.5px;}
+  .util-track{height:7px; background:rgba(22,35,63,0.08); border-radius:3px; overflow:hidden;}
+  .util-fill{height:100%; border-radius:3px;}
+
+  .feed{list-style:none; margin:0; padding:0;}
+  .feed li{display:flex; gap:10px; padding:9px 0; border-bottom:1px dashed var(--line); font-size:12.5px;}
+  .feed li:last-child{border-bottom:none; padding-bottom:0;}
+  .feed .time{font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-faint); white-space:nowrap; padding-top:1px;}
+  .feed .txt b{font-weight:600;}
+  .feed .txt{color:var(--ink-soft); line-height:1.4;}
+
+  .badge{display:inline-flex; align-items:center; gap:5px; font-family:'IBM Plex Mono', monospace; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.4px; padding:3px 8px; border-radius:20px;}
+  .badge::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor;}
+  .b-green{background:var(--green-bg); color:var(--green);}
+  .b-amber{background:var(--amber-bg); color:var(--amber);}
+  .b-rust{background:var(--rust-bg); color:var(--rust);}
+  .b-blue{background:var(--blue-bg); color:var(--blue);}
+
+  .toolbar{display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;}
+  .filter-chip{border:1px solid var(--line); background:var(--panel); padding:6px 12px; border-radius:20px; font-size:11.5px; color:var(--ink-soft); cursor:pointer;}
+  .filter-chip.active{background:var(--ink); color:#fff; border-color:var(--ink);}
+  .spacer{flex:1;}
+  .af-select{border:1px solid var(--line); background:var(--panel); padding:6px 10px; border-radius:20px; font-size:11.5px; color:var(--ink-soft); font-family:inherit; cursor:pointer;}
+
+  .res-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;}
+  .tag-card{background:var(--panel); border:1.5px dashed var(--line); border-radius:6px; padding:14px 15px 15px; position:relative;}
+  .tag-card::before, .tag-card::after{content:""; position:absolute; width:9px; height:9px; border-radius:50%; background:var(--paper); border:1.5px dashed var(--line); top:50%; transform:translateY(-50%);}
+  .tag-card::before{left:-6px;}
+  .tag-card::after{right:-6px;}
+  .tag-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;}
+  .tag-cat{font-family:'IBM Plex Mono', monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--ink-faint);}
+  .tag-name{font-size:14.5px; font-weight:600; margin:4px 0 0; line-height:1.3;}
+  .qr{width:34px; height:34px; background:linear-gradient(90deg, var(--ink) 0 3px, transparent 3px 6px) repeat-x, linear-gradient(0deg, var(--ink) 0 3px, transparent 3px 6px) repeat-y; background-size:6px 6px; border:1.5px solid var(--ink); border-radius:3px; flex-shrink:0; cursor:pointer;}
+  .qr:hover{outline:2px solid var(--green); outline-offset:2px;}
+  .tag-meta{font-size:11.5px; color:var(--ink-soft); line-height:1.7; margin-top:10px;}
+  .tag-meta .k{color:var(--ink-faint);}
+  .tag-foot{margin-top:12px; padding-top:10px; border-top:1px dashed var(--line); display:flex; justify-content:space-between; align-items:center; gap:6px;}
+  .tag-hint{font-size:10px; color:var(--ink-faint); font-family:'IBM Plex Mono',monospace;}
+
+  table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  thead th{text-align:left; font-family:'IBM Plex Mono', monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.8px; color:var(--ink-faint); font-weight:600; padding:0 10px 10px; border-bottom:1px solid var(--line);}
+  tbody td{padding:12px 10px; border-bottom:1px dashed var(--line); color:var(--ink-soft); vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody td.strong{color:var(--ink); font-weight:600;}
+  .mono{font-family:'IBM Plex Mono', monospace; font-size:11.5px;}
+  .btn{font-family:'IBM Plex Mono', monospace; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.4px; padding:5px 10px; border-radius:3px; border:1px solid var(--line); background:var(--panel); cursor:pointer; margin-right:5px;}
+  .btn.ok{background:var(--green); color:#fff; border-color:var(--green);}
+  .btn.no{background:var(--panel); color:var(--rust); border-color:var(--rust-bg);}
+  .note{font-size:11px; color:var(--ink-faint); font-style:italic;}
+
+  .section-title{font-family:'IBM Plex Mono', monospace; font-size:12.5px; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin:0 0 14px;}
+
+  /* modal */
+  .modal-backdrop{position:fixed; inset:0; background:rgba(22,35,63,0.35); display:none; align-items:center; justify-content:center; z-index:100;}
+  .modal-backdrop.open{display:flex;}
+  .modal-box{background:var(--panel); border:1px solid var(--line); border-radius:4px; width:380px; max-width:90vw; padding:20px 22px; box-shadow:0 20px 60px rgba(22,35,63,0.25);}
+  .modal-box h3{font-family:'IBM Plex Mono',monospace; font-size:13px; text-transform:uppercase; letter-spacing:1px; margin:0 0 14px;}
+  .field{margin-bottom:12px;}
+  .field label{display:block; font-size:11px; color:var(--ink-faint); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.5px;}
+  .field input, .field select{width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; font-family:inherit; background:#fff; color:var(--ink);}
+  .modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:16px;}
+
+  /* toast */
+  .toast{position:fixed; bottom:20px; right:20px; background:var(--ink); color:#fff; padding:10px 16px; border-radius:4px; font-size:12.5px; font-family:'IBM Plex Mono', monospace; opacity:0; transform:translateY(8px); transition:all .25s ease; z-index:200; pointer-events:none; max-width:280px;}
+  .toast.show{opacity:1; transform:translateY(0);}
+
+  @media (max-width: 880px){
+    .shell{grid-template-columns:1fr;}
+    .rail{display:none;}
+    .kpis, .res-grid{grid-template-columns:1fr 1fr;}
+    .grid-2{grid-template-columns:1fr;}
+  }
+
+  /* Login / Create account screens (US-11 / SRS-11) */
+  .shell{display:none;}
+  body.authed .shell{display:grid;}
+  body.authed .auth-screen{display:none;}
+  .role-menu button.menu-logout{border-top:1px solid var(--line); margin-top:2px;}
+  .role-menu button.menu-logout b{color:var(--rust);}
+  .role-menu button.menu-logout:hover{background:var(--rust-bg);}
+
+  .auth-screen{
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .auth-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    width:400px; max-width:100%; padding:34px 32px 28px;
+    box-shadow:0 24px 70px rgba(22,35,63,0.12);
+    display:none;
+  }
+  .auth-card.active{display:block;}
+
+  .auth-brand{display:flex; flex-direction:column; align-items:center; margin-bottom:22px;}
+  .auth-brand .stamp-badge{width:46px; height:46px; font-size:17px; margin-bottom:10px;}
+  .auth-brand .name{font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:13px; letter-spacing:1.5px;}
+  .auth-brand .sub{font-size:9.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:1.5px; margin-top:2px;}
+
+  .auth-card h2{text-align:center; font-size:20px; font-weight:600; margin:0 0 22px; font-family:'IBM Plex Sans', sans-serif;}
+
+  .auth-card .field{margin-bottom:16px;}
+  .auth-card .field-row{display:flex; gap:12px;}
+  .auth-card .field-row .field{flex:1; min-width:0;}
+  .auth-card .field label{font-size:12px; font-weight:600; color:var(--ink-soft); text-transform:none; letter-spacing:normal; margin-bottom:6px;}
+  .auth-card .field input, .auth-card .field select{padding:10px 12px; border-radius:6px; font-size:13.5px; outline:none; transition:border-color .15s;}
+  .auth-card .field input:focus, .auth-card .field select:focus{border-color:var(--accent, #2C5F8A);}
+  .auth-card .input-wrap{position:relative;}
+  .auth-card .toggle-pw{position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--ink-faint); font-size:13px;}
+
+  .row-between{display:flex; justify-content:flex-end; margin:-8px 0 16px;}
+  .row-between a{font-size:12px; color:#2C5F8A; text-decoration:none; cursor:pointer;}
+  .row-between a:hover{text-decoration:underline;}
+
+  .btn-primary{
+    width:100%; padding:11px; background:#2C5F8A; color:#fff; border:none; border-radius:6px;
+    font-family:'IBM Plex Sans', sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:background .15s;
+  }
+  .btn-primary:hover{background:#1F4A6E;}
+
+  .btn-google{
+    width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+    padding:9px 10px; border:1px solid var(--line); border-radius:6px; background:#fff;
+    font-family:'IBM Plex Sans', sans-serif; font-size:13px; font-weight:600; color:var(--ink);
+    cursor:pointer;
+  }
+  .btn-google:hover{background:rgba(22,35,63,0.03);}
+  .login-divider{display:flex; align-items:center; gap:10px; margin:18px 0; color:var(--ink-faint); font-size:10.5px; text-transform:uppercase; letter-spacing:1px; font-family:'IBM Plex Mono', monospace;}
+  .login-divider::before, .login-divider::after{content:""; flex:1; height:1px; background:var(--line);}
+
+  .switch-form{margin-top:18px; text-align:center; font-size:12.5px; color:var(--ink-soft);}
+  .switch-form a{color:#2C5F8A; font-weight:600; text-decoration:none; cursor:pointer;}
+  .switch-form a:hover{text-decoration:underline;}
+
+  .auth-hint{font-size:11px; color:var(--ink-faint); margin-top:-10px; margin-bottom:16px; line-height:1.5;}
+
+  .login-error{
+    display:none; align-items:center; gap:6px; background:var(--rust-bg); color:var(--rust);
+    font-size:11.5px; padding:8px 10px; border-radius:4px; margin-bottom:14px; font-family:'IBM Plex Mono', monospace;
+  }
+  .login-error.show{display:flex;}
+
+  /* Google account chooser (mock) */
+  .g-backdrop{position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; align-items:center; justify-content:center; z-index:200; font-family:Roboto, Arial, sans-serif;}
+  .g-backdrop.open{display:flex;}
+  .g-card{background:#fff; border-radius:8px; width:400px; max-width:92vw; box-shadow:0 1px 3px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.15); overflow:hidden;}
+  .g-head{padding:24px 24px 16px; text-align:center;}
+  .g-logo{width:36px; height:36px; margin-bottom:16px;}
+  .g-head h4{margin:0 0 6px; font-size:16px; font-weight:400; color:#202124;}
+  .g-head p{margin:0; font-size:14px; color:#5f6368;}
+  .g-list{padding:8px 0;}
+  .g-row{display:flex; align-items:center; gap:16px; padding:10px 24px; cursor:pointer;}
+  .g-row:hover{background:#f8f9fa;}
+  .g-av{width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:500; flex-shrink:0;}
+  .g-name{font-size:14px; color:#202124; line-height:1.4;}
+  .g-email{font-size:12px; color:#5f6368;}
+  .g-row.g-other .g-av{background:#f1f3f4 !important; color:#5f6368;}
+  .g-foot{padding:16px 24px 24px; font-size:12px; color:#5f6368; line-height:1.5; border-top:1px solid #e8eaed; margin-top:8px;}
+</style>
+</head>
+<body data-role="admin">
+
+<!-- LOGIN / CREATE ACCOUNT SCREENS (US-11 / SRS-11) -->
+<div class="auth-screen" id="auth-screen">
+
+  <!-- LOG IN -->
+  <div class="auth-card active" id="login-view">
+    <div class="auth-brand">
+      <div class="stamp-badge">V</div>
+      <div class="name">VASE</div>
+      <div class="sub">Software Eng. Lab</div>
+    </div>
+    <h2>Log in</h2>
+
+    <div id="login-error" class="login-error">
+      <span>⚠</span><span id="login-error-text">Invalid email or password.</span>
+    </div>
+
+    <form id="login-form">
+      <div class="field"><label>Email</label><input id="login-email" type="email" placeholder="username@ku.th" required></div>
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <input id="login-password" type="password" placeholder="Password" required>
+          <button type="button" class="toggle-pw" onclick="togglePw('login-password')">👁</button>
+        </div>
+      </div>
+      <div class="row-between"><a>Forgot password?</a></div>
+      <button class="btn-primary" type="submit">Sign in</button>
+    </form>
+
+    <div class="login-divider">or continue with</div>
+    <button class="btn-google" id="btn-google-login" type="button">
+      <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.9c1.7-1.57 2.7-3.88 2.7-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.8.54-1.84.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.98v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.95 10.7A5.4 5.4 0 0 1 3.66 9c0-.59.1-1.17.29-1.7V4.97H.98A9 9 0 0 0 0 9c0 1.45.35 2.83.98 4.03l2.97-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.51.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 0 0 .98 4.97l2.97 2.33C4.66 5.17 6.65 3.58 9 3.58z"/></svg>
+      Continue with Google
+    </button>
+
+    <div class="switch-form">don't have account? <a onclick="showAuthView('create')">Create one</a></div>
+  </div>
+
+  <!-- CREATE ACCOUNT -->
+  <div class="auth-card" id="create-view">
+    <div class="auth-brand">
+      <div class="stamp-badge">V</div>
+      <div class="name">VASE</div>
+      <div class="sub">Software Eng. Lab</div>
+    </div>
+    <h2>Create account</h2>
+
+    <div id="create-error" class="login-error">
+      <span>⚠</span><span id="create-error-text"></span>
+    </div>
+
+    <form id="create-form">
+      <div class="field"><label>Student ID</label><input id="create-student-id" type="text" inputmode="numeric" maxlength="10" placeholder="10-digit student ID" required></div>
+      <div class="field-row">
+        <div class="field"><label>First Name</label><input id="create-first-name" type="text" placeholder="First name" required></div>
+        <div class="field"><label>Last Name</label><input id="create-last-name" type="text" placeholder="Last name" required></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Faculty</label><input id="create-faculty" type="text" placeholder="Faculty" required></div>
+        <div class="field"><label>Major</label><input id="create-major" type="text" placeholder="Major" required></div>
+      </div>
+
+      <div id="student-fields" style="display:none;">
+        <div class="field">
+          <label>Year</label>
+          <select id="create-year">
+            <option value="" disabled selected>Select your year</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field"><label>Email</label><input id="create-email" type="email" placeholder="username@ku.th" required></div>
+      <div class="field">
+        <label>I am a</label>
+        <select id="create-role" required>
+          <option value="" disabled selected>Select your role</option>
+          <option value="phd_student">Ph.D. Student</option>
+          <option value="undergrad_student">Undergraduate Student</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <input id="create-password" type="password" placeholder="Password" required>
+          <button type="button" class="toggle-pw" onclick="togglePw('create-password')">👁</button>
+        </div>
+      </div>
+      <div class="field"><label>Confirm password</label><input id="create-confirm-password" type="password" placeholder="Confirm password" required></div>
+
+      <div class="auth-hint">Lab Admin and Professor accounts can only be created or assigned by a Lab Manager/Administrator after sign-up (SRS-11 / URS-9).</div>
+      <button class="btn-primary" type="submit">Create account</button>
+    </form>
+
+    <div class="switch-form">already have an account? <a onclick="showAuthView('login')">Log in</a></div>
+  </div>
+  <!-- COMPLETE PROFILE (first-time Google sign-in only) — Panyasiri -->
+  <div class="auth-card" id="complete-profile-view">
+    <div class="auth-brand">
+      <div class="stamp-badge">V</div>
+      <div class="name">VASE</div>
+      <div class="sub">Software Eng. Lab</div>
+    </div>
+    <h2>Complete your profile</h2>
+    <p class="auth-hint" style="margin-top:-10px;">Signed in as <b id="g-profile-name">—</b> (<span id="g-profile-email">—</span>). This is your first time signing in — tell us your role to finish setting up your account.</p>
+
+    <form id="complete-profile-form">
+      <div class="field">
+        <label>I am a</label>
+        <select id="complete-profile-role" required>
+          <option value="" disabled selected>Select your role</option>
+          <option value="phd_student">Ph.D. Student</option>
+          <option value="undergrad_student">Undergraduate Student</option>
+        </select>
+      </div>
+      <div class="auth-hint">Lab Admin and Professor accounts can only be created or assigned by a Lab Manager/Administrator afterward (SRS-11 / URS-9).</div>
+      <button class="btn-primary" type="submit">Continue</button>
+    </form>
+  </div>
+
+</div>
+
+<div class="shell"> 
+
+  <aside class="rail">
+    <div class="stamp">
+      <div class="stamp-badge">V</div>
+      <div class="stamp-text"><div class="name">VASE</div><div class="sub">Software Eng. Lab</div></div>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" data-view="home">
+        <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 7L8 2L14 7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 6V13.5H12.5V6" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+        Home
+      </button>
+      <button class="nav-item req-admin-nav" data-view="access">
+        <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.7" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 14C2.9 10.8 5.1 9.2 8 9.2C10.9 9.2 13.1 10.8 13.5 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+        User & Access
+      </button>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="page-title">Home</h1>
+        <div class="desc" id="page-desc">You're signed in — more features arrive in later iterations</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="role-select" id="role-select">
+          <div class="role-chip" id="role-chip">
+            <div class="av" id="role-av">SA</div>
+            <div class="rt"><b id="role-name">System Admin</b><span id="role-label">Administrator</span></div>
+            <svg class="caret" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.4"/></svg>
+          </div>
+          <div class="role-menu" id="role-menu">
+            <div class="eyebrow">View as</div>
+            <button data-role="user"><b>Napakhet</b><span>Lab User (Student)</span></button>
+            <button data-role="professor"><b>Aj. Somchai</b><span>Professor (view-only)</span></button>
+            <button data-role="admin" class="active"><b>System Admin</b><span>Administrator</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- HOME (placeholder — Dashboard itself is built in a later iteration) -->
+    <section class="view active" id="view-home">
+      <div class="panel">
+        <div class="panel-head"><h2>Signed in</h2></div>
+        <p class="note" style="margin:0;">You're logged in to VASE. For this iteration, we're focusing on Login and Role-based Access (US-11, US-12). Other features, including resources, bookings, maintenance, and the operations dashboard, will be developed in later iterations.</p>
+      </div>
+    </section>
+
+    <!-- USER & ACCESS (Admin only) access control demo for US-12; account management (US-13) not built yet -->
+    <section class="view" id="view-access">
+      <div class="panel">
+        <div class="panel-head"><h2>User & Access</h2></div>
+        <p class="note" style="margin:0;">🔒 Restricted area — Administrators only. This section is currently limited to administrators. User account management, such as creating, editing, and deactivating accounts, will be added in a later iteration.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal-backdrop"><div class="modal-box" id="modal-box"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+  /* Roles */
+  const ROLES = {
+    user:      { label:'Lab User',      name:'Napakhet',    initials:'NP', canManage:false, canApprove:false },
+    professor: { label:'Professor',     name:'Aj. Somchai',  initials:'AS', canManage:false, canApprove:false },
+    admin:     { label:'Administrator', name:'System Admin', initials:'SA', canManage:true,  canApprove:true  }
+  };
+  let currentRole = 'admin';
+  let roleLocked = false; // true once a real backend login happens — no more "view as" switching
+
+  function applyRole(key){
+    currentRole = key;
+    document.body.dataset.role = key;
+    const r = ROLES[key];
+    document.getElementById('role-av').textContent = r.initials;
+    document.getElementById('role-name').textContent = r.name;
+    document.getElementById('role-label').textContent = r.label;
+    document.querySelectorAll('#role-menu button').forEach(b=>b.classList.toggle('active', b.dataset.role===key));
+    document.getElementById('role-menu').classList.remove('open');
+  }
+
+  function lockRoleSwitcher(){
+    // view as
+    roleLocked = true;
+    const menu = document.getElementById('role-menu');
+    menu.innerHTML = `
+      <div class="eyebrow">Account</div>
+      <button type="button" class="menu-logout" id="menu-logout"><b>Log out</b></button>
+    `;
+    document.getElementById('menu-logout').addEventListener('click', signOut);
+  }
+
+  document.getElementById('role-chip').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    document.getElementById('role-menu').classList.toggle('open');
+  });
+  document.querySelectorAll('#role-menu button').forEach(b=>{
+    b.addEventListener('click', ()=> applyRole(b.dataset.role));
+  });
+  document.addEventListener('click', ()=> document.getElementById('role-menu').classList.remove('open'));
+
+  /* access-check tied to backend) */
+  const titles = {
+    home: ["Home", "You're signed in — more features arrive in later iterations"],
+    access: ["User & Access", "Manage accounts, roles, and permissions"]
+  };
+  document.querySelectorAll('.nav-item').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const key = btn.dataset.view;
+
+      // SRS-12: deny out-of-role access attempts for all roles.
+      if(key === 'access'){
+        const {ok} = await apiAuthGet('/api/admin/access-check');
+        if(!ok){
+          toast('Access denied — Administrator role required');
+          return;
+        }
+      }
+
+      document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      document.getElementById('view-'+key).classList.add('active');
+      document.getElementById('page-title').textContent = titles[key][0];
+      document.getElementById('page-desc').textContent = titles[key][1];
+    });
+  });
+
+  /* Toast */
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(()=> t.classList.remove('show'), 2600);
+  }
+
+  /* Login (US-11 / SRS-11) wired to real backend */
+  const API_BASE = '/api/auth';
+  // Backend roles (phd_student/undergrad_student/professor/admin) map
+  // onto the frontend's display roles (user/professor/admin)
+  const BACKEND_TO_UI_ROLE = {
+    phd_student: 'user', undergrad_student: 'user',
+    professor: 'professor', admin: 'admin'
+  };
+
+  const loginError = document.getElementById('login-error');
+  const loginErrorText = document.getElementById('login-error-text');
+  const createError = document.getElementById('create-error');
+  const createErrorText = document.getElementById('create-error-text');
+
+  function showLoginError(msg){
+    loginErrorText.textContent = msg;
+    loginError.classList.add('show');
+  }
+  function showCreateError(msg){
+    createErrorText.textContent = msg;
+    createError.classList.add('show');
+  }
+
+  function applyRealUser(user){
+    const uiRole = BACKEND_TO_UI_ROLE[user.role] || 'user';
+    ROLES[uiRole] = {
+      ...ROLES[uiRole],
+      label: ROLES[uiRole].label,
+      name: user.full_name || user.email,
+      initials: (user.full_name || user.email).split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()
+    };
+    applyRole(uiRole);
+    lockRoleSwitcher();
+  }
+
+  function signIn(token, user){
+    localStorage.setItem('vase_token', token);
+    localStorage.setItem('vase_user', JSON.stringify(user));
+    loginError.classList.remove('show');
+    createError.classList.remove('show');
+    document.body.classList.add('authed');
+    applyRealUser(user);
+  }
+
+  function signOut(){
+    // JWTs are stateless, so logging out is just discarding the token
+    // client-side; reloading resets all in-memory app state cleanly.
+    localStorage.removeItem('vase_token');
+    localStorage.removeItem('vase_user');
+    window.location.reload();
+  }
+
+  async function apiPost(path, body){
+    const res = await fetch(API_BASE + path, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+    const data = await res.json().catch(()=>({}));
+    return {ok: res.ok, status: res.status, data};
+  }
+
+  // Generic authenticated GET, used for the /me restore check and for
+  // server-side-enforced role gates like /api/admin/access-check.
+  async function apiAuthGet(path){
+    const token = localStorage.getItem('vase_token');
+    const res = await fetch(path, {
+      headers: token ? {'Authorization': 'Bearer ' + token} : {}
+    });
+    const data = await res.json().catch(()=>({}));
+    return {ok: res.ok, status: res.status, data};
+  }
+
+  // Restores the session on page load/refresh (fixes: user had to log in again every refresh). Re-validates the stored token against the
+  // backend rather than trusting the cached user blindly
+  async function restoreSession(){
+    const token = localStorage.getItem('vase_token');
+    if(!token) return;
+    const {ok, data} = await apiAuthGet(API_BASE + '/me');
+    if(!ok || !data.user){
+      localStorage.removeItem('vase_token');
+      localStorage.removeItem('vase_user');
+      return;
+    }
+    signIn(token, data.user);
+  }
+
+  /* Google Sign-In (real, via Google Identity Services) */
+  let pendingGoogleProfile = null; // holds {google_sub, email, full_name} while a first-time Google user picks a role
+
+  async function handleGoogleCredential(response){
+    loginError.classList.remove('show');
+    const {ok, data} = await apiPost('/google', {credential: response.credential});
+    if(!ok){
+      showLoginError(data.error || 'Google sign-in failed.');
+      return;
+    }
+    if(data.needs_role){
+      // First-time Google sign-in: no role on file yet (ask before creating the account)
+      pendingGoogleProfile = data;
+      document.getElementById('g-profile-name').textContent = data.full_name || data.email;
+      document.getElementById('g-profile-email').textContent = data.email;
+      showAuthView('complete-profile');
+      return;
+    }
+    signIn(data.token, data.user);
+  }
+
+  window.addEventListener('load', () => {
+    if(!window.google || !google.accounts){
+      // GSI script failed to load (leave the button inert rather than crash)
+      return;
+    }
+    google.accounts.id.initialize({
+      client_id: '{{ google_client_id }}',
+      callback: handleGoogleCredential
+    });
+  });
+
+  document.getElementById('btn-google-login').addEventListener('click', () => {
+    if(!window.google || !google.accounts){
+      showLoginError('Google Sign-In script did not load. Check your connection and try again.');
+      return;
+    }
+    google.accounts.id.prompt();
+  });
+
+  document.getElementById('complete-profile-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if(!pendingGoogleProfile) return;
+    const role = document.getElementById('complete-profile-role').value;
+    const {ok, data} = await apiPost('/google/complete-profile', {
+      google_sub: pendingGoogleProfile.google_sub,
+      email: pendingGoogleProfile.email,
+      full_name: pendingGoogleProfile.full_name,
+      role
+    });
+    if(!ok){
+      alert(data.error || 'Could not complete sign-up.');
+      return;
+    }
+    pendingGoogleProfile = null;
+    signIn(data.token, data.user);
+  });
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.classList.remove('show');
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+
+    if(!email || !password){
+      showLoginError('Email and password are required.');
+      return;
+    }
+
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try{
+      const {ok, data} = await apiPost('/login', {email, password});
+      if(!ok){
+        showLoginError(data.error || 'Invalid email or password.');
+        return;
+      }
+      signIn(data.token, data.user);
+    } catch(err){
+      showLoginError('Could not reach the server. Is the backend running?');
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  function showAuthView(view){
+    document.getElementById('login-view').classList.toggle('active', view === 'login');
+    document.getElementById('create-view').classList.toggle('active', view === 'create');
+    document.getElementById('complete-profile-view').classList.toggle('active', view === 'complete-profile');
+  }
+
+  function togglePw(id){
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+  }
+
+  // Year only applies to undergraduate students
+  const STUDENT_ROLES = ['undergrad_student'];
+  document.getElementById('create-role').addEventListener('change', (e) => {
+    const isStudent = STUDENT_ROLES.includes(e.target.value);
+    document.getElementById('student-fields').style.display = isStudent ? 'block' : 'none';
+  });
+
+  const studentIdInput = document.getElementById('create-student-id');
+  studentIdInput.addEventListener('input', () => {
+    // Digits only, 10 characters max.
+    studentIdInput.value = studentIdInput.value.replace(/\D/g, '').slice(0, 10);
+  });
+
+  document.getElementById('create-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    createError.classList.remove('show');
+
+    const sid = studentIdInput.value;
+    if(sid.length !== 10){
+      showCreateError('Student ID must be exactly 10 digits.');
+      return;
+    }
+
+    const email = document.getElementById('create-email').value.trim();
+    if(!email.includes('@')){
+      showCreateError('Please enter a valid email address (must contain @).');
+      return;
+    }
+
+    const password = document.getElementById('create-password').value;
+    const confirmPassword = document.getElementById('create-confirm-password').value;
+    if(password !== confirmPassword){
+      showCreateError('Passwords do not match.');
+      return;
+    }
+
+    const firstName = document.getElementById('create-first-name').value.trim();
+    const lastName = document.getElementById('create-last-name').value.trim();
+    const role = document.getElementById('create-role').value;
+
+    const payload = {
+      student_id: sid,
+      full_name: `${firstName} ${lastName}`.trim(),
+      faculty: document.getElementById('create-faculty').value.trim(),
+      major: document.getElementById('create-major').value.trim(),
+      email, role, password
+    };
+
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try{
+      const {ok, data} = await apiPost('/signup', payload);
+      if(!ok){
+        showCreateError(data.error || 'Could not create account.');
+        return;
+      }
+      // Sign-up is limited to Ph.D./Undergraduate Student (see dropdown options)
+      // Lab Admin / Professor accounts are assigned later by an Administrator (SRS-11, URS-9)
+      signIn(data.token, data.user);
+    } catch(err){
+      showCreateError('Could not reach the server. Is the backend running?');
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  applyRole('admin'); // default demo state; overridden below if a real session restores
+  restoreSession();
+</script>
+
+</body>
+</html>
