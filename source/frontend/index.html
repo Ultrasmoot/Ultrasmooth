@@ -425,6 +425,34 @@
     <div class="switch-form">remembered it? <a onclick="showAuthView('login')">Back to log in</a></div>
   </div>
 
+  <!-- RESET PASSWORD (opened via the emailed link) -->
+  <div class="auth-card" id="reset-password-view">
+    <div class="auth-brand">
+      <div class="stamp-badge">V</div>
+      <div class="name">VASE</div>
+      <div class="sub">Software Eng. Lab</div>
+    </div>
+    <h2>Set a new password</h2>
+
+    <div id="reset-password-error" class="login-error">
+      <span>⚠</span><span id="reset-password-error-text"></span>
+    </div>
+
+    <form id="reset-password-form">
+      <div class="field">
+        <label>New password</label>
+        <div class="input-wrap">
+          <input id="reset-new-password" type="password" placeholder="At least 8 characters" required>
+          <button type="button" class="toggle-pw" onclick="togglePw('reset-new-password')">👁</button>
+        </div>
+      </div>
+      <div class="field"><label>Confirm password</label><input id="reset-confirm-password" type="password" placeholder="Confirm password" required></div>
+      <button class="btn-primary" type="submit">Update password</button>
+    </form>
+
+    <div class="switch-form">back to <a onclick="showAuthView('login')">Log in</a></div>
+  </div>
+
 </div>
 
 <div class="shell"> 
