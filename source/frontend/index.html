@@ -260,7 +260,7 @@
   }
   .login-error.show{display:flex;}
 
-  /* Google account chooser (mock) */
+  /* Google account chooser */
   .g-backdrop{position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; align-items:center; justify-content:center; z-index:200; font-family:Roboto, Arial, sans-serif;}
   .g-backdrop.open{display:flex;}
   .g-card{background:#fff; border-radius:8px; width:400px; max-width:92vw; box-shadow:0 1px 3px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.15); overflow:hidden;}
@@ -382,7 +382,7 @@
 
     <div class="switch-form">already have an account? <a onclick="showAuthView('login')">Log in</a></div>
   </div>
-  <!-- COMPLETE PROFILE (first-time Google sign-in only) — Panyasiri -->
+  <!-- COMPLETE PROFILE (first-time Google sign-in only) -->
   <div class="auth-card" id="complete-profile-view">
     <div class="auth-brand">
       <div class="stamp-badge">V</div>
@@ -404,6 +404,25 @@
       <div class="auth-hint">Lab Admin and Professor accounts can only be created or assigned by a Lab Manager/Administrator afterward (SRS-11 / URS-9).</div>
       <button class="btn-primary" type="submit">Continue</button>
     </form>
+  </div>
+
+  <!-- FORGOT PASSWORD -->
+  <div class="auth-card" id="forgot-password-view">
+    <div class="auth-brand">
+      <div class="stamp-badge">V</div>
+      <div class="name">VASE</div>
+      <div class="sub">Software Eng. Lab</div>
+    </div>
+    <h2>Reset your password</h2>
+
+    <div id="forgot-password-message" class="auth-hint" style="display:none;"></div>
+
+    <form id="forgot-password-form">
+      <div class="field"><label>Email</label><input id="forgot-email" type="email" placeholder="username@ku.th" required></div>
+      <button class="btn-primary" type="submit">Send reset link</button>
+    </form>
+
+    <div class="switch-form">remembered it? <a onclick="showAuthView('login')">Back to log in</a></div>
   </div>
 
 </div>
@@ -463,7 +482,7 @@
     <section class="view" id="view-access">
       <div class="panel">
         <div class="panel-head"><h2>User & Access</h2></div>
-        <p class="note" style="margin:0;">🔒 Restricted area — Administrators only. This section is currently limited to administrators. User account management, such as creating, editing, and deactivating accounts, will be added in a later iteration.</p>
+        <p class="note" style="margin:0;"> Restricted area - Admin only. This section is currently limited to administrators. User account management, such as creating, editing, and deactivating accounts, will be added in a later iteration.</p>
       </div>
     </section>
 
