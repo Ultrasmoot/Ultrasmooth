@@ -467,6 +467,7 @@
         <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 7L8 2L14 7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 6V13.5H12.5V6" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
         Home
       </button>
+      <!-- Resources -->
       <button class="nav-item req-admin-nav" data-view="access">
         <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.7" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 14C2.9 10.8 5.1 9.2 8 9.2C10.9 9.2 13.1 10.8 13.5 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
         User & Access
@@ -481,6 +482,7 @@
         <div class="desc" id="page-desc">You're signed in — more features arrive in later iterations</div>
       </div>
       <div style="display:flex; align-items:center; gap:12px;">
+        <!-- role menu -->
         <div class="role-select" id="role-select">
           <div class="role-chip" id="role-chip">
             <div class="av" id="role-av">SA</div>
@@ -671,6 +673,22 @@
     return {ok: res.ok, status: res.status, data};
   }
 
+  // Generic authenticated write (POST/PUT), used by Resource Management
+  // (US-2)- same Bearer-token pattern as apiAuthGet, with a JSON body.
+  async function apiAuthSend(method, path, body){
+    const token = localStorage.getItem('vase_token');
+    const res = await fetch(path, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? {'Authorization': 'Bearer ' + token} : {})
+      },
+      body: body !== undefined ? JSON.stringify(body) : undefined
+    });
+    const data = await res.json().catch(()=>({}));
+    return {ok: res.ok, status: res.status, data};
+  }
+
   // Restores the session on page load/refresh (fixes: user had to log in again every refresh). Re-validates the stored token against the
   // backend rather than trusting the cached user blindly
   async function restoreSession(){
@@ -847,7 +865,16 @@
     }
   });
 
-  applyRole('admin'); // default demo state; overridden below if a real session restores
+  /* Resource Management US-1 (view/search, all roles) + US-2 (manage, admin) */
+  let resourceCache = [];
+  let editingResourceId = null; // null = creating a new resource
+
+  function escapeHtml(s){
+    return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  /* init calls */
+  applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
 </script>
 
