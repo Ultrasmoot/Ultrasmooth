@@ -876,6 +876,93 @@
   function escapeHtml(s){
     return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
+  
+  /*filter option*/
+  function populateFilterOptions(resources){
+    const catSel = document.getElementById('res-filter-category');
+    const locSel = document.getElementById('res-filter-location');
+    const prevCat = catSel.value, prevLoc = locSel.value;
+
+    const categories = [...new Set(resources.map(r => r.category))].sort();
+    const locations = [...new Set(resources.map(r => r.location))].sort();
+
+    catSel.innerHTML = '<option value="">All categories</option>' +
+      categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    locSel.innerHTML = '<option value="">All locations</option>' +
+      locations.map(l => `<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`).join('');
+
+    catSel.value = prevCat;
+    locSel.value = prevLoc;
+  }
+
+  function renderResources(resources){
+    const tbody = document.getElementById('res-tbody');
+    const empty = document.getElementById('res-empty');
+
+    if(resources.length === 0){
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    tbody.innerHTML = resources.map(r => `
+      <tr style="border-bottom:1px solid var(--line);" data-id="${r.id}">
+        <td style="padding:8px 6px; font-family:'IBM Plex Mono',monospace; font-size:11px;">${escapeHtml(r.resource_code)}</td>
+        <td style="padding:8px 6px;">${escapeHtml(r.name)}</td>
+        <td style="padding:8px 6px;">${escapeHtml(r.type)}</td>
+        <td style="padding:8px 6px;">${escapeHtml(r.category)}</td>
+        <td style="padding:8px 6px;">${escapeHtml(r.location)}</td>
+        <td style="padding:8px 6px;">${escapeHtml(r.status)}</td>
+        <td class="req-admin-cell" style="padding:8px 6px; white-space:nowrap;">
+          <button class="btn" type="button" data-action="edit" data-id="${r.id}">Edit</button>
+          <button class="btn no" type="button" data-action="archive" data-id="${r.id}">Archive</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  async function loadResources(){
+    const params = new URLSearchParams();
+    const q = document.getElementById('res-search').value.trim();
+    const category = document.getElementById('res-filter-category').value;
+    const location = document.getElementById('res-filter-location').value;
+    const status = document.getElementById('res-filter-status').value;
+    const sort = document.getElementById('res-sort').value;
+    if(q) params.set('q', q);
+    if(category) params.set('category', category);
+    if(location) params.set('location', location);
+    if(status) params.set('status', status);
+    if(sort) params.set('sort', sort);
+
+    const {ok, data} = await apiAuthGet('/api/resources?' + params.toString());
+    if(!ok){
+      toast('Could not load resources');
+      return;
+    }
+    resourceCache = data.resources;
+    populateFilterOptions(resourceCache);
+    renderResources(resourceCache);
+  }
+
+  ['res-search'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => loadResources());
+  });
+  ['res-filter-category', 'res-filter-location', 'res-filter-status', 'res-sort'].forEach(id => {
+    document.getElementById(id).addEventListener('change', () => loadResources());
+  });
+
+  document.getElementById('res-tbody').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]');
+    if(!btn) return;
+    const id = Number(btn.dataset.id);
+    if(btn.dataset.action === 'edit') openResourceModal(id);
+    if(btn.dataset.action === 'archive') archiveResource(id);
+  });
+
+  function closeModal(){
+    document.getElementById('modal-backdrop').classList.remove('open');
+  }
 
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
