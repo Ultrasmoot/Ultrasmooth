@@ -1045,6 +1045,10 @@
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
+  // open the reset password page when a reset token is in the URL
+  if (new URLSearchParams(window.location.search).get('reset_token')) {
+    showAuthView('reset-password');
+  }
 </script>
 
 </body>
