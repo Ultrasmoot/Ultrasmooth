@@ -964,6 +964,7 @@
     document.getElementById('modal-backdrop').classList.remove('open');
   }
   
+  // open resource modal
   function openResourceModal(resourceId = null){
     editingResourceId = resourceId;
     const resource = resourceId ? resourceCache.find(r => r.id === resourceId) : null;
@@ -1025,6 +1026,21 @@
     closeModal();
     loadResources();
   }
+
+  async function archiveResource(id){
+    // AD-1: archiving hides the resource from the active list rather than deleting it.
+    const {ok, data} = await apiAuthSend('POST', `/api/resources/${id}/archive`);
+    if(!ok){
+      toast(data.error || 'Could not archive resource');
+      return;
+    }
+    toast('Resource archived');
+    loadResources();
+  }
+
+  document.getElementById('modal-backdrop').addEventListener('click', (e) => {
+    if(e.target.id === 'modal-backdrop') closeModal();
+  });
 
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
