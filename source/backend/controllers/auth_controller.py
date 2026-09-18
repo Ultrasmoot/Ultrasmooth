@@ -103,3 +103,62 @@ def me():
     if not user:
         return jsonify({"error": "Not authenticated."}), 401
     return jsonify({"user": _public_user(user)}), 200
+
+# forgot password
+def _send_reset_email(to_email: str, reset_link: str):
+    subject = "Reset your VASE password"
+    body = (
+        f"Click the link below to reset your password:\n\n{reset_link}\n\n"
+        f"This link expires in {Config.RESET_TOKEN_EXPIRES_MINUTES} minutes. "
+        "If you didn't request this, you can ignore this email."
+    )
+
+    if not Config.SMTP_HOST:
+        # print reset link if email is not configured
+        print(f"[DEV] Password reset link for {to_email}: {reset_link}")
+        return
+
+    msg = MIMEText(body)
+    msg["Subject"] = subject
+    msg["From"] = Config.SMTP_FROM
+    msg["To"] = to_email
+
+    with smtplib.SMTP(Config.SMTP_HOST, Config.SMTP_PORT) as server:
+        server.starttls()
+        server.login(Config.SMTP_USER, Config.SMTP_PASSWORD)
+        server.sendmail(Config.SMTP_FROM, [to_email], msg.as_string())
+
+
+@auth_bp.post("/forgot-password")
+def forgot_password():
+    # request a password reset link
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip().lower()
+    if not email:
+        return jsonify({"error": "Email is required."}), 400
+
+    token = UserModel.create_reset_token(email)
+    if token:
+        reset_link = f"{Config.APP_BASE_URL}/?reset_token={token}"
+        _send_reset_email(email, reset_link)
+
+    return jsonify(
+        {"message": "If an account exists for this email, a reset link has been sent."}
+    ), 200
+
+
+@auth_bp.post("/reset-password")
+def reset_password():
+    # reset password using the token from email
+    data = request.get_json(silent=True) or {}
+    token = data.get("token")
+    new_password = data.get("password")
+    if not token:
+        return jsonify({"error": "Missing reset token."}), 400
+
+    try:
+        UserModel.reset_password(token, new_password)
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 400
+
+    return jsonify({"message": "Password updated. You can now log in."}), 200
