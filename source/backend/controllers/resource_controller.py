@@ -54,3 +54,27 @@ def get_resource(resource_id):
     if not resource:
         return jsonify({"error": "Resource not found."}), 404
     return jsonify({"resource": _serialize(resource)}), 200
+
+
+@resource_bp.post("")
+@role_required("admin")
+def create_resource():
+    """SRS-2: only Lab Managers/Administrators may add resource records."""
+    data = request.get_json(silent=True) or {}
+    try:
+        resource = ResourceModel.create(data)
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 400
+    return jsonify({"resource": _serialize(resource)}), 201
+
+
+@resource_bp.put("/<int:resource_id>")
+@role_required("admin")
+def update_resource(resource_id):
+    """SRS-2: only Lab Managers/Administrators may edit resource records."""
+    data = request.get_json(silent=True) or {}
+    try:
+        resource = ResourceModel.update(resource_id, data)
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 400
+    return jsonify({"resource": _serialize(resource)}), 200
