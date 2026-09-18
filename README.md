@@ -1,4 +1,4 @@
-# VASE Laboratory Resource Management System
+# Vase - Lab Data Management System
 
 **Course:** Individual Software Development Process 2026
 **Team:** UltraSmooth
