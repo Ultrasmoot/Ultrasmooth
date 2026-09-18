@@ -167,3 +167,63 @@ def find_or_create_google_user(cls, google_sub: str, email: str, full_name: str)
             raise ValidationError("An account with this email already exists.")
         finally:
             conn.close()
+
+    # forgot password
+    @classmethod
+    def create_reset_token(cls, email: str):
+        # create a reset token for an active user
+        user = cls.find_by_email((email or "").strip().lower())
+        if not user or not user["is_active"]:
+            return None
+
+        token = secrets.token_urlsafe(32)
+        expires_at = datetime.datetime.utcnow() + datetime.timedelta(
+            minutes=Config.RESET_TOKEN_EXPIRES_MINUTES
+        )
+        conn = get_connection()
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                "INSERT INTO password_resets (user_id, token, expires_at) VALUES (%s, %s, %s)",
+                (user["id"], token, expires_at),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+        return token
+
+    @staticmethod
+    def _find_valid_reset(token: str):
+        # find a reset token that is still valid
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            cur.execute(
+                "SELECT * FROM password_resets WHERE token = %s AND used = 0 AND expires_at > %s",
+                (token, datetime.datetime.utcnow()),
+            )
+            return cur.fetchone()
+        finally:
+            conn.close()
+
+    @classmethod
+    def reset_password(cls, token: str, new_password: str):
+        # check the reset token and update the password
+        reset = cls._find_valid_reset(token)
+        if not reset:
+            raise ValidationError("This reset link is invalid or has expired.")
+
+        if len(new_password or "") < 8:
+            raise ValidationError("Password must be at least 8 characters.")
+
+        conn = get_connection()
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                "UPDATE users SET password_hash = %s WHERE id = %s",
+                (cls._hash_password(new_password), reset["user_id"]),
+            )
+            cur.execute("UPDATE password_resets SET used = 1 WHERE id = %s", (reset["id"],))
+            conn.commit()
+        finally:
+            conn.close()
