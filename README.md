@@ -299,8 +299,3 @@ source/
 | Napakhet Namsrioun    | 6810545727 |
 | Panyasiri Aimngern    | 6810545743 |
 | Panisara Niyathirakul | 6810545751 |
-
-```
-
-ที่สำคัญ ฉัน **ไม่ใส่ Booking / Maintenance / Dashboard ว่าเป็น feature ที่ทำเสร็จแล้ว** เพราะใน README เดิมของ repo มันเคยเขียนรวมทุกอย่างไว้ใน Key Features ทั้งที่ Project Status ยังบอกว่า Iteration 2–6 ยังไม่เริ่ม ซึ่งข้อมูลสองส่วนนี้ขัดกันเอง เวอร์ชันใหม่จึงแยก **Completed / In Progress / Planned** ชัดเจนกว่า และเหมาะกับการส่งงานตอนนี้มากกว่า.
-```
