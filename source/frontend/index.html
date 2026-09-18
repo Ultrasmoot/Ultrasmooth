@@ -512,6 +512,50 @@
       </div>
     </section>
 
+    <!-- RESOURCES-view resources -->
+    <section class="view" id="view-resources"> <!-- Panyasiri -->
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Resources</h2>
+          <button class="btn ok req-admin" id="btn-add-resource" type="button">+ Add Resource</button> <!-- Jirat -->
+        </div>
+
+        <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+          <input id="res-search" placeholder="Search by name…" style="flex:1; min-width:160px; padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; font-family:inherit;">
+          <select id="res-filter-category" style="padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; font-family:inherit;"><option value="">All categories</option></select>
+          <select id="res-filter-location" style="padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; font-family:inherit;"><option value="">All locations</option></select>
+          <select id="res-filter-status" style="padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; font-family:inherit;">
+            <option value="">All statuses</option>
+            <option>Available</option>
+            <option>In Use</option>
+            <option>Maintenance</option>
+          </select>
+          <select id="res-sort" style="padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; font-family:inherit;">
+            <option value="name">Sort: Name</option>
+            <option value="category">Sort: Category</option>
+            <option value="location">Sort: Location</option>
+            <option value="status">Sort: Status</option>
+          </select>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+          <thead>
+            <tr style="text-align:left; border-bottom:1px solid var(--line); color:var(--ink-faint); text-transform:uppercase; font-size:10.5px; letter-spacing:0.5px;">
+              <th style="padding:8px 6px;">Code</th>
+              <th style="padding:8px 6px;">Name</th>
+              <th style="padding:8px 6px;">Type</th>
+              <th style="padding:8px 6px;">Category</th>
+              <th style="padding:8px 6px;">Location</th>
+              <th style="padding:8px 6px;">Status</th>
+              <th class="req-admin-cell" style="padding:8px 6px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="res-tbody"></tbody>
+        </table>
+        <p class="note" id="res-empty" style="display:none; margin-top:10px;">No resources found.</p>
+      </div>
+    </section>
+
     <!-- USER & ACCESS (Admin only) access control demo for US-12; account management (US-13) not built yet -->
     <section class="view" id="view-access">
       <div class="panel">
