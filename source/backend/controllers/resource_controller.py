@@ -58,8 +58,7 @@ def get_resource(resource_id):
 
 @resource_bp.post("")
 @role_required("admin")
-def create_resource():
-    """SRS-2: only Lab Managers/Administrators may add resource records."""
+def create_resource(): # SRS-2: only Lab Managers/Administrators may add resource records
     data = request.get_json(silent=True) or {}
     try:
         resource = ResourceModel.create(data)
@@ -70,11 +69,20 @@ def create_resource():
 
 @resource_bp.put("/<int:resource_id>")
 @role_required("admin")
-def update_resource(resource_id):
-    """SRS-2: only Lab Managers/Administrators may edit resource records."""
+def update_resource(resource_id): # SRS-2: only Lab Managers/Administrators may edit resource records
     data = request.get_json(silent=True) or {}
     try:
         resource = ResourceModel.update(resource_id, data)
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"resource": _serialize(resource)}), 200
+
+@resource_bp.post("/<int:resource_id>/archive")
+@role_required("admin")
+def archive_resource(resource_id):
+    """SRS-2 / AD-1: archiving hides a resource from the active list rather than deleting it."""
+    try:
+        ResourceModel.archive(resource_id)
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 400
+    return jsonify({"status": "archived"}), 200
