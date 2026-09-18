@@ -91,3 +91,16 @@ class ResourceModel:
             return cls.get(resource_id)
         finally:
             conn.close()
+
+    @classmethod
+    def archive(cls, resource_id: int):
+    # AD-1: archiving hides the resource from the active list rather than deleting it
+        if not cls.get(resource_id):
+            raise ValidationError("Resource not found.")
+        conn = get_connection()
+        try:
+            cur = conn.cursor()
+            cur.execute("UPDATE resources SET is_archived = 1 WHERE id = %s", (resource_id,))
+            conn.commit()
+        finally:
+            conn.close()
