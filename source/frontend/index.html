@@ -637,6 +637,8 @@
       document.getElementById('view-'+key).classList.add('active');
       document.getElementById('page-title').textContent = titles[key][0];
       document.getElementById('page-desc').textContent = titles[key][1];
+
+      if(key === 'resources') loadResources();
     });
   });
 
