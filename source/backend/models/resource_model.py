@@ -9,7 +9,6 @@ class ValidationError(Exception):
 
 class ResourceModel:
 
-    # Jirat
     @staticmethod
     def _next_resource_code(conn):
         cur = conn.cursor()
@@ -19,8 +18,7 @@ class ResourceModel:
 
     @staticmethod
     def _validate(data: dict, partial: bool = False):
-        """SRS-2: required fields must be filled before saving; missing or
-        invalid data blocks the save with a validation message."""
+        #SRS-2: required fields must be filled 
         for field in REQUIRED_FIELDS:
             if not partial or field in data:
                 if not (data.get(field) or "").strip():
@@ -41,8 +39,7 @@ class ResourceModel:
                 cur = conn.cursor()
                 try:
                     cur.execute(
-                        """INSERT INTO resources (resource_code, name, type, category, location, owner, status)
-                           VALUES (%s, %s, %s, %s, %s, %s, %s)""",
+                        #insert into resources
                         (
                             code,
                             data["name"].strip(),
@@ -74,9 +71,7 @@ class ResourceModel:
         try:
             cur = conn.cursor()
             cur.execute(
-                """UPDATE resources
-                   SET name=%s, type=%s, category=%s, location=%s, owner=%s, status=%s
-                   WHERE id=%s""",
+                #update resources
                 (
                     merged["name"].strip(),
                     merged["type"].strip(),
@@ -104,3 +99,56 @@ class ResourceModel:
             conn.commit()
         finally:
             conn.close()
+
+    @staticmethod
+    def get(resource_id: int):
+        #get resource
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            cur.execute("SELECT * FROM resources WHERE id = %s", (resource_id,))
+            return cur.fetchone()
+        finally:
+            conn.close()
+
+    SORTABLE_COLUMNS = {"name", "category", "location", "status"}
+
+    @staticmethod
+    def list(search: str = None, category: str = None, location: str = None,
+              status: str = None, include_archived: bool = False,
+              sort_by: str = "name", sort_dir: str = "asc"):
+        #SRS-1: search by keyword, filter/sort by category, location, availability and status
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            clauses = []
+            params = []
+
+            if not include_archived:
+                clauses.append("is_archived = 0")
+            if search:
+                clauses.append("name LIKE %s")
+                params.append(f"%{search}%")
+            if category:
+                clauses.append("category = %s")
+                params.append(category)
+            if location:
+                clauses.append("location = %s")
+                params.append(location)
+            if status:
+                clauses.append("status = %s")
+                params.append(status)
+
+            sql = "SELECT * FROM resources"
+            if clauses:
+                sql += " WHERE " + " AND ".join(clauses)
+
+            column = sort_by if sort_by in ResourceModel.SORTABLE_COLUMNS else "name"
+            direction = "DESC" if str(sort_dir).lower() == "desc" else "ASC"
+            sql += f" ORDER BY {column} {direction}"
+
+            cur.execute(sql, tuple(params))
+            return cur.fetchall()
+        finally:
+            conn.close()
+    
