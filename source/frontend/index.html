@@ -963,6 +963,68 @@
   function closeModal(){
     document.getElementById('modal-backdrop').classList.remove('open');
   }
+  
+  function openResourceModal(resourceId = null){
+    editingResourceId = resourceId;
+    const resource = resourceId ? resourceCache.find(r => r.id === resourceId) : null;
+
+    document.getElementById('modal-box').innerHTML = `
+      <h3>${resource ? 'Edit Resource' : 'Add Resource'}</h3>
+      <div id="resource-form-error" class="login-error"><span>⚠</span><span id="resource-form-error-text"></span></div>
+      <form id="resource-form">
+        <div class="field"><label>Name</label><input id="res-name" required value="${escapeHtml(resource?.name)}"></div>
+        <div class="field"><label>Type</label><input id="res-type" required value="${escapeHtml(resource?.type)}"></div>
+        <div class="field"><label>Category</label><input id="res-category" required value="${escapeHtml(resource?.category)}"></div>
+        <div class="field"><label>Location</label><input id="res-location" required value="${escapeHtml(resource?.location)}"></div>
+        <div class="field"><label>Owner</label><input id="res-owner" required value="${escapeHtml(resource?.owner)}"></div>
+        <div class="field">
+          <label>Status</label>
+          <select id="res-status">
+            <option ${resource?.status === 'Available' || !resource ? 'selected' : ''}>Available</option>
+            <option ${resource?.status === 'In Use' ? 'selected' : ''}>In Use</option>
+            <option ${resource?.status === 'Maintenance' ? 'selected' : ''}>Maintenance</option>
+          </select>
+        </div>
+        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
+          <button class="btn no" type="button" id="resource-form-cancel">Cancel</button>
+          <button class="btn ok" type="submit">Save</button>
+        </div>
+      </form>
+    `;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('resource-form-cancel').addEventListener('click', closeModal);
+    document.getElementById('resource-form').addEventListener('submit', submitResourceForm);
+  }
+  document.getElementById('btn-add-resource').addEventListener('click', () => openResourceModal(null));
+
+  async function submitResourceForm(e){
+    e.preventDefault();
+    const errBox = document.getElementById('resource-form-error');
+    const errText = document.getElementById('resource-form-error-text');
+    errBox.classList.remove('show');
+
+    const payload = {
+      name: document.getElementById('res-name').value.trim(),
+      type: document.getElementById('res-type').value.trim(),
+      category: document.getElementById('res-category').value.trim(),
+      location: document.getElementById('res-location').value.trim(),
+      owner: document.getElementById('res-owner').value.trim(),
+      status: document.getElementById('res-status').value
+    };
+
+    const method = editingResourceId ? 'PUT' : 'POST';
+    const path = editingResourceId ? `/api/resources/${editingResourceId}` : '/api/resources';
+
+    const {ok, data} = await apiAuthSend(method, path, payload);
+    if(!ok){
+      // SRS-2: missing/invalid data blocks saving with a validation message.
+      errText.textContent = data.error || 'Could not save resource.';
+      errBox.classList.add('show');
+      return;
+    }
+    closeModal();
+    loadResources();
+  }
 
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
