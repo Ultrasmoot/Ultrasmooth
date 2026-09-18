@@ -1,3 +1,4 @@
+-- user table
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_id VARCHAR(10) UNIQUE,
@@ -10,4 +11,19 @@ CREATE TABLE IF NOT EXISTS users (
     major VARCHAR(150),
     is_active TINYINT(1) NOT NULL DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- US-1 / US-2 (SRS-1 / SRS-2): laboratory resource records.
+CREATE TABLE IF NOT EXISTS resources (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    resource_code VARCHAR(20) NOT NULL UNIQUE,
+    name VARCHAR(150) NOT NULL,
+    type VARCHAR(100) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    location VARCHAR(150) NOT NULL,
+    owner VARCHAR(150) NOT NULL,
+    status ENUM('Available','In Use','Maintenance') NOT NULL DEFAULT 'Available',
+    is_archived TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
