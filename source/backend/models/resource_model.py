@@ -111,8 +111,14 @@ class ResourceModel:
         finally:
             conn.close()
 
-    SORTABLE_COLUMNS = {"name", "category", "location", "status"}
-
+    SORTABLE_COLUMNS = {
+            "name": "name",
+            "category": "category",
+            "location": "location",
+            "status": "status",
+            "availability": "CASE WHEN status = 'Available' THEN 0 ELSE 1 END, name",
+        }
+    
     @staticmethod
     def list(search: str = None, category: str = None, location: str = None,
               status: str = None, include_archived: bool = False,
@@ -143,9 +149,9 @@ class ResourceModel:
             if clauses:
                 sql += " WHERE " + " AND ".join(clauses)
 
-            column = sort_by if sort_by in ResourceModel.SORTABLE_COLUMNS else "name"
+            order_expr = ResourceModel.SORTABLE_COLUMNS.get(sort_by, "name")
             direction = "DESC" if str(sort_dir).lower() == "desc" else "ASC"
-            sql += f" ORDER BY {column} {direction}"
+            sql += f" ORDER BY {order_expr} {direction}"
 
             cur.execute(sql, tuple(params))
             return cur.fetchall()
