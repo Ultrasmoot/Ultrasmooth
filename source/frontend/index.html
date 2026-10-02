@@ -536,8 +536,15 @@
             <option value="name">Sort: Name</option>
             <option value="category">Sort: Category</option>
             <option value="location">Sort: Location</option>
+            <option value="availability">Sort: Availability</option>
             <option value="status">Sort: Status</option>
           </select>
+
+          
+          <label class="req-admin" style="display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; cursor:pointer; white-space:nowrap;">
+            <input type="checkbox" id="res-show-archived">
+            Show archived
+          </label>
         </div>
 
         <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
@@ -964,10 +971,10 @@
         <td style="padding:8px 6px;">${escapeHtml(r.type)}</td>
         <td style="padding:8px 6px;">${escapeHtml(r.category)}</td>
         <td style="padding:8px 6px;">${escapeHtml(r.location)}</td>
-        <td style="padding:8px 6px;">${escapeHtml(r.status)}</td>
-        <td class="req-admin-cell" style="padding:8px 6px; white-space:nowrap;">
+        <td style="padding:8px 6px;">${escapeHtml(r.status)}${r.is_archived ? ' <span style="font-size:10px; color:var(--muted); border:1px solid var(--line); border-radius:3px; padding:1px 5px;">Archived</span>' : ''}</td>
+         <td class="req-admin-cell" style="padding:8px 6px; white-space:nowrap;">
           <button class="btn" type="button" data-action="edit" data-id="${r.id}">Edit</button>
-          <button class="btn no" type="button" data-action="archive" data-id="${r.id}">Archive</button>
+          ${r.is_archived ? '' : `<button class="btn no" type="button" data-action="archive" data-id="${r.id}">Archive</button>`}
         </td>
       </tr>
     `).join('');
@@ -978,13 +985,18 @@
     const q = document.getElementById('res-search').value.trim();
     const category = document.getElementById('res-filter-category').value;
     const location = document.getElementById('res-filter-location').value;
-    const status = document.getElementById('res-filter-status').value;
+    const statusEl = document.getElementById('res-filter-status');
+    const availableOnly = document.getElementById('res-filter-availability').checked;
+    const status = availableOnly ? 'Available' : statusEl.value;
+    statusEl.disabled = availableOnly;
     const sort = document.getElementById('res-sort').value;
+    const showArchived = document.getElementById('res-show-archived').checked;
     if(q) params.set('q', q);
     if(category) params.set('category', category);
     if(location) params.set('location', location);
     if(status) params.set('status', status);
     if(sort) params.set('sort', sort);
+    if(showArchived) params.set('include_archived', 'true');
 
     const {ok, data} = await apiAuthGet('/api/resources?' + params.toString());
     if(!ok){
@@ -999,7 +1011,7 @@
   ['res-search'].forEach(id => {
     document.getElementById(id).addEventListener('input', () => loadResources());
   });
-  ['res-filter-category', 'res-filter-location', 'res-filter-status', 'res-sort'].forEach(id => {
+  ['res-filter-category', 'res-filter-location', 'res-filter-status', 'res-sort', 'res-filter-availability', 'res-show-archived'].forEach(id => {
     document.getElementById(id).addEventListener('change', () => loadResources());
   });
 
