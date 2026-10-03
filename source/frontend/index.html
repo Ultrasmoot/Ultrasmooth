@@ -1274,6 +1274,102 @@
     loadBookings();
   });
 
+  async function openBookingModal(){
+    if(!resourceCache.length){
+      const {ok, data} = await apiAuthGet('/api/resources');
+      if(ok) resourceCache = data.resources;
+    }
+    // Only offer resources that can actually be booked (Available, not archived).
+    // Fetched fresh each time so a status change by an admin is reflected;
+    // the backend re-checks this anyway.
+    let bookable = resourceCache.filter(r => r.status === 'Available');
+    const fresh = await apiAuthGet('/api/resources?status=Available');
+    if(fresh.ok) bookable = fresh.data.resources;
+    const opts = bookable.length
+      ? bookable.map(r => `<option value="${r.id}">${escapeHtml(r.name)}</option>`).join('')
+      : '<option value="" disabled selected>No resources available</option>';
+    document.getElementById('modal-box').innerHTML = `
+      <h3>New booking request</h3>
+      <div id="booking-form-error" class="login-error"><span>⚠</span><span id="booking-form-error-text"></span></div>
+      <form id="booking-form">
+        <div class="field"><label>Resource</label><select id="bk-resource" required>${opts}</select></div>
+        <div class="field"><label>Start</label><input id="bk-start" type="datetime-local" required></div>
+        <div class="field"><label>End</label><input id="bk-end" type="datetime-local" required></div>
+        <div class="field"><label>Purpose</label><input id="bk-purpose" required maxlength="255" placeholder="e.g. Sprint planning meeting"></div>
+        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
+          <button class="btn no" type="button" id="booking-form-cancel">Cancel</button>
+          <button class="btn ok" type="submit">Submit</button>
+        </div>
+      </form>
+    `;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('booking-form-cancel').addEventListener('click', closeModal);
+    document.getElementById('booking-form').addEventListener('submit', submitBookingForm);
+  }
+  document.getElementById('btn-new-booking').addEventListener('click', openBookingModal);
+
+  async function submitBookingForm(e){
+    e.preventDefault();
+    const errBox = document.getElementById('booking-form-error');
+    const errText = document.getElementById('booking-form-error-text');
+    errBox.classList.remove('show');
+
+    const payload = {
+      resource_id: Number(document.getElementById('bk-resource').value),
+      start_time: document.getElementById('bk-start').value,
+      end_time: document.getElementById('bk-end').value,
+      purpose: document.getElementById('bk-purpose').value.trim()
+    };
+
+    const {ok, data} = await apiAuthSend('POST', '/api/bookings', payload);
+    if(!ok){
+      // SRS-3: missing/invalid info or an overlapping booking blocks submission with a message.
+      errText.textContent = data.error || 'Could not submit request.';
+      errBox.classList.add('show');
+      return;
+    }
+    closeModal();
+    toast('Request submitted');
+    loadBookings();
+  }
+
+  /* Announcements */
+  async function loadAnnouncements(){
+    const {ok, data} = await apiAuthGet('/api/announcements');
+    if(!ok){
+      toast(data.error || 'Could not load announcements');
+      return;
+    }
+    renderAnnouncements(data.announcements);
+  }
+
+  function renderAnnouncements(items){
+    const list = document.getElementById('announcements-list');
+    const empty = document.getElementById('announcements-empty');
+    if(!items.length){
+      list.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    const me = currentUser; // set in applyRealUser(); null if not yet restored
+    list.innerHTML = items.map(a => `
+      <div style="padding:12px 0; border-bottom:1px solid var(--line); ${a.is_pinned ? 'background:var(--amber-bg);' : ''}">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+          <div>
+            ${a.is_pinned ? '<span class="badge b-amber" style="margin-right:6px;">Pinned</span>' : ''}
+            <b>${escapeHtml(a.title)}</b>
+          </div>
+          <div style="display:flex; gap:6px; white-space:nowrap;">
+            <button class="btn req-announcer" type="button" data-act="pin" data-id="${a.id}">${a.is_pinned ? 'Unpin' : 'Pin'}</button>
+            ${me && me.id === a.author_id ? `<button class="btn no" type="button" data-act="delete" data-id="${a.id}">Delete</button>` : ''}
+          </div>
+        </div>
+        <p class="note" style="margin:4px 0 0; white-space:pre-wrap;">${escapeHtml(a.body)}</p>
+        <p class="note" style="margin:6px 0 0; font-size:11px;">Posted ${new Date(a.created_at).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}</p>
+      </div>
+    `).join('');
+  }
 
   // pin announcements
   document.getElementById('announcements-list').addEventListener('click', async (e) => {
@@ -1291,7 +1387,6 @@
     }
   });
 
-  // Panisara
   document.getElementById('btn-new-announcement').addEventListener('click', () => {
     document.getElementById('modal-box').innerHTML = `
       <h3>New announcement</h3>
