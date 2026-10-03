@@ -49,16 +49,3 @@ def list_my_bookings():
 def list_booking_history():
     bookings = BookingModel.list_history()
     return jsonify({"bookings": [_serialize(b) for b in bookings]}), 200
-
-
-# US-5: Lab Managers/Administrators approve or reject a request.
-@booking_bp.post("/<int:booking_id>/decide")
-@role_required("admin")
-def decide_booking(booking_id):
-    data = request.get_json(silent=True) or {}
-    user = get_current_user()
-    try:
-        booking = BookingModel.decide(booking_id, data.get("decision"), admin_id=user["id"])
-    except ValidationError as e:
-        return jsonify({"error": str(e)}), 400
-    return jsonify({"booking": _serialize(booking)}), 200
