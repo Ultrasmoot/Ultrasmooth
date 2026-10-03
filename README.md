@@ -1,8 +1,8 @@
 # Vase - Lab Data Management System
 
-**Course:** Individual Software Development Process 2026
-**Team:** UltraSmooth
-**Challenge:** Project A - Lab Data Management
+**Course :** Individual Software Development Process 2026
+**Team :** UltraSmooth
+**Challenge :** Project A - Lab Data Management
 
 ## Overview
 
@@ -13,7 +13,7 @@ The main goal is to keep laboratory information in one system and make it easier
 ### Target Users
 
 * **Ph.D. Students / Undergraduate Students** view resources, submit and track bookings, and check in/out resources
-* **Lab Managers / Administrators** manage resources, bookings, maintenance, activity history, dashboards, and user accounts
+* **Lab Administrators** manage resources, bookings, maintenance, activity history, dashboards, and user accounts
 * **Professor** view laboratory information with read-only access
 
 ## Key Features
@@ -32,19 +32,28 @@ The main goal is to keep laboratory information in one system and make it easier
 * Resource status validation
 * Admin-only resource archiving using soft-delete
 * Archived resources remain in the database but are hidden from the default resource list
+* **Booking requests** submitted by Ph.D. and Undergraduate students (US-3)
+* **Booking validation:** required fields, valid dates, end time after start time, no start time in the past, purpose up to 255 characters
+* **Resource availability check:** only existing, non-archived, `Available` resources can be booked
+* **Overlap (conflict) check** against Pending and Approved bookings on the same resource
+* **My Requests page** with Pending / Approved / Rejected status badges and automatic refresh every 30 seconds (US-4)
+* **Admin review of Pending requests** with approve / reject, recording the decision, the administrator ID, and the decision time (US-5)
+* **Announcements:** Professors and Administrators can post and pin/unpin announcements; all logged-in users can read them on the home page; only the author can delete an announcement
+* **Rate limiting** on login, signup, and password-reset endpoints
+* Application and database timezone set to `Asia/Bangkok`
 
 ### In Progress
 
-The following features are not fully completed yet:
+The following items are not fully completed yet:
 
-* Full sorting on the resource list. The current version uses the default name ordering.
-* Availability-specific filtering is not available in the UI yet.
-* The admin "Show Archived" option is not available in the UI yet. The backend already supports it through the `include_archived` parameter.
+* Automated tests for the booking workflow (overlap, back-to-back, rejected bookings, resource status checks, concurrent requests, already-decided requests)
+* Read-only view of all booking requests for Professors (access level not yet confirmed with the stakeholder)
+* Replacing the in-memory rate limiter with a shared store (e.g. Redis) before final deployment
+* Full sorting on the resource list, availability-specific filtering, and the admin "Show Archived" option (carried over from Iteration 2)
 
 ### Planned for Later Iterations
 
-* **Iteration 3:** Booking and request management
-* **Iteration 4:** Issue reporting and maintenance tracking
+* **Iteration 4:** Check-in/check-out, issue reporting and maintenance tracking
 * **Iteration 5:** Activity history and operations dashboard
 * **Iteration 6:** User account and role management
 
@@ -63,12 +72,12 @@ The following features are not fully completed yet:
 The system uses a modular monolithic architecture with the MVC pattern.
 
 * **View** - Web application in `frontend/index.html`
-* **Controllers** - Handle authentication and resource-related requests
-* **Models** - Handle business logic and database operations
+* **Controllers** - Handle authentication, resource, booking, and announcement requests
+* **Models** - Handle business logic and database operations. All booking rules (validation, resource availability, conflict check) live in the Booking Model
 * **Persistence** - MySQL database
-* **Authentication & Authorization** - Shared middleware for authentication and role checking
+* **Authentication & Authorization** - Shared middleware for authentication and role checking, used by the booking and announcement endpoints
 
-More controllers will be added in later iterations as new features are implemented.
+Booking creation runs inside a database transaction that locks the selected resource row, so the conflict check and the insert happen together. Approve/reject updates a booking only while its status is still `Pending`.
 
 ## Getting Started
 
@@ -89,6 +98,8 @@ cp .env.example .env
 ```
 
 The `.env` file is ignored by Git and should not be committed.
+
+In production (`APP_ENV=production`), the app refuses to start if `SECRET_KEY` is missing or still a placeholder.
 
 By default, `SMTP_HOST` is empty. Password reset links are therefore printed in the container log instead of being sent by email. This is enough for local development and testing.
 
@@ -112,7 +123,7 @@ docker compose up --build
 
 The database is created and seeded automatically on the first run.
 
-If the database volume already exists and does not contain the latest seed data, reset it with:
+If the database volume already exists and does not contain the latest seed data (including the Iteration 3 `bookings` and `announcements` tables), reset it with:
 
 ```bash
 docker compose down -v
@@ -150,9 +161,11 @@ Email:    admin@ku.th
 Password: Admin1234
 ```
 
-This account has the `admin` role and can create, edit, and archive resources.
+This account has the `admin` role and can manage resources, review booking requests, and post announcements.
 
-Five sample resources are also included in the seed data.
+A demo student account is also included in the seed data so the booking flow can be demonstrated (see `database/seed.sql` for its credentials).
+
+The seed data also includes five sample resources and three sample bookings (one Pending, one Approved, one Rejected).
 
 ## Google Sign-In
 
@@ -170,7 +183,7 @@ It may take a few minutes for the new OAuth setting to take effect.
 
 ## Project Status
 
-The project is currently in **Iteration 2 (Resource Management)**, covering **SRS-1** and **SRS-2**.
+The project is currently in **Iteration 3 (Booking & Request Management)**, covering **SRS-3**, **SRS-4** and **SRS-5**.
 
 ### Iteration 1 (Authentication & Role-Based Access)
 
@@ -184,45 +197,49 @@ The implemented features include:
 * Server-side role-based access control
 * Forgot and reset password
 
-The forgot/reset password feature was added as an enhancement during the Iteration 2 work cycle.
-
 ### Iteration 2 (Resource Management)
 
-The team completed both planned user stories within the capacity of two user stories.
+Iteration 2 has been completed (SRS-1 and SRS-2).
 
-#### US-1: View and Search Resources
+* **US-1:** Users can search resources by name and filter by category, location, and status.
+* **US-2:** Administrators can create, edit, validate, and archive resources. Archiving uses soft-delete.
 
-Users can:
+### Iteration 3 (Booking & Request Management)
 
-* Search resources by name
-* Filter resources by category
-* Filter resources by location
-* Filter resources by status
+The team completed all three planned user stories. Capacity was three stories, one more than in Iterations 1 and 2, because all three share the same `bookings` table and Booking Model.
 
-The resource list currently uses name ordering by default.
+#### US-3: Submit a Booking Request
 
-Full sorting and a separate availability filter are still open and are tracked as **R-01**.
+Ph.D. and Undergraduate students can choose a resource, start time, end time, and purpose.
 
-#### US-2: Manage Resource Records
+The system rejects:
 
-Administrators can:
+* Empty required fields
+* An end time that is not after the start time
+* A start time in the past
+* A purpose longer than 255 characters
+* A resource that does not exist, is archived, or is not `Available`
+* A request that overlaps a Pending or Approved booking on the same resource
 
-* Create resources
-* Edit resources
-* Validate required fields
-* Validate resource status
-* Archive resources
+Rejected bookings do not block a slot, and back-to-back bookings are allowed. Other roles are refused. The form shows the error message returned by the server.
 
-Resource archiving uses soft-delete. This means the resource is not removed from the database. Instead, it is marked as archived and hidden from the normal resource list.
+#### US-4: Track My Bookings/Requests
 
-The admin "Show Archived" option is not available in the UI yet, although the backend already supports the `include_archived` parameter. This is tracked as **R-02**.
+Students can view only their own booking requests with Pending, Approved, or Rejected badges. The list is sorted by start time, latest first. It can be refreshed manually and reloads automatically every 30 seconds while the Requests page is open and visible.
+
+#### US-5: Review and Approve/Reject Requests
+
+Administrators can view Pending requests (resource name, requester name and email, earliest start time first) and approve or reject each one. The system records the decision, the administrator ID, and the decision time. A request that has already been decided cannot be decided again, even if two administrators act at the same moment.
+
+#### Scope Addition: Announcements
+
+Added as a small extension with no user story removed. Professors and Administrators can post and pin/unpin announcements, all logged-in users can read them on the home page (pinned first), and only the author can delete an announcement.
 
 ### Future Iterations
 
 The following iterations have not started yet:
 
-* **Iteration 3:** Booking & Request Management
-* **Iteration 4:** Issue Reporting & Maintenance
+* **Iteration 4:** Check-in/Check-out & Maintenance
 * **Iteration 5:** Activity History & Operations Dashboard
 * **Iteration 6:** User Management
 
@@ -232,36 +249,49 @@ Detailed sprint information, Gantt charts, retrospective results, and the risk r
 
 The current open issues are:
 
-| ID   | Issue                                                                                              | Status |
-| ---- | -------------------------------------------------------------------------------------------------- | ------ |
-| R-01 | Full sorting and a separate availability filter are not available yet.                             | Open   |
-| R-02 | The admin UI does not have a "Show Archived" option yet, although the backend already supports it. | Open   |
-
-The team plans to complete these items before the final demonstration.
+| ID   | Issue                                                                                                                                      | Status     |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| R-01 | Double booking: concurrency tests are still needed to confirm simultaneous requests cannot create conflicting bookings.                    | Open       |
+| R-02 | Professors have no read-only view of all booking requests, and the access level each role needs is not yet confirmed.                      | Open       |
+| R-03 | Availability checks are not yet tested against resources that are In Use, under Maintenance, or archived.                                  | Open       |
+| R-04 | The rate limiter keeps counters in memory (per process, reset on restart). A shared store such as Redis is needed before final deployment. | Open       |
+| R-05 | Date/time values without a timezone offset are treated as server-local time. `TZ=Asia/Bangkok` must be kept in Docker settings.            | Monitoring |
 
 ## Testing
 
-Testing for Iteration 2 was mainly done manually and at the code level.
+Automated tests are in `backend/tests/test_security.py`. They cover Google sign-in validation, rate limiting, signup input validation, password-reset token handling, and production secret-key configuration. **They do not yet cover the booking workflow.**
 
-### US-1 Testing
+The Iteration 3 implementation was reviewed by the team for input validation, resource availability, conflict detection, and transaction handling.
 
-We confirmed that authenticated users can:
+### US-3 Review
 
-* Search resources by name
-* Filter resources by category
-* Filter resources by location
-* Filter resources by status
+* Missing or blank fields, invalid dates, end times not after start times, past start times, and purposes over 255 characters are rejected.
+* The selected resource must exist, not be archived, and have an `Available` status.
+* Date/time values with a timezone offset are converted to server time; values without an offset are treated as server-local time.
+* Only Pending and Approved bookings count as conflicts.
 
-### US-2 Testing
+### US-4 Review
 
-We confirmed that:
+* The system returns only bookings that belong to the logged-in user.
 
-* A resource with a missing required field is rejected with a `400` response and a validation message.
-* Invalid resource status values are rejected.
-* Archiving changes the resource to an archived state without deleting it from the database.
-* Archived resources are hidden from the default resource list.
+### US-5 Review
 
-Automated testing and a complete SRS-to-implementation checklist are planned before the final demonstration.
+* Only administrators can open the Pending list and the decide endpoint.
+* Only `approve` or `reject` are accepted as a decision.
+* An already-decided request cannot be decided again.
+
+### Announcements Review
+
+* Empty title or body is rejected.
+* Only the author can delete an announcement.
+
+### Planned Tests (before Iteration 4)
+
+* Booking validation
+* Overlap check: partial overlap, back-to-back, and a rejected booking freeing the slot
+* Resource availability: In Use, Maintenance, archived
+* Concurrent booking requests
+* Approve/reject, including an already-decided request
 
 ## Project Structure
 
@@ -277,12 +307,18 @@ source/
 │   ├── .env.example
 │   ├── controllers/
 │   │   ├── auth_controller.py
-│   │   └── resource_controller.py
+│   │   ├── resource_controller.py
+│   │   ├── booking_controller.py
+│   │   └── announcement_controller.py
 │   ├── middleware/
 │   │   └── auth_middleware.py
 │   ├── models/
 │   │   ├── user_model.py
-│   │   └── resource_model.py
+│   │   ├── resource_model.py
+│   │   ├── booking_model.py
+│   │   └── announcement_model.py
+│   ├── tests/
+│   │   └── test_security.py
 │   └── database/
 │       ├── db.py
 │       ├── schema.sql
