@@ -8,7 +8,6 @@ class ValidationError(Exception):
     pass
 
 class ResourceModel:
-
     @staticmethod
     def _next_resource_code(conn):
         cur = conn.cursor()
@@ -39,7 +38,8 @@ class ResourceModel:
                 cur = conn.cursor()
                 try:
                     cur.execute(
-                        #insert into resources
+                        """INSERT INTO resources (resource_code, name, type, category, location, owner, status)
+                           VALUES (%s, %s, %s, %s, %s, %s, %s)""",
                         (
                             code,
                             data["name"].strip(),
@@ -71,7 +71,9 @@ class ResourceModel:
         try:
             cur = conn.cursor()
             cur.execute(
-                #update resources
+                """UPDATE resources
+                   SET name=%s, type=%s, category=%s, location=%s, owner=%s, status=%s
+                   WHERE id=%s""",
                 (
                     merged["name"].strip(),
                     merged["type"].strip(),
@@ -102,7 +104,7 @@ class ResourceModel:
 
     @staticmethod
     def get(resource_id: int):
-        #get resource
+        # get resource
         conn = get_connection()
         try:
             cur = conn.cursor(dictionary=True)
