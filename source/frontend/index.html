@@ -47,6 +47,7 @@
   body[data-role="admin"] .req-admin{display:inline-flex !important;}
   .req-admin-cell{display:none !important;}
   body[data-role="admin"] .req-admin-cell{display:table-cell !important;}
+
   .req-booker{display:none !important;}
   body[data-role="user"] .req-booker{display:inline-flex !important;}
   .req-announcer{display:none !important;}
@@ -57,7 +58,7 @@
   body[data-role="professor"] .professor-note{display:inline-flex !important;}
   .nav-item.req-admin-nav{display:none !important;}
   body[data-role="admin"] .nav-item.req-admin-nav{display:flex !important;}
-  
+
   /* Shell */
   .shell{display:grid; grid-template-columns:216px 1fr; min-height:100vh;}
 
@@ -478,6 +479,10 @@
         <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg></span>
         Resources
       </button>
+      <button class="nav-item" data-view="bookings">
+        <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1.5V3.5M11 1.5V3.5M2.5 6H13.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+        Requests
+      </button>
       <button class="nav-item req-admin-nav" data-view="access">
         <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.7" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 14C2.9 10.8 5.1 9.2 8 9.2C10.9 9.2 13.1 10.8 13.5 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
         User & Access
@@ -550,12 +555,10 @@
             <option value="availability">Sort: Availability</option>
             <option value="status">Sort: Status</option>
           </select>
-          
           <label style="display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; cursor:pointer; white-space:nowrap;">
             <input type="checkbox" id="res-filter-availability">
             Available now
           </label>
-          
           <label class="req-admin" style="display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; cursor:pointer; white-space:nowrap;">
             <input type="checkbox" id="res-show-archived">
             Show archived
@@ -679,6 +682,7 @@
   const titles = {
     home: ["Home", "You're signed in — more features arrive in later iterations"],
     resources: ["Resources", "View, search, and filter laboratory resources (US-1)"],
+    bookings: ["Requests", "Submit and track booking requests (US-3/US-4/US-5)"],
     access: ["User & Access", "Manage accounts, roles, and permissions"]
   };
   document.querySelectorAll('.nav-item').forEach(btn=>{
@@ -702,6 +706,7 @@
       document.getElementById('page-desc').textContent = titles[key][1];
 
       if(key === 'resources') loadResources();
+      if(key === 'bookings') loadBookings();
     });
   });
 
@@ -737,7 +742,9 @@
     createError.classList.add('show');
   }
 
+  let currentUser = null;
   function applyRealUser(user){
+    currentUser = user;
     const uiRole = BACKEND_TO_UI_ROLE[user.role] || 'user';
     ROLES[uiRole] = {
       ...ROLES[uiRole],
@@ -756,6 +763,7 @@
     createError.classList.remove('show');
     document.body.classList.add('authed');
     applyRealUser(user);
+    loadAnnouncements();
   }
 
   function signOut(){
@@ -820,7 +828,7 @@
   //Google sign in
   let pendingGoogleProfile = null; // holds email and name while first time Google user pick role
   let pendingGoogleCredential = null; // save Google token
-  
+
   async function handleGoogleCredential(response){
     loginError.classList.remove('show');
     const {ok, data} = await apiPost('/google', {credential: response.credential});
@@ -864,9 +872,7 @@
     if(!pendingGoogleProfile) return;
     const role = document.getElementById('complete-profile-role').value;
     const {ok, data} = await apiPost('/google/complete-profile', {
-      google_sub: pendingGoogleProfile.google_sub,
-      email: pendingGoogleProfile.email,
-      full_name: pendingGoogleProfile.full_name,
+      credential: pendingGoogleCredential,
       role
     });
     if(!ok){
@@ -874,6 +880,7 @@
       return;
     }
     pendingGoogleProfile = null;
+    pendingGoogleCredential = null;
     signIn(data.token, data.user);
   });
 
@@ -990,7 +997,7 @@
   function escapeHtml(s){
     return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
-  
+
   /*filter option*/
   function populateFilterOptions(resources){
     const catSel = document.getElementById('res-filter-category');
@@ -1028,7 +1035,7 @@
         <td style="padding:8px 6px;">${escapeHtml(r.category)}</td>
         <td style="padding:8px 6px;">${escapeHtml(r.location)}</td>
         <td style="padding:8px 6px;">${escapeHtml(r.status)}${r.is_archived ? ' <span style="font-size:10px; color:var(--muted); border:1px solid var(--line); border-radius:3px; padding:1px 5px;">Archived</span>' : ''}</td>
-         <td class="req-admin-cell" style="padding:8px 6px; white-space:nowrap;">
+        <td class="req-admin-cell" style="padding:8px 6px; white-space:nowrap;">
           <button class="btn" type="button" data-action="edit" data-id="${r.id}">Edit</button>
           ${r.is_archived ? '' : `<button class="btn no" type="button" data-action="archive" data-id="${r.id}">Archive</button>`}
         </td>
@@ -1082,7 +1089,7 @@
   function closeModal(){
     document.getElementById('modal-backdrop').classList.remove('open');
   }
-  
+
   // open resource modal
   function openResourceModal(resourceId = null){
     editingResourceId = resourceId;
@@ -1157,6 +1164,38 @@
     loadResources();
   }
 
+  // request decision
+  document.getElementById('bk-tbody').addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-act]');
+    if(!btn) return;
+    const decision = btn.dataset.act; // approve and reject
+    const {ok, data} = await apiAuthSend('POST', `/api/bookings/${btn.dataset.id}/decide`, {decision});
+    if(!ok){
+      toast(data.error || 'Could not update request');
+      return;
+    }
+    toast(`Request ${decision}d`);
+    loadBookings();
+  });
+
+
+  // pin announcements
+  document.getElementById('announcements-list').addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-act]');
+    if(!btn) return;
+    if(btn.dataset.act === 'pin'){
+      const {ok, data} = await apiAuthSend('POST', `/api/announcements/${btn.dataset.id}/pin`);
+      if(!ok){ toast(data.error || 'Could not update'); return; }
+      loadAnnouncements();
+    } else if(btn.dataset.act === 'delete'){
+      const {ok, data} = await apiAuthSend('DELETE', `/api/announcements/${btn.dataset.id}`);
+      if(!ok){ toast(data.error || 'Could not delete'); return; }
+      toast('Announcement deleted');
+      loadAnnouncements();
+    }
+  });
+
+  // Panisara
   document.getElementById('btn-new-announcement').addEventListener('click', () => {
     document.getElementById('modal-box').innerHTML = `
       <h3>New announcement</h3>
