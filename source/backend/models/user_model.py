@@ -1,4 +1,7 @@
+import datetime
 import re
+import secrets
+
 import bcrypt
 import mysql.connector
 
@@ -10,8 +13,38 @@ from database.db import get_connection
 STUDENT_ROLES = {"phd_student", "undergrad_student"}
 ALL_ROLES = {"phd_student", "undergrad_student", "professor", "admin"}
 
+# password and text validation rules
+# limit bcrypt to only uses the first 72 bytes of a password
+MAX_PASSWORD_BYTES = 72
+MIN_PASSWORD_LENGTH = 8
+MAX_TEXT_LENGTH = 150  # match VARCHAR(150) columns
+
+
 class ValidationError(Exception):
     pass
+
+
+def _clean_text(value, field: str, required: bool = False):#f
+    #return a stripped string, rejecting non-string, too long input
+    if value is None or value == "":
+        if required:
+            raise ValidationError(f"{field} is required.")
+        return None
+    if not isinstance(value, str):
+        raise ValidationError(f"{field} must be text.")
+    value = value.strip()
+    if required and not value:
+        raise ValidationError(f"{field} is required.")
+    if len(value) > MAX_TEXT_LENGTH:
+        raise ValidationError(f"{field} must be at most {MAX_TEXT_LENGTH} characters.")
+    return value or None
+
+
+def _check_password_rules(password):
+    if not isinstance(password, str) or len(password) < MIN_PASSWORD_LENGTH:
+        raise ValidationError(f"Password must be at least {MIN_PASSWORD_LENGTH} characters.")
+    if len(password.encode("utf-8")) > MAX_PASSWORD_BYTES:
+        raise ValidationError(f"Password must be at most {MAX_PASSWORD_BYTES} bytes long.")
 
 class UserModel:
     # password helpers
@@ -81,7 +114,10 @@ class UserModel:
         if allowed_domain and not email.endswith("@" + allowed_domain):
             raise ValidationError(f"Sign-up is only available for @{allowed_domain} email addresses.")
 
+    
         password = data.get("password") or ""
+        #
+
         if len(password) < 8:
             raise ValidationError("Password must be at least 8 characters.")
 
@@ -209,21 +245,31 @@ class UserModel:
     @classmethod
     def reset_password(cls, token: str, new_password: str):
         # check the reset token and update the password
-        reset = cls._find_valid_reset(token)
-        if not reset:
+        if not isinstance(token, str) or not token or len(token) > 128:
             raise ValidationError("This reset link is invalid or has expired.")
-
-        if len(new_password or "") < 8:
-            raise ValidationError("Password must be at least 8 characters.")
+        # validate the password first
+        _check_password_rules(new_password)
 
         conn = get_connection()
         try:
-            cur = conn.cursor()
+            cur = conn.cursor(dictionary=True)
+            cur.execute(
+                "UPDATE password_resets SET used = 1 "
+                "WHERE token = %s AND used = 0 AND expires_at > %s",
+                (token, datetime.datetime.utcnow()),
+            )
+            if cur.rowcount != 1:
+                conn.rollback()
+                raise ValidationError("This reset link is invalid or has expired.")
+            cur.execute("SELECT user_id FROM password_resets WHERE token = %s", (token,))
+            row = cur.fetchone()
             cur.execute(
                 "UPDATE users SET password_hash = %s WHERE id = %s",
-                (cls._hash_password(new_password), reset["user_id"]),
+                (cls._hash_password(new_password), row["user_id"]),
             )
-            cur.execute("UPDATE password_resets SET used = 1 WHERE id = %s", (reset["id"],))
             conn.commit()
+        except Exception:
+            conn.rollback()
+            raise
         finally:
             conn.close()
