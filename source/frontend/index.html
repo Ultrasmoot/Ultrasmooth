@@ -47,13 +47,18 @@
   body[data-role="admin"] .req-admin{display:inline-flex !important;}
   .req-admin-cell{display:none !important;}
   body[data-role="admin"] .req-admin-cell{display:table-cell !important;}
+
+  .req-booker{display:none !important;}
+  body[data-role="user"] .req-booker{display:inline-flex !important;}
+  .req-announcer{display:none !important;}
+  body[data-role="professor"] .req-announcer, body[data-role="admin"] .req-announcer{display:inline-flex !important;}
   /* professor is read-only: can view everything, cannot submit/act */
   body[data-role="professor"] .req-submit{display:none !important;}
   .professor-note{display:none;}
   body[data-role="professor"] .professor-note{display:inline-flex !important;}
   .nav-item.req-admin-nav{display:none !important;}
   body[data-role="admin"] .nav-item.req-admin-nav{display:flex !important;}
-  
+
   /* Shell */
   .shell{display:grid; grid-template-columns:216px 1fr; min-height:100vh;}
 
@@ -474,6 +479,10 @@
         <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg></span>
         Resources
       </button>
+      <button class="nav-item" data-view="bookings">
+        <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1.5V3.5M11 1.5V3.5M2.5 6H13.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+        Requests
+      </button>
       <button class="nav-item req-admin-nav" data-view="access">
         <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.7" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 14C2.9 10.8 5.1 9.2 8 9.2C10.9 9.2 13.1 10.8 13.5 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
         User & Access
@@ -508,14 +517,21 @@
 
     <!-- HOME (placeholder — Dashboard itself is built in a later iteration) -->
     <section class="view active" id="view-home">
+      <div class="panel" style="margin-bottom:16px;">
+        <div class="panel-head"><h2>Announcements</h2>
+          <button class="btn ok req-announcer" id="btn-new-announcement" type="button">+ New announcement</button>
+        </div>
+        <div id="announcements-list"></div>
+        <p class="note" id="announcements-empty" style="display:none; margin:0;">No announcements yet.</p>
+      </div>
       <div class="panel">
         <div class="panel-head"><h2>Signed in</h2></div>
-        <p class="note" style="margin:0;">You're logged in to VASE. This iteration adds Resource management (US-1/US-2) and password recovery, on top of Login and Role-based Access (US-11, US-12). Bookings, maintenance, and the operations dashboard will be developed in later iterations.</p>
+        <p class="note" style="margin:0;">You're logged in to VASE. This iteration adds Resource management (US-1/US-2), password recovery, and Booking & Request management (US-3/US-4/US-5). Maintenance and the operations dashboard will be developed in later iterations.</p>
       </div>
     </section>
 
     <!-- RESOURCES-view resources -->
-    <section class="view" id="view-resources"> <!-- Panyasiri -->
+    <section class="view" id="view-resources">
       <div class="panel">
         <div class="panel-head">
           <h2>Resources</h2>
@@ -536,8 +552,17 @@
             <option value="name">Sort: Name</option>
             <option value="category">Sort: Category</option>
             <option value="location">Sort: Location</option>
+            <option value="availability">Sort: Availability</option>
             <option value="status">Sort: Status</option>
           </select>
+          <label style="display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; cursor:pointer; white-space:nowrap;">
+            <input type="checkbox" id="res-filter-availability">
+            Available now
+          </label>
+          <label class="req-admin" style="display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; cursor:pointer; white-space:nowrap;">
+            <input type="checkbox" id="res-show-archived">
+            Show archived
+          </label>
         </div>
 
         <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
@@ -555,6 +580,45 @@
           <tbody id="res-tbody"></tbody>
         </table>
         <p class="note" id="res-empty" style="display:none; margin-top:10px;">No resources found.</p>
+      </div>
+    </section>
+
+    <!-- REQUESTS: students submit + track their own (US-3/US-4); admin reviews the pending queue (US-5) -->
+    <section class="view" id="view-bookings">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Requests</h2>
+          <div>
+            <button class="btn" id="btn-refresh-bookings" type="button">↻ Refresh</button>
+            <button class="btn ok req-booker" id="btn-new-booking" type="button">+ New booking</button>
+          </div>
+        </div>
+        <div class="toolbar req-admin" id="admin-bk-tabs" style="margin-bottom:12px;">
+          <button class="filter-chip active" type="button" data-tab="pending">Pending</button>
+          <button class="filter-chip" type="button" data-tab="history">History</button>
+        </div>
+        <p class="note req-admin" id="admin-bk-note" style="margin:0 0 10px;">Showing requests awaiting your review.</p>
+        <div class="toolbar req-booker" id="booking-filters" style="margin-bottom:12px;">
+          <button class="filter-chip active" type="button" data-filter="All">All</button>
+          <button class="filter-chip" type="button" data-filter="Pending">Pending</button>
+          <button class="filter-chip" type="button" data-filter="Approved">Approved</button>
+          <button class="filter-chip" type="button" data-filter="Rejected">Rejected</button>
+        </div>
+        <p class="note req-booker" id="booking-filter-note" style="margin:0 0 10px;">These are your booking requests and their current status.</p>
+        <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+          <thead>
+            <tr style="text-align:left; border-bottom:1px solid var(--line); color:var(--ink-faint); text-transform:uppercase; font-size:10.5px; letter-spacing:0.5px;">
+              <th style="padding:8px 6px;">Resource</th>
+              <th class="req-admin-cell" style="padding:8px 6px;">Requester</th>
+              <th style="padding:8px 6px;">Time</th>
+              <th style="padding:8px 6px;">Purpose</th>
+              <th style="padding:8px 6px;">Status</th>
+              <th id="bk-last-th" style="padding:8px 6px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="bk-tbody"></tbody>
+        </table>
+        <p class="note" id="bk-empty" style="display:none; margin-top:10px;">No requests to show.</p>
       </div>
     </section>
 
@@ -618,6 +682,7 @@
   const titles = {
     home: ["Home", "You're signed in — more features arrive in later iterations"],
     resources: ["Resources", "View, search, and filter laboratory resources (US-1)"],
+    bookings: ["Requests", "Submit and track booking requests (US-3/US-4/US-5)"],
     access: ["User & Access", "Manage accounts, roles, and permissions"]
   };
   document.querySelectorAll('.nav-item').forEach(btn=>{
@@ -641,6 +706,7 @@
       document.getElementById('page-desc').textContent = titles[key][1];
 
       if(key === 'resources') loadResources();
+      if(key === 'bookings') loadBookings();
     });
   });
 
@@ -676,7 +742,9 @@
     createError.classList.add('show');
   }
 
+  let currentUser = null;
   function applyRealUser(user){
+    currentUser = user;
     const uiRole = BACKEND_TO_UI_ROLE[user.role] || 'user';
     ROLES[uiRole] = {
       ...ROLES[uiRole],
@@ -695,6 +763,7 @@
     createError.classList.remove('show');
     document.body.classList.add('authed');
     applyRealUser(user);
+    loadAnnouncements();
   }
 
   function signOut(){
@@ -756,8 +825,9 @@
     signIn(token, data.user);
   }
 
-  /* Google Sign-In (real, via Google Identity Services) */
-  let pendingGoogleProfile = null; // holds {google_sub, email, full_name} while a first-time Google user picks a role
+  //Google sign in
+  let pendingGoogleProfile = null; // holds email and name while first time Google user pick role
+  let pendingGoogleCredential = null; // save Google token
 
   async function handleGoogleCredential(response){
     loginError.classList.remove('show');
@@ -767,8 +837,9 @@
       return;
     }
     if(data.needs_role){
-      // First-time Google sign-in: no role on file yet (ask before creating the account)
+      // first time Google sign in ask for a role before creating account
       pendingGoogleProfile = data;
+      pendingGoogleCredential = response.credential;
       document.getElementById('g-profile-name').textContent = data.full_name || data.email;
       document.getElementById('g-profile-email').textContent = data.email;
       showAuthView('complete-profile');
@@ -801,9 +872,7 @@
     if(!pendingGoogleProfile) return;
     const role = document.getElementById('complete-profile-role').value;
     const {ok, data} = await apiPost('/google/complete-profile', {
-      google_sub: pendingGoogleProfile.google_sub,
-      email: pendingGoogleProfile.email,
-      full_name: pendingGoogleProfile.full_name,
+      credential: pendingGoogleCredential,
       role
     });
     if(!ok){
@@ -811,6 +880,7 @@
       return;
     }
     pendingGoogleProfile = null;
+    pendingGoogleCredential = null;
     signIn(data.token, data.user);
   });
 
@@ -927,7 +997,7 @@
   function escapeHtml(s){
     return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
-  
+
   /*filter option*/
   function populateFilterOptions(resources){
     const catSel = document.getElementById('res-filter-category');
@@ -964,10 +1034,10 @@
         <td style="padding:8px 6px;">${escapeHtml(r.type)}</td>
         <td style="padding:8px 6px;">${escapeHtml(r.category)}</td>
         <td style="padding:8px 6px;">${escapeHtml(r.location)}</td>
-        <td style="padding:8px 6px;">${escapeHtml(r.status)}</td>
+        <td style="padding:8px 6px;">${escapeHtml(r.status)}${r.is_archived ? ' <span style="font-size:10px; color:var(--muted); border:1px solid var(--line); border-radius:3px; padding:1px 5px;">Archived</span>' : ''}</td>
         <td class="req-admin-cell" style="padding:8px 6px; white-space:nowrap;">
           <button class="btn" type="button" data-action="edit" data-id="${r.id}">Edit</button>
-          <button class="btn no" type="button" data-action="archive" data-id="${r.id}">Archive</button>
+          ${r.is_archived ? '' : `<button class="btn no" type="button" data-action="archive" data-id="${r.id}">Archive</button>`}
         </td>
       </tr>
     `).join('');
@@ -978,13 +1048,18 @@
     const q = document.getElementById('res-search').value.trim();
     const category = document.getElementById('res-filter-category').value;
     const location = document.getElementById('res-filter-location').value;
-    const status = document.getElementById('res-filter-status').value;
+    const statusEl = document.getElementById('res-filter-status');
+    const availableOnly = document.getElementById('res-filter-availability').checked;
+    const status = availableOnly ? 'Available' : statusEl.value;
+    statusEl.disabled = availableOnly;
     const sort = document.getElementById('res-sort').value;
+    const showArchived = document.getElementById('res-show-archived').checked;
     if(q) params.set('q', q);
     if(category) params.set('category', category);
     if(location) params.set('location', location);
     if(status) params.set('status', status);
     if(sort) params.set('sort', sort);
+    if(showArchived) params.set('include_archived', 'true');
 
     const {ok, data} = await apiAuthGet('/api/resources?' + params.toString());
     if(!ok){
@@ -999,7 +1074,7 @@
   ['res-search'].forEach(id => {
     document.getElementById(id).addEventListener('input', () => loadResources());
   });
-  ['res-filter-category', 'res-filter-location', 'res-filter-status', 'res-sort'].forEach(id => {
+  ['res-filter-category', 'res-filter-location', 'res-filter-status', 'res-sort', 'res-filter-availability', 'res-show-archived'].forEach(id => {
     document.getElementById(id).addEventListener('change', () => loadResources());
   });
 
@@ -1014,7 +1089,7 @@
   function closeModal(){
     document.getElementById('modal-backdrop').classList.remove('open');
   }
-  
+
   // open resource modal
   function openResourceModal(resourceId = null){
     editingResourceId = resourceId;
@@ -1087,6 +1162,268 @@
     }
     toast('Resource archived');
     loadResources();
+  }
+
+  /* Requests (US-3/US-4/US-5)*/
+  function fmtRange(startIso, endIso){
+    const opts = {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'};
+    return `${new Date(startIso).toLocaleString([], opts)} – ${new Date(endIso).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+  }
+
+  function bookingBadge(status){
+    const map = {Pending:'b-amber', Approved:'b-green', Rejected:'b-rust'};
+    return `<span class="badge ${map[status] || ''}">${status}</span>`;
+  }
+
+  let bookingFilter = 'All';
+
+  document.getElementById('booking-filters').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-filter]');
+    if(!btn) return;
+    bookingFilter = btn.dataset.filter;
+    document.querySelectorAll('#booking-filters .filter-chip').forEach(b => {
+      b.classList.toggle('active', b.dataset.filter === bookingFilter);
+    });
+    loadBookings();
+  });
+
+  let adminTab = 'pending';
+  document.getElementById('admin-bk-tabs').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-tab]');
+    if(!btn) return;
+    adminTab = btn.dataset.tab;
+    document.querySelectorAll('#admin-bk-tabs .filter-chip').forEach(b => b.classList.toggle('active', b.dataset.tab === adminTab));
+    document.getElementById('admin-bk-note').textContent = adminTab === 'history'
+      ? 'Requests already decided, newest first — with the time of the decision.'
+      : 'Showing requests awaiting your review.';
+    document.getElementById('bk-last-th').textContent = adminTab === 'history' ? 'Decided at' : 'Actions';
+    loadBookings();
+  });
+
+  async function loadBookings(silent = false){
+    const isAdmin = currentRole === 'admin';
+    const path = isAdmin ? (adminTab === 'history' ? '/api/bookings/history' : '/api/bookings/pending') : '/api/bookings/mine';
+    const {ok, data} = await apiAuthGet(path);
+    if(!ok){
+      if(!silent) toast(data.error || 'Could not load requests');
+      return;
+    }
+    renderBookings(data.bookings, isAdmin);
+  }
+
+  // SRS-4: status changes made by a Lab Manager/Administrator show up on their
+  // own — manual Refresh button plus a quiet background reload every 30 s while
+  // the Requests view is open (skipped when the tab is hidden or a form is open).
+  document.getElementById('btn-refresh-bookings').addEventListener('click', () => loadBookings());
+  setInterval(() => {
+    const onRequests = document.getElementById('view-bookings').classList.contains('active');
+    const modalOpen = document.getElementById('modal-backdrop').classList.contains('open');
+    if(document.body.classList.contains('authed') && onRequests && !modalOpen && !document.hidden){
+      loadBookings(true);
+    }
+  }, 30000);
+
+  function renderBookings(bookings, isAdmin){
+    const tbody = document.getElementById('bk-tbody');
+    const empty = document.getElementById('bk-empty');
+    const filtered = isAdmin || bookingFilter === 'All'
+      ? bookings
+      : bookings.filter(b => b.status === bookingFilter);
+
+    if(!filtered.length){
+      tbody.innerHTML = '';
+      empty.textContent = isAdmin
+        ? (adminTab === 'history' ? 'No decided requests yet.' : 'No requests to show.')
+        : `No ${bookingFilter === 'All' ? '' : bookingFilter.toLowerCase() + ' '}requests to show.`;
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    // Names come from the backend (JOINed), not from the client-side resource cache.
+    const resourceName = b => b.resource_name || `#${b.resource_id}`;
+    const requesterName = b => b.requester_name || b.requester_email || `User #${b.requester_id}`;
+    tbody.innerHTML = filtered.map(b => `<tr>
+      <td style="padding:8px 6px;">${escapeHtml(resourceName(b))}</td>
+      <td class="req-admin-cell" style="padding:8px 6px;">${escapeHtml(requesterName(b))}${b.requester_email ? `<div class="note" style="margin:0; font-size:11px;">${escapeHtml(b.requester_email)}</div>` : ''}</td>
+      <td style="padding:8px 6px;" class="mono">${fmtRange(b.start_time, b.end_time)}</td>
+      <td style="padding:8px 6px; max-width:200px; white-space:normal;">${escapeHtml(b.purpose)}</td>
+      <td style="padding:8px 6px;">${bookingBadge(b.status)}</td>
+      <td style="padding:8px 6px; white-space:nowrap;">
+        ${isAdmin && adminTab === 'history'
+          ? `<span class="mono">${b.decided_at ? new Date(b.decided_at).toLocaleString([], {dateStyle:'medium', timeStyle:'short'}) : ''}</span>`
+          : isAdmin && b.status === 'Pending'
+          ? `<button class="btn ok" type="button" data-act="approve" data-id="${b.id}">Approve</button>
+             <button class="btn no" type="button" data-act="reject" data-id="${b.id}">Reject</button>`
+          : ''}
+      </td>
+    </tr>`).join('');
+  }
+
+
+  // request decision
+  document.getElementById('bk-tbody').addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-act]');
+    if(!btn) return;
+    const decision = btn.dataset.act; // approve and reject
+    const {ok, data} = await apiAuthSend('POST', `/api/bookings/${btn.dataset.id}/decide`, {decision});
+    if(!ok){
+      toast(data.error || 'Could not update request');
+      return;
+    }
+    toast(`Request ${decision}d`);
+    loadBookings();
+  });
+
+  async function openBookingModal(){
+    if(!resourceCache.length){
+      const {ok, data} = await apiAuthGet('/api/resources');
+      if(ok) resourceCache = data.resources;
+    }
+    // Only offer resources that can actually be booked (Available, not archived).
+    // Fetched fresh each time so a status change by an admin is reflected;
+    // the backend re-checks this anyway.
+    let bookable = resourceCache.filter(r => r.status === 'Available');
+    const fresh = await apiAuthGet('/api/resources?status=Available');
+    if(fresh.ok) bookable = fresh.data.resources;
+    const opts = bookable.length
+      ? bookable.map(r => `<option value="${r.id}">${escapeHtml(r.name)}</option>`).join('')
+      : '<option value="" disabled selected>No resources available</option>';
+    document.getElementById('modal-box').innerHTML = `
+      <h3>New booking request</h3>
+      <div id="booking-form-error" class="login-error"><span>⚠</span><span id="booking-form-error-text"></span></div>
+      <form id="booking-form">
+        <div class="field"><label>Resource</label><select id="bk-resource" required>${opts}</select></div>
+        <div class="field"><label>Start</label><input id="bk-start" type="datetime-local" required></div>
+        <div class="field"><label>End</label><input id="bk-end" type="datetime-local" required></div>
+        <div class="field"><label>Purpose</label><input id="bk-purpose" required maxlength="255" placeholder="e.g. Sprint planning meeting"></div>
+        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
+          <button class="btn no" type="button" id="booking-form-cancel">Cancel</button>
+          <button class="btn ok" type="submit">Submit</button>
+        </div>
+      </form>
+    `;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('booking-form-cancel').addEventListener('click', closeModal);
+    document.getElementById('booking-form').addEventListener('submit', submitBookingForm);
+  }
+  document.getElementById('btn-new-booking').addEventListener('click', openBookingModal);
+
+  async function submitBookingForm(e){
+    e.preventDefault();
+    const errBox = document.getElementById('booking-form-error');
+    const errText = document.getElementById('booking-form-error-text');
+    errBox.classList.remove('show');
+
+    const payload = {
+      resource_id: Number(document.getElementById('bk-resource').value),
+      start_time: document.getElementById('bk-start').value,
+      end_time: document.getElementById('bk-end').value,
+      purpose: document.getElementById('bk-purpose').value.trim()
+    };
+
+    const {ok, data} = await apiAuthSend('POST', '/api/bookings', payload);
+    if(!ok){
+      // SRS-3: missing/invalid info or an overlapping booking blocks submission with a message.
+      errText.textContent = data.error || 'Could not submit request.';
+      errBox.classList.add('show');
+      return;
+    }
+    closeModal();
+    toast('Request submitted');
+    loadBookings();
+  }
+
+  /* Announcements */
+  async function loadAnnouncements(){
+    const {ok, data} = await apiAuthGet('/api/announcements');
+    if(!ok){
+      toast(data.error || 'Could not load announcements');
+      return;
+    }
+    renderAnnouncements(data.announcements);
+  }
+
+  function renderAnnouncements(items){
+    const list = document.getElementById('announcements-list');
+    const empty = document.getElementById('announcements-empty');
+    if(!items.length){
+      list.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    const me = currentUser; // set in applyRealUser(); null if not yet restored
+    list.innerHTML = items.map(a => `
+      <div style="padding:12px 0; border-bottom:1px solid var(--line); ${a.is_pinned ? 'background:var(--amber-bg);' : ''}">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+          <div>
+            ${a.is_pinned ? '<span class="badge b-amber" style="margin-right:6px;">Pinned</span>' : ''}
+            <b>${escapeHtml(a.title)}</b>
+          </div>
+          <div style="display:flex; gap:6px; white-space:nowrap;">
+            <button class="btn req-announcer" type="button" data-act="pin" data-id="${a.id}">${a.is_pinned ? 'Unpin' : 'Pin'}</button>
+            ${me && me.id === a.author_id ? `<button class="btn no" type="button" data-act="delete" data-id="${a.id}">Delete</button>` : ''}
+          </div>
+        </div>
+        <p class="note" style="margin:4px 0 0; white-space:pre-wrap;">${escapeHtml(a.body)}</p>
+        <p class="note" style="margin:6px 0 0; font-size:11px;">Posted ${new Date(a.created_at).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}</p>
+      </div>
+    `).join('');
+  }
+
+  // pin announcements
+  document.getElementById('announcements-list').addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-act]');
+    if(!btn) return;
+    if(btn.dataset.act === 'pin'){
+      const {ok, data} = await apiAuthSend('POST', `/api/announcements/${btn.dataset.id}/pin`);
+      if(!ok){ toast(data.error || 'Could not update'); return; }
+      loadAnnouncements();
+    } else if(btn.dataset.act === 'delete'){
+      const {ok, data} = await apiAuthSend('DELETE', `/api/announcements/${btn.dataset.id}`);
+      if(!ok){ toast(data.error || 'Could not delete'); return; }
+      toast('Announcement deleted');
+      loadAnnouncements();
+    }
+  });
+
+  document.getElementById('btn-new-announcement').addEventListener('click', () => {
+    document.getElementById('modal-box').innerHTML = `
+      <h3>New announcement</h3>
+      <div id="announcement-form-error" class="login-error"><span>⚠</span><span id="announcement-form-error-text"></span></div>
+      <form id="announcement-form">
+        <div class="field"><label>Title</label><input id="an-title" required maxlength="150" placeholder="e.g. Fume hood maintenance this Friday"></div>
+        <div class="field"><label>Body</label><textarea id="an-body" required rows="4" style="width:100%; font-family:inherit; font-size:13px; padding:8px; border:1px solid var(--line); border-radius:6px;"></textarea></div>
+        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
+          <button class="btn no" type="button" id="announcement-form-cancel">Cancel</button>
+          <button class="btn ok" type="submit">Post</button>
+        </div>
+      </form>
+    `;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('announcement-form-cancel').addEventListener('click', closeModal);
+    document.getElementById('announcement-form').addEventListener('submit', submitAnnouncementForm);
+  });
+
+  async function submitAnnouncementForm(e){
+    e.preventDefault();
+    const errBox = document.getElementById('announcement-form-error');
+    const errText = document.getElementById('announcement-form-error-text');
+    errBox.classList.remove('show');
+
+    const payload = {
+      title: document.getElementById('an-title').value.trim(),
+      body: document.getElementById('an-body').value.trim()
+    };
+    const {ok, data} = await apiAuthSend('POST', '/api/announcements', payload);
+    if(!ok){
+      errText.textContent = data.error || 'Could not post announcement.';
+      errBox.classList.add('show');
+      return;
+    }
+    closeModal();
+    toast('Announcement posted');
+    loadAnnouncements();
   }
 
   document.getElementById('modal-backdrop').addEventListener('click', (e) => {
