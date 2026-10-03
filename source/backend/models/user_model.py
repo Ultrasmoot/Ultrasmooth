@@ -1,4 +1,7 @@
+import datetime
 import re
+import secrets
+
 import bcrypt
 import mysql.connector
 
@@ -10,16 +13,48 @@ from database.db import get_connection
 STUDENT_ROLES = {"phd_student", "undergrad_student"}
 ALL_ROLES = {"phd_student", "undergrad_student", "professor", "admin"}
 
+# password and text validation rules
+# limit bcrypt to only uses the first 72 bytes of a password
+MAX_PASSWORD_BYTES = 72
+MIN_PASSWORD_LENGTH = 8
+MAX_TEXT_LENGTH = 150  # matches VARCHAR(150) columns
+
+
 class ValidationError(Exception):
     pass
 
+
+def _clean_text(value, field: str, required: bool = False):
+#return a stripped string, rejecting non-string, too long input
+    if value is None or value == "":
+        if required:
+            raise ValidationError(f"{field} is required.")
+        return None
+    if not isinstance(value, str):
+        raise ValidationError(f"{field} must be text.")
+    value = value.strip()
+    if required and not value:
+        raise ValidationError(f"{field} is required.")
+    if len(value) > MAX_TEXT_LENGTH:
+        raise ValidationError(f"{field} must be at most {MAX_TEXT_LENGTH} characters.")
+    return value or None
+
+
+def _check_password_rules(password):
+    if not isinstance(password, str) or len(password) < MIN_PASSWORD_LENGTH:
+        raise ValidationError(f"Password must be at least {MIN_PASSWORD_LENGTH} characters.")
+    if len(password.encode("utf-8")) > MAX_PASSWORD_BYTES:
+        raise ValidationError(f"Password must be at most {MAX_PASSWORD_BYTES} bytes long.")
+
+
 class UserModel:
     # password helpers
+    # hash password
     @staticmethod
     def _hash_password(password: str) -> str:
         return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-    # check password
+    # Napakhet - check password
     @staticmethod
     def _check_password(password: str, password_hash: str) -> bool:
         if not password_hash:
@@ -46,8 +81,8 @@ class UserModel:
             return cur.fetchone()
         finally:
             conn.close()
-    
-    # section that use in middleware    
+
+    # section that use in middleware
     @staticmethod
     def find_by_id(user_id: int):
         conn = get_connection()
@@ -61,29 +96,32 @@ class UserModel:
     # email-password login (US-11)
     @classmethod
     def create_student_account(cls, data: dict):
-        role = (data.get("role") or "").strip()
+        if not isinstance(data.get("role"), str):
+            raise ValidationError("Self sign-up is only available for Ph.D. and Undergraduate students.")
+        role = data["role"].strip()
         if role not in STUDENT_ROLES:
             raise ValidationError("Self sign-up is only available for Ph.D. and Undergraduate students.")
 
-        student_id = (data.get("student_id") or "").strip()
+        student_id = data.get("student_id")
+        student_id = student_id.strip() if isinstance(student_id, str) else ""
         if not re.fullmatch(r"\d{10}", student_id):
             raise ValidationError("Student ID must be exactly 10 digits.")
 
-        full_name = (data.get("full_name") or "").strip()
-        if not full_name:
-            raise ValidationError("Full name is required.")
+        full_name = _clean_text(data.get("full_name"), "Full name", required=True)
+        faculty = _clean_text(data.get("faculty"), "Faculty")
+        major = _clean_text(data.get("major"), "Major")
 
-        email = (data.get("email") or "").strip().lower()
-        if "@" not in email:
+        email = data.get("email")
+        email = email.strip().lower() if isinstance(email, str) else ""
+        if "@" not in email or len(email) > MAX_TEXT_LENGTH:
             raise ValidationError("Please enter a valid email address.")
 
         allowed_domain = Config.ALLOWED_EMAIL_DOMAIN
         if allowed_domain and not email.endswith("@" + allowed_domain):
             raise ValidationError(f"Sign-up is only available for @{allowed_domain} email addresses.")
 
-        password = data.get("password") or ""
-        if len(password) < 8:
-            raise ValidationError("Password must be at least 8 characters.")
+        password = data.get("password")
+        _check_password_rules(password)
 
         if cls.find_by_email(email):
             raise ValidationError("An account with this email already exists.")
@@ -101,8 +139,8 @@ class UserModel:
                     email,
                     cls._hash_password(password),
                     role,
-                    data.get("faculty"),
-                    data.get("major"),
+                    faculty,
+                    major,
                 ),
             )
             conn.commit()
@@ -113,40 +151,39 @@ class UserModel:
         finally:
             conn.close()
 
-# email login (US-11)
-@classmethod
-def authenticate(cls, email: str, password: str):
-    user = cls.find_by_email((email or "").strip().lower())
-    if not user or not user["is_active"]:
-        return None
-    if not cls._check_password(password, user["password_hash"]):
-        return None
-    return user
+    # email login (US-11)
+    @classmethod
+    def authenticate(cls, email: str, password: str):
+        user = cls.find_by_email((email or "").strip().lower())
+        if not user or not user["is_active"]:
+            return None
+        if not cls._check_password(password, user["password_hash"]):
+            return None
+        return user
 
+    # Google login (US-11)
+    @classmethod
+    def find_or_create_google_user(cls, google_sub: str, email: str, full_name: str):
+        # find existing Google user or return a new user.
+        user = cls.find_by_google_sub(google_sub)
+        if user:
+            return user, False
 
-# Google login (US-11)
-@classmethod
-def find_or_create_google_user(cls, google_sub: str, email: str, full_name: str):
-    # find existing Google user or return a new user.
-    user = cls.find_by_google_sub(google_sub)
-    if user:
-        return user, False
+        user = cls.find_by_email(email)
+        if user:
+            conn = get_connection()
+            try:
+                cur = conn.cursor()
+                cur.execute(
+                    "UPDATE users SET google_sub = %s WHERE id = %s",
+                    (google_sub, user["id"]),
+                )
+                conn.commit()
+            finally:
+                conn.close()
+            return cls.find_by_id(user["id"]), False
 
-    user = cls.find_by_email(email)
-    if user:
-        conn = get_connection()
-        try:
-            cur = conn.cursor()
-            cur.execute(
-                "UPDATE users SET google_sub = %s WHERE id = %s"
-                (google_sub, user["id"]),
-            )
-            conn.commit()
-        finally:
-            conn.close()
-        return cls.find_by_id(user["id"]), False
-
-    return None, True
+        return None, True
 
     @classmethod
     def complete_google_signup(cls, google_sub: str, email: str, full_name: str, role: str):
@@ -158,7 +195,7 @@ def find_or_create_google_user(cls, google_sub: str, email: str, full_name: str)
             cur.execute(
                 """INSERT INTO users (full_name, email, google_sub, role)
                    VALUES (%s, %s, %s, %s)""",
-                (full_name, (email or "").strip().lower(), google_sub, role),
+                ((full_name or "")[:MAX_TEXT_LENGTH], (email or "").strip().lower(), google_sub, role),
             )
             conn.commit()
             return cls.find_by_id(cur.lastrowid)
@@ -171,7 +208,10 @@ def find_or_create_google_user(cls, google_sub: str, email: str, full_name: str)
     # forgot password
     @classmethod
     def create_reset_token(cls, email: str):
-        # create a reset token for an active user
+        """Returns a reset token if the email matches an active account,
+        else None. Callers must not reveal which case occurred — always
+        respond the same way either way, to avoid confirming which emails
+        have accounts."""
         user = cls.find_by_email((email or "").strip().lower())
         if not user or not user["is_active"]:
             return None
@@ -194,7 +234,6 @@ def find_or_create_google_user(cls, google_sub: str, email: str, full_name: str)
 
     @staticmethod
     def _find_valid_reset(token: str):
-        # find a reset token that is still valid
         conn = get_connection()
         try:
             cur = conn.cursor(dictionary=True)
@@ -206,24 +245,35 @@ def find_or_create_google_user(cls, google_sub: str, email: str, full_name: str)
         finally:
             conn.close()
 
+    # reset password (single-use token)
     @classmethod
     def reset_password(cls, token: str, new_password: str):
         # check the reset token and update the password
-        reset = cls._find_valid_reset(token)
-        if not reset:
+        if not isinstance(token, str) or not token or len(token) > 128:
             raise ValidationError("This reset link is invalid or has expired.")
-
-        if len(new_password or "") < 8:
-            raise ValidationError("Password must be at least 8 characters.")
+        # validate the password first
+        _check_password_rules(new_password)
 
         conn = get_connection()
         try:
-            cur = conn.cursor()
+            cur = conn.cursor(dictionary=True)
+            cur.execute(
+                "UPDATE password_resets SET used = 1 "
+                "WHERE token = %s AND used = 0 AND expires_at > %s",
+                (token, datetime.datetime.utcnow()),
+            )
+            if cur.rowcount != 1:
+                conn.rollback()
+                raise ValidationError("This reset link is invalid or has expired.")
+            cur.execute("SELECT user_id FROM password_resets WHERE token = %s", (token,))
+            row = cur.fetchone()
             cur.execute(
                 "UPDATE users SET password_hash = %s WHERE id = %s",
-                (cls._hash_password(new_password), reset["user_id"]),
+                (cls._hash_password(new_password), row["user_id"]),
             )
-            cur.execute("UPDATE password_resets SET used = 1 WHERE id = %s", (reset["id"],))
             conn.commit()
+        except Exception:
+            conn.rollback()
+            raise
         finally:
             conn.close()
