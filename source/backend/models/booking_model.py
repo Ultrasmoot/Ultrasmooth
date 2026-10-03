@@ -23,7 +23,7 @@ class ValidationError(Exception):
 
 
 class BookingModel:
-
+    # validation
     @staticmethod
     def _parse_datetime(value, field_name):
         try:
@@ -70,7 +70,6 @@ class BookingModel:
     # Check booking conflict
     @staticmethod
     def _has_conflict(conn, resource_id: int, start, end, exclude_booking_id: int = None) -> bool:
-        """Check booking conflicts."""
         cur = conn.cursor()
         sql = """SELECT COUNT(*) FROM bookings
                  WHERE resource_id = %s AND status IN ('Pending','Approved')
@@ -134,7 +133,7 @@ class BookingModel:
         finally:
             conn.close()
 
-        # Create booking
+    # Create booking
     @classmethod
     def create(cls, data: dict, requester_id: int):
         resource_id, start, end, purpose = cls._validate(data)
