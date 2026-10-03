@@ -17,15 +17,15 @@ ALL_ROLES = {"phd_student", "undergrad_student", "professor", "admin"}
 # limit bcrypt to only uses the first 72 bytes of a password
 MAX_PASSWORD_BYTES = 72
 MIN_PASSWORD_LENGTH = 8
-MAX_TEXT_LENGTH = 150  # match VARCHAR(150) columns
+MAX_TEXT_LENGTH = 150  # matches VARCHAR(150) columns
 
 
 class ValidationError(Exception):
     pass
 
 
-def _clean_text(value, field: str, required: bool = False):#f
-    #return a stripped string, rejecting non-string, too long input
+def _clean_text(value, field: str, required: bool = False):
+#return a stripped string, rejecting non-string, too long input
     if value is None or value == "":
         if required:
             raise ValidationError(f"{field} is required.")
@@ -46,13 +46,15 @@ def _check_password_rules(password):
     if len(password.encode("utf-8")) > MAX_PASSWORD_BYTES:
         raise ValidationError(f"Password must be at most {MAX_PASSWORD_BYTES} bytes long.")
 
+
 class UserModel:
     # password helpers
+    # hash password
     @staticmethod
     def _hash_password(password: str) -> str:
         return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-    # check password
+    # Napakhet - check password
     @staticmethod
     def _check_password(password: str, password_hash: str) -> bool:
         if not password_hash:
@@ -79,8 +81,8 @@ class UserModel:
             return cur.fetchone()
         finally:
             conn.close()
-    
-    # section that use in middleware    
+
+    # section that use in middleware
     @staticmethod
     def find_by_id(user_id: int):
         conn = get_connection()
@@ -94,32 +96,32 @@ class UserModel:
     # email-password login (US-11)
     @classmethod
     def create_student_account(cls, data: dict):
-        role = (data.get("role") or "").strip()
+        if not isinstance(data.get("role"), str):
+            raise ValidationError("Self sign-up is only available for Ph.D. and Undergraduate students.")
+        role = data["role"].strip()
         if role not in STUDENT_ROLES:
             raise ValidationError("Self sign-up is only available for Ph.D. and Undergraduate students.")
 
-        student_id = (data.get("student_id") or "").strip()
+        student_id = data.get("student_id")
+        student_id = student_id.strip() if isinstance(student_id, str) else ""
         if not re.fullmatch(r"\d{10}", student_id):
             raise ValidationError("Student ID must be exactly 10 digits.")
 
-        full_name = (data.get("full_name") or "").strip()
-        if not full_name:
-            raise ValidationError("Full name is required.")
+        full_name = _clean_text(data.get("full_name"), "Full name", required=True)
+        faculty = _clean_text(data.get("faculty"), "Faculty")
+        major = _clean_text(data.get("major"), "Major")
 
-        email = (data.get("email") or "").strip().lower()
-        if "@" not in email:
+        email = data.get("email")
+        email = email.strip().lower() if isinstance(email, str) else ""
+        if "@" not in email or len(email) > MAX_TEXT_LENGTH:
             raise ValidationError("Please enter a valid email address.")
 
         allowed_domain = Config.ALLOWED_EMAIL_DOMAIN
         if allowed_domain and not email.endswith("@" + allowed_domain):
             raise ValidationError(f"Sign-up is only available for @{allowed_domain} email addresses.")
 
-    
-        password = data.get("password") or ""
-        #
-
-        if len(password) < 8:
-            raise ValidationError("Password must be at least 8 characters.")
+        password = data.get("password")
+        _check_password_rules(password)
 
         if cls.find_by_email(email):
             raise ValidationError("An account with this email already exists.")
@@ -137,8 +139,8 @@ class UserModel:
                     email,
                     cls._hash_password(password),
                     role,
-                    data.get("faculty"),
-                    data.get("major"),
+                    faculty,
+                    major,
                 ),
             )
             conn.commit()
@@ -159,7 +161,6 @@ class UserModel:
             return None
         return user
 
-
     # Google login (US-11)
     @classmethod
     def find_or_create_google_user(cls, google_sub: str, email: str, full_name: str):
@@ -174,7 +175,7 @@ class UserModel:
             try:
                 cur = conn.cursor()
                 cur.execute(
-                    "UPDATE users SET google_sub = %s WHERE id = %s"
+                    "UPDATE users SET google_sub = %s WHERE id = %s",
                     (google_sub, user["id"]),
                 )
                 conn.commit()
@@ -194,7 +195,7 @@ class UserModel:
             cur.execute(
                 """INSERT INTO users (full_name, email, google_sub, role)
                    VALUES (%s, %s, %s, %s)""",
-                (full_name, (email or "").strip().lower(), google_sub, role),
+                ((full_name or "")[:MAX_TEXT_LENGTH], (email or "").strip().lower(), google_sub, role),
             )
             conn.commit()
             return cls.find_by_id(cur.lastrowid)
@@ -207,7 +208,10 @@ class UserModel:
     # forgot password
     @classmethod
     def create_reset_token(cls, email: str):
-        # create a reset token for an active user
+        """Returns a reset token if the email matches an active account,
+        else None. Callers must not reveal which case occurred — always
+        respond the same way either way, to avoid confirming which emails
+        have accounts."""
         user = cls.find_by_email((email or "").strip().lower())
         if not user or not user["is_active"]:
             return None
@@ -230,7 +234,6 @@ class UserModel:
 
     @staticmethod
     def _find_valid_reset(token: str):
-        # find a reset token that is still valid
         conn = get_connection()
         try:
             cur = conn.cursor(dictionary=True)
@@ -242,6 +245,7 @@ class UserModel:
         finally:
             conn.close()
 
+    # reset password (single-use token)
     @classmethod
     def reset_password(cls, token: str, new_password: str):
         # check the reset token and update the password
