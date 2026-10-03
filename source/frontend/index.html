@@ -1164,6 +1164,102 @@
     loadResources();
   }
 
+  /* Requests (US-3/US-4/US-5)*/
+  function fmtRange(startIso, endIso){
+    const opts = {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'};
+    return `${new Date(startIso).toLocaleString([], opts)} – ${new Date(endIso).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+  }
+
+  function bookingBadge(status){
+    const map = {Pending:'b-amber', Approved:'b-green', Rejected:'b-rust'};
+    return `<span class="badge ${map[status] || ''}">${status}</span>`;
+  }
+
+  let bookingFilter = 'All';
+
+  document.getElementById('booking-filters').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-filter]');
+    if(!btn) return;
+    bookingFilter = btn.dataset.filter;
+    document.querySelectorAll('#booking-filters .filter-chip').forEach(b => {
+      b.classList.toggle('active', b.dataset.filter === bookingFilter);
+    });
+    loadBookings();
+  });
+
+  let adminTab = 'pending';
+  document.getElementById('admin-bk-tabs').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-tab]');
+    if(!btn) return;
+    adminTab = btn.dataset.tab;
+    document.querySelectorAll('#admin-bk-tabs .filter-chip').forEach(b => b.classList.toggle('active', b.dataset.tab === adminTab));
+    document.getElementById('admin-bk-note').textContent = adminTab === 'history'
+      ? 'Requests already decided, newest first — with the time of the decision.'
+      : 'Showing requests awaiting your review.';
+    document.getElementById('bk-last-th').textContent = adminTab === 'history' ? 'Decided at' : 'Actions';
+    loadBookings();
+  });
+
+  async function loadBookings(silent = false){
+    const isAdmin = currentRole === 'admin';
+    const path = isAdmin ? (adminTab === 'history' ? '/api/bookings/history' : '/api/bookings/pending') : '/api/bookings/mine';
+    const {ok, data} = await apiAuthGet(path);
+    if(!ok){
+      if(!silent) toast(data.error || 'Could not load requests');
+      return;
+    }
+    renderBookings(data.bookings, isAdmin);
+  }
+
+  // SRS-4: status changes made by a Lab Manager/Administrator show up on their
+  // own — manual Refresh button plus a quiet background reload every 30 s while
+  // the Requests view is open (skipped when the tab is hidden or a form is open).
+  document.getElementById('btn-refresh-bookings').addEventListener('click', () => loadBookings());
+  setInterval(() => {
+    const onRequests = document.getElementById('view-bookings').classList.contains('active');
+    const modalOpen = document.getElementById('modal-backdrop').classList.contains('open');
+    if(document.body.classList.contains('authed') && onRequests && !modalOpen && !document.hidden){
+      loadBookings(true);
+    }
+  }, 30000);
+
+  function renderBookings(bookings, isAdmin){
+    const tbody = document.getElementById('bk-tbody');
+    const empty = document.getElementById('bk-empty');
+    const filtered = isAdmin || bookingFilter === 'All'
+      ? bookings
+      : bookings.filter(b => b.status === bookingFilter);
+
+    if(!filtered.length){
+      tbody.innerHTML = '';
+      empty.textContent = isAdmin
+        ? (adminTab === 'history' ? 'No decided requests yet.' : 'No requests to show.')
+        : `No ${bookingFilter === 'All' ? '' : bookingFilter.toLowerCase() + ' '}requests to show.`;
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    // Names come from the backend (JOINed), not from the client-side resource cache.
+    const resourceName = b => b.resource_name || `#${b.resource_id}`;
+    const requesterName = b => b.requester_name || b.requester_email || `User #${b.requester_id}`;
+    tbody.innerHTML = filtered.map(b => `<tr>
+      <td style="padding:8px 6px;">${escapeHtml(resourceName(b))}</td>
+      <td class="req-admin-cell" style="padding:8px 6px;">${escapeHtml(requesterName(b))}${b.requester_email ? `<div class="note" style="margin:0; font-size:11px;">${escapeHtml(b.requester_email)}</div>` : ''}</td>
+      <td style="padding:8px 6px;" class="mono">${fmtRange(b.start_time, b.end_time)}</td>
+      <td style="padding:8px 6px; max-width:200px; white-space:normal;">${escapeHtml(b.purpose)}</td>
+      <td style="padding:8px 6px;">${bookingBadge(b.status)}</td>
+      <td style="padding:8px 6px; white-space:nowrap;">
+        ${isAdmin && adminTab === 'history'
+          ? `<span class="mono">${b.decided_at ? new Date(b.decided_at).toLocaleString([], {dateStyle:'medium', timeStyle:'short'}) : ''}</span>`
+          : isAdmin && b.status === 'Pending'
+          ? `<button class="btn ok" type="button" data-act="approve" data-id="${b.id}">Approve</button>
+             <button class="btn no" type="button" data-act="reject" data-id="${b.id}">Reject</button>`
+          : ''}
+      </td>
+    </tr>`).join('');
+  }
+
+
   // request decision
   document.getElementById('bk-tbody').addEventListener('click', async (e) => {
     const btn = e.target.closest('button[data-act]');
