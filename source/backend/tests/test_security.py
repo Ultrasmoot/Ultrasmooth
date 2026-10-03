@@ -145,7 +145,7 @@ class ValidationTests(unittest.TestCase):
         from models.user_model import UserModel, ValidationError
         conn = mock.MagicMock()
         cur = conn.cursor.return_value
-        cur.rowcount = 0  # token already used / expired (e.g. lost the race)
+        cur.rowcount = 0
         with mock.patch("models.user_model.get_connection", return_value=conn):
             with self.assertRaises(ValidationError):
                 UserModel.reset_password("tok", "password123")
