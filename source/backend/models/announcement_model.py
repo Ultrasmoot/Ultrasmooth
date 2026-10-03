@@ -8,6 +8,30 @@ class ValidationError(Exception):
 
 
 class AnnouncementModel:
+    @staticmethod
+    def get(announcement_id: int):
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            cur.execute("SELECT * FROM announcements WHERE id = %s", (announcement_id,))
+            return cur.fetchone()
+        finally:
+            conn.close()
+
+    @staticmethod
+    def list():
+    # Pinned announcements first, newest first within each group
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            cur.execute(
+                "SELECT * FROM announcements ORDER BY is_pinned DESC, created_at DESC"
+            )
+            return cur.fetchall()
+        finally:
+            conn.close()
+
+
     @classmethod
     def toggle_pin(cls, announcement_id: int):
         announcement = cls.get(announcement_id)
