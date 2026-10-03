@@ -30,7 +30,22 @@ class AnnouncementModel:
             return cur.fetchall()
         finally:
             conn.close()
-
+            
+    @classmethod
+    def delete(cls, announcement_id: int, user_id: int):
+    # Only the author may delete their own announcement
+        announcement = cls.get(announcement_id)
+        if not announcement:
+            raise ValidationError("Announcement not found.")
+        if announcement["author_id"] != user_id:
+            raise ValidationError("You can only delete your own announcement.")
+        conn = get_connection()
+        try:
+            cur = conn.cursor()
+            cur.execute("DELETE FROM announcements WHERE id = %s", (announcement_id,))
+            conn.commit()
+        finally:
+            conn.close()
 
     @classmethod
     def toggle_pin(cls, announcement_id: int):
