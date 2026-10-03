@@ -17,6 +17,8 @@ ON DUPLICATE KEY UPDATE resource_code = resource_code;
 
 -- Sample requests belong to the demo student (not the admin), so the student
 -- sees them under "My requests" and the admin sees the Pending one in the queue.
+--   email:    student@ku.th
+--   password: Student1234
 INSERT INTO users (student_id, full_name, email, password_hash, role, faculty, major, is_active)
 VALUES (
     '6610000001',
