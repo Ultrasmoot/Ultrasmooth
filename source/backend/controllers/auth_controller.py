@@ -1,4 +1,6 @@
 import datetime
+import smtplib
+from email.mime.text import MIMEText
 import jwt
 from flask import Blueprint, jsonify, request
 from google.auth.transport import requests as google_requests
@@ -24,6 +26,37 @@ def _public_user(user: dict) -> dict:
         "full_name": user["full_name"],
         "role": user["role"],
     }
+
+# verify google id token
+def _verify_google_credential(credential):
+    if not credential or not isinstance(credential, str):
+        return None, (jsonify({"error": "Missing Google credential."}), 400)
+
+    try:
+        payload = id_token.verify_oauth2_token(
+            credential, google_requests.Request(), Config.GOOGLE_CLIENT_ID)
+    except ValueError:
+        return None, (jsonify({"error": "Invalid Google token."}), 401)
+
+    google_sub = payload.get("sub")
+    email = (payload.get("email") or "").strip().lower()
+    if not google_sub or not email:
+        return None, (jsonify({"error": "Invalid Google token."}), 401)
+
+    # only trust a verified google email
+    if payload.get("email_verified") is not True:
+        return None, (jsonify({"error": "Google account email is not verified."}), 403)
+
+    # check the email domain
+    allowed_domain = Config.ALLOWED_EMAIL_DOMAIN
+    if allowed_domain and not email.endswith("@" + allowed_domain):
+        return None, (jsonify({"error": f"Only @{allowed_domain} accounts may sign in."}), 403)
+
+    return {
+        "google_sub": google_sub,
+        "email": email,
+        "full_name": payload.get("name", ""),
+    }, None
 
 # sign up
 @auth_bp.post("/signup")
@@ -55,32 +88,18 @@ def login():
 @auth_bp.post("/google")
 def google_login(): # check google id token from the frontend
     data = request.get_json(silent=True) or {}
-    credential = data.get("credential")
-    if not credential:
-        return jsonify({"error": "Missing Google credential."}), 400
+    identity, error = _verify_google_credential(data.get("credential"))
+    if error:
+        return error
 
-    try:
-        payload = id_token.verify_oauth2_token(
-            credential, google_requests.Request(), Config.GOOGLE_CLIENT_ID
-        )
-    except ValueError:
-        return jsonify({"error": "Invalid Google token."}), 401
-
-    google_sub = payload["sub"]
-    email = (payload.get("email") or "").lower()
-    full_name = payload.get("name", "")
-
-    # check the email is from the allowed domain
-    allowed_domain = Config.ALLOWED_EMAIL_DOMAIN
-    if allowed_domain and not email.endswith("@" + allowed_domain):
-        return jsonify({"error": f"Only @{allowed_domain} accounts may sign in."}), 403
+    google_sub = identity["google_sub"]
+    email = identity["email"]
+    full_name = identity["full_name"]
 
     user, is_new = UserModel.find_or_create_google_user(google_sub, email, full_name)
     if is_new:
-        # new google user needs to choose a role first
-        return jsonify(
-            {"needs_role": True, "google_sub": google_sub, "email": email, "full_name": full_name}
-        ), 200
+        # new google user needs to choose a role
+        return jsonify({"needs_role": True, "email": email, "full_name": full_name}), 200
 
     return jsonify({"token": _issue_token(user), "user": _public_user(user)}), 200
 
