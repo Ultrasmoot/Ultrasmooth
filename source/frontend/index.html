@@ -512,9 +512,16 @@
 
     <!-- HOME (placeholder — Dashboard itself is built in a later iteration) -->
     <section class="view active" id="view-home">
+      <div class="panel" style="margin-bottom:16px;">
+        <div class="panel-head"><h2>Announcements</h2>
+          <button class="btn ok req-announcer" id="btn-new-announcement" type="button">+ New announcement</button>
+        </div>
+        <div id="announcements-list"></div>
+        <p class="note" id="announcements-empty" style="display:none; margin:0;">No announcements yet.</p>
+      </div>
       <div class="panel">
         <div class="panel-head"><h2>Signed in</h2></div>
-        <p class="note" style="margin:0;">You're logged in to VASE. This iteration adds Resource management (US-1/US-2) and password recovery, on top of Login and Role-based Access (US-11, US-12). Bookings, maintenance, and the operations dashboard will be developed in later iterations.</p>
+        <p class="note" style="margin:0;">You're logged in to VASE. This iteration adds Resource management (US-1/US-2), password recovery, and Booking & Request management (US-3/US-4/US-5). Maintenance and the operations dashboard will be developed in later iterations.</p>
       </div>
     </section>
 
