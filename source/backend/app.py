@@ -3,12 +3,17 @@ from flask import Flask, render_template
 from config import Config
 from controllers.auth_controller import auth_bp
 from middleware.auth_middleware import login_required, role_required
-
+from controllers.resource_controller import resource_bp
+from controllers.booking_controller import booking_bp
+from controllers.announcement_controller import announcement_bp
 
 def create_app():
     app = Flask(__name__, template_folder="../frontend")
     app.register_blueprint(auth_bp)
-
+    app.register_blueprint(resource_bp)
+    app.register_blueprint(booking_bp)  # Jirat
+    app.register_blueprint(announcement_bp)  # Jirat
+    
     @app.get("/")
     def index():
         return render_template("index.html", google_client_id=Config.GOOGLE_CLIENT_ID)
