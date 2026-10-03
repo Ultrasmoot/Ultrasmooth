@@ -111,6 +111,57 @@ class RateLimitTests(unittest.TestCase):
             ]
             self.assertEqual(codes[-1], 429)
 
+
+class ValidationTests(unittest.TestCase):
+    def setUp(self):
+        reset_rate_limits()
+        self.client = create_app().test_client()
+
+    def _signup(self, **over):
+        body = {"role": "undergrad_student", "student_id": "6512345678", "full_name": "A",
+                "email": "a@ku.th", "password": "password123"}
+        body.update(over)
+        return self.client.post("/api/auth/signup", json=body)
+
+    def test_signup_rejects_bad_input_without_500(self):
+        with mock.patch("models.user_model.UserModel.find_by_email", return_value=None):
+            for over in ({"password": "x" * 73}, {"password": 12345678}, {"full_name": ["a"]},
+                         {"full_name": "n" * 151}, {"faculty": "f" * 151}, {"email": 5}):
+                self.assertEqual(self._signup(**over).status_code, 400, over)
+
+    def test_signup_is_rate_limited(self):
+        codes = [self._signup(role="admin").status_code for _ in range(11)]
+        self.assertEqual(codes[:10], [400] * 10)
+        self.assertEqual(codes[10], 429)
+
+    def test_reset_rejects_long_password_before_touching_db(self):
+        from models.user_model import UserModel, ValidationError
+        with mock.patch("models.user_model.get_connection") as gc:
+            with self.assertRaises(ValidationError):
+                UserModel.reset_password("tok", "x" * 73)
+            gc.assert_not_called()
+
+    def test_reset_token_consumed_by_single_conditional_update(self):
+        from models.user_model import UserModel, ValidationError
+        conn = mock.MagicMock()
+        cur = conn.cursor.return_value
+        cur.rowcount = 0  # token already used / expired (e.g. lost the race)
+        with mock.patch("models.user_model.get_connection", return_value=conn):
+            with self.assertRaises(ValidationError):
+                UserModel.reset_password("tok", "password123")
+        conn.rollback.assert_called()
+        conn.commit.assert_not_called()
+
+        conn = mock.MagicMock()
+        cur = conn.cursor.return_value
+        cur.rowcount = 1
+        cur.fetchone.return_value = {"user_id": 3}
+        with mock.patch("models.user_model.get_connection", return_value=conn), \
+             mock.patch.object(UserModel, "_hash_password", return_value="h"):
+            UserModel.reset_password("tok", "password123")
+        conn.commit.assert_called_once()
+
+
 class ConfigTests(unittest.TestCase):
     def test_production_refuses_missing_or_placeholder_secret(self):
      
