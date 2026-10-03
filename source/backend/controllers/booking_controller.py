@@ -42,10 +42,3 @@ def list_my_bookings():
     user = get_current_user()
     bookings = BookingModel.list_mine(user["id"])
     return jsonify({"bookings": [_serialize(b) for b in bookings]}), 200
-
-# Admin history: already-decided requests, newest decision first.
-@booking_bp.get("/history")
-@role_required("admin")
-def list_booking_history():
-    bookings = BookingModel.list_history()
-    return jsonify({"bookings": [_serialize(b) for b in bookings]}), 200
