@@ -15,6 +15,12 @@ def _serialize(a: dict) -> dict:
         "created_at": a["created_at"].isoformat(),
     }
 
+@announcement_bp.get("")
+@login_required
+def list_announcements():
+    items = AnnouncementModel.list()
+    return jsonify({"announcements": [_serialize(a) for a in items]}), 200
+
 @announcement_bp.post("")
 @role_required(*POSTER_ROLES)
 def create_announcement():
@@ -25,3 +31,13 @@ def create_announcement():
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"announcement": _serialize(announcement)}), 201
+
+@announcement_bp.delete("/<int:announcement_id>")
+@login_required
+def delete_announcement(announcement_id):
+    user = get_current_user()
+    try:
+        AnnouncementModel.delete(announcement_id, user_id=user["id"])
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 400
+    return jsonify({"deleted": True}), 200
