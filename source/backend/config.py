@@ -3,10 +3,7 @@ import os
 _INSECURE_SECRET_KEYS = {"", "dev-secret-change-me", "change-me"}
 
 def _load_secret_key(app_env: str) -> str:
-    """Production must supply a real SECRET_KEY via the environment; the app
-    refuses to start otherwise. A throwaway key is only allowed when
-    APP_ENV=development, so a forgotten variable can never silently yield a
-    guessable JWT signing key."""
+    """Require a real SECRET_KEY in production; allow a temporary key only in development."""
     key = os.getenv("SECRET_KEY", "")
     if key not in _INSECURE_SECRET_KEYS:
         return key
