@@ -1,5 +1,6 @@
 import os
 import sys
+import config
 import unittest
 from unittest import mock
 
@@ -80,3 +81,53 @@ class GoogleAuthTests(unittest.TestCase):
             r = self.client.post("/api/auth/google", json={"credential": "tok"})
             self.assertEqual(r.status_code, 200)
             self.assertNotIn("google_sub", r.get_json())
+
+class RateLimitTests(unittest.TestCase):
+    def setUp(self):
+        reset_rate_limits()
+        self.client = create_app().test_client()
+
+    def test_login_is_limited_with_429(self):
+        with mock.patch("controllers.auth_controller.UserModel") as um:
+            um.authenticate.return_value = None
+            codes = [
+                self.client.post("/api/auth/login", json={"email": "a@ku.th", "password": "x"}).status_code
+                for _ in range(12)
+            ]
+        self.assertEqual(codes[:10], [401] * 10)
+        self.assertEqual(codes[10:], [429, 429])
+
+    def test_forgot_and_reset_are_limited(self):
+        with mock.patch("controllers.auth_controller.UserModel") as um:
+            um.create_reset_token.return_value = None
+            codes = [
+                self.client.post("/api/auth/forgot-password", json={"email": "a@ku.th"}).status_code
+                for _ in range(6)
+            ]
+            self.assertEqual(codes[-1], 429)
+            codes = [
+                self.client.post("/api/auth/reset-password", json={"token": ""}).status_code
+                for _ in range(11)
+            ]
+            self.assertEqual(codes[-1], 429)
+
+class ConfigTests(unittest.TestCase):
+    def test_production_refuses_missing_or_placeholder_secret(self):
+     
+        for value in (None, "", "change-me", "dev-secret-change-me"):
+            env = {"SECRET_KEY": value} if value is not None else {}
+            with mock.patch.dict(os.environ, env, clear=True):
+                if value is None:
+                    os.environ.pop("SECRET_KEY", None)
+                with self.assertRaises(RuntimeError):
+                    config._load_secret_key("production")
+
+    def test_production_accepts_real_secret_and_dev_allows_placeholder(self):
+        
+        with mock.patch.dict(os.environ, {"SECRET_KEY": "x" * 48}):
+            self.assertEqual(config._load_secret_key("production"), "x" * 48)
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(config._load_secret_key("development"), "dev-secret-change-me")
+
+if __name__ == "__main__":
+    unittest.main()
