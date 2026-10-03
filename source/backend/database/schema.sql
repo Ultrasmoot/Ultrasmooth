@@ -13,6 +13,21 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- US-1 / US-2 (SRS-1 / SRS-2): laboratory resource records.
+CREATE TABLE IF NOT EXISTS resources (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    resource_code VARCHAR(20) NOT NULL UNIQUE,
+    name VARCHAR(150) NOT NULL,
+    type VARCHAR(100) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    location VARCHAR(150) NOT NULL,
+    owner VARCHAR(150) NOT NULL,
+    status ENUM('Available','In Use','Maintenance') NOT NULL DEFAULT 'Available',
+    is_archived TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 -- bookings: resource reservation requests (US-3/US-4/US-5)
 CREATE TABLE IF NOT EXISTS bookings (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,21 +54,6 @@ CREATE TABLE IF NOT EXISTS announcements (
     is_pinned TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES users(id)
-);
-
--- US-1 / US-2 (SRS-1 / SRS-2): laboratory resource records.
-CREATE TABLE IF NOT EXISTS resources (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    resource_code VARCHAR(20) NOT NULL UNIQUE,
-    name VARCHAR(150) NOT NULL,
-    type VARCHAR(100) NOT NULL,
-    category VARCHAR(100) NOT NULL,
-    location VARCHAR(150) NOT NULL,
-    owner VARCHAR(150) NOT NULL,
-    status ENUM('Available','In Use','Maintenance') NOT NULL DEFAULT 'Available',
-    is_archived TINYINT(1) NOT NULL DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- password reset tokens
