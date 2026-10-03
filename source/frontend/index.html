@@ -771,9 +771,10 @@
     signIn(token, data.user);
   }
 
-  /* Google Sign-In (real, via Google Identity Services) */
-  let pendingGoogleProfile = null; // holds {google_sub, email, full_name} while a first-time Google user picks a role
-
+  //Google sign in
+  let pendingGoogleProfile = null; // holds email and name while first time Google user pick role
+  let pendingGoogleCredential = null; // save Google token
+  
   async function handleGoogleCredential(response){
     loginError.classList.remove('show');
     const {ok, data} = await apiPost('/google', {credential: response.credential});
@@ -782,8 +783,9 @@
       return;
     }
     if(data.needs_role){
-      // First-time Google sign-in: no role on file yet (ask before creating the account)
+      // first time Google sign in ask for a role before creating account
       pendingGoogleProfile = data;
+      pendingGoogleCredential = response.credential;
       document.getElementById('g-profile-name').textContent = data.full_name || data.email;
       document.getElementById('g-profile-email').textContent = data.email;
       showAuthView('complete-profile');
