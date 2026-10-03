@@ -9,6 +9,16 @@ class ValidationError(Exception):
 
 class AnnouncementModel:
     @staticmethod
+    def _validate(data: dict):
+        title = str(data.get("title") or "").strip()
+        body = str(data.get("body") or "").strip()
+        if not title:
+            raise ValidationError("title is required.")
+        if not body:
+            raise ValidationError("body is required.")
+        return title, body
+
+    @staticmethod
     def get(announcement_id: int):
         conn = get_connection()
         try:
@@ -30,7 +40,22 @@ class AnnouncementModel:
             return cur.fetchall()
         finally:
             conn.close()
-            
+
+    @classmethod
+    def create(cls, data: dict, author_id: int):
+        title, body = cls._validate(data)
+        conn = get_connection()
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                "INSERT INTO announcements (author_id, title, body) VALUES (%s, %s, %s)",
+                (author_id, title, body),
+            )
+            conn.commit()
+            return cls.get(cur.lastrowid)
+        finally:
+            conn.close()
+
     @classmethod
     def delete(cls, announcement_id: int, user_id: int):
     # Only the author may delete their own announcement
