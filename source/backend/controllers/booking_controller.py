@@ -23,7 +23,7 @@ def _serialize(b: dict) -> dict:
     }
 
 
-# US-3: Submit a booking request
+# US-3: Ph.D. Students and Undergraduate Students submit a booking request.
 @booking_bp.post("")
 @role_required(*STUDENT_ROLES)
 def create_booking():
@@ -34,3 +34,31 @@ def create_booking():
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"booking": _serialize(booking)}), 201
+
+# US-4: a requester views their own bookings and current status.
+@booking_bp.get("/mine")
+@login_required
+def list_my_bookings():
+    user = get_current_user()
+    bookings = BookingModel.list_mine(user["id"])
+    return jsonify({"bookings": [_serialize(b) for b in bookings]}), 200
+
+# Admin history: already-decided requests, newest decision first.
+@booking_bp.get("/history")
+@role_required("admin")
+def list_booking_history():
+    bookings = BookingModel.list_history()
+    return jsonify({"bookings": [_serialize(b) for b in bookings]}), 200
+
+
+# US-5: Lab Managers/Administrators approve or reject a request.
+@booking_bp.post("/<int:booking_id>/decide")
+@role_required("admin")
+def decide_booking(booking_id):
+    data = request.get_json(silent=True) or {}
+    user = get_current_user()
+    try:
+        booking = BookingModel.decide(booking_id, data.get("decision"), admin_id=user["id"])
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 400
+    return jsonify({"booking": _serialize(booking)}), 200
