@@ -526,7 +526,7 @@
     </section>
 
     <!-- RESOURCES-view resources -->
-    <section class="view" id="view-resources"> <!-- Panyasiri -->
+    <section class="view" id="view-resources">
       <div class="panel">
         <div class="panel-head">
           <h2>Resources</h2>
@@ -577,6 +577,45 @@
           <tbody id="res-tbody"></tbody>
         </table>
         <p class="note" id="res-empty" style="display:none; margin-top:10px;">No resources found.</p>
+      </div>
+    </section>
+
+    <!-- REQUESTS: students submit + track their own (US-3/US-4); admin reviews the pending queue (US-5) -->
+    <section class="view" id="view-bookings">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Requests</h2>
+          <div>
+            <button class="btn" id="btn-refresh-bookings" type="button">↻ Refresh</button>
+            <button class="btn ok req-booker" id="btn-new-booking" type="button">+ New booking</button>
+          </div>
+        </div>
+        <div class="toolbar req-admin" id="admin-bk-tabs" style="margin-bottom:12px;">
+          <button class="filter-chip active" type="button" data-tab="pending">Pending</button>
+          <button class="filter-chip" type="button" data-tab="history">History</button>
+        </div>
+        <p class="note req-admin" id="admin-bk-note" style="margin:0 0 10px;">Showing requests awaiting your review.</p>
+        <div class="toolbar req-booker" id="booking-filters" style="margin-bottom:12px;">
+          <button class="filter-chip active" type="button" data-filter="All">All</button>
+          <button class="filter-chip" type="button" data-filter="Pending">Pending</button>
+          <button class="filter-chip" type="button" data-filter="Approved">Approved</button>
+          <button class="filter-chip" type="button" data-filter="Rejected">Rejected</button>
+        </div>
+        <p class="note req-booker" id="booking-filter-note" style="margin:0 0 10px;">These are your booking requests and their current status.</p>
+        <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+          <thead>
+            <tr style="text-align:left; border-bottom:1px solid var(--line); color:var(--ink-faint); text-transform:uppercase; font-size:10.5px; letter-spacing:0.5px;">
+              <th style="padding:8px 6px;">Resource</th>
+              <th class="req-admin-cell" style="padding:8px 6px;">Requester</th>
+              <th style="padding:8px 6px;">Time</th>
+              <th style="padding:8px 6px;">Purpose</th>
+              <th style="padding:8px 6px;">Status</th>
+              <th id="bk-last-th" style="padding:8px 6px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="bk-tbody"></tbody>
+        </table>
+        <p class="note" id="bk-empty" style="display:none; margin-top:10px;">No requests to show.</p>
       </div>
     </section>
 
