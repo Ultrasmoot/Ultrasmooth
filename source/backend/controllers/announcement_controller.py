@@ -41,3 +41,12 @@ def delete_announcement(announcement_id):
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"deleted": True}), 200
+
+@announcement_bp.post("/<int:announcement_id>/pin")
+@role_required(*POSTER_ROLES)
+def pin_announcement(announcement_id):
+    try:
+        announcement = AnnouncementModel.toggle_pin(announcement_id)
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 400
+    return jsonify({"announcement": _serialize(announcement)}), 200
