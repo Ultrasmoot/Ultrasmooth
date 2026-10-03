@@ -152,35 +152,6 @@ Then open:
 
 The container-side port remains `5000`.
 
-## Demo Login
-
-The database is seeded with an admin account for testing:
-
-```text
-Email:    admin@ku.th
-Password: Admin1234
-```
-
-This account has the `admin` role and can manage resources, review booking requests, and post announcements.
-
-A demo student account is also included in the seed data so the booking flow can be demonstrated (see `database/seed.sql` for its credentials).
-
-The seed data also includes five sample resources and three sample bookings (one Pending, one Approved, one Rejected).
-
-## Google Sign-In
-
-Google OAuth checks the exact origin of the application, including the protocol, domain, and port.
-
-If the application port is changed, the new origin must be added to **Authorized JavaScript origins** in Google Cloud Console.
-
-For example, if the application runs on port `5001`:
-
-```text
-http://localhost:5001
-```
-
-It may take a few minutes for the new OAuth setting to take effect.
-
 ## Project Status
 
 The project is currently in **Iteration 3 (Booking & Request Management)**, covering **SRS-3**, **SRS-4** and **SRS-5**.
