@@ -1,8 +1,29 @@
 import os
 
+_INSECURE_SECRET_KEYS = {"", "dev-secret-change-me", "change-me"}
+
+def _load_secret_key(app_env: str) -> str:
+    """Production must supply a real SECRET_KEY via the environment; the app
+    refuses to start otherwise. A throwaway key is only allowed when
+    APP_ENV=development, so a forgotten variable can never silently yield a
+    guessable JWT signing key."""
+    key = os.getenv("SECRET_KEY", "")
+    if key not in _INSECURE_SECRET_KEYS:
+        return key
+    if app_env == "development":
+        return "dev-secret-change-me"
+    raise RuntimeError(
+        "SECRET_KEY is missing or still set to a placeholder value. "
+        "Set a long random SECRET_KEY in the environment "
+        "(or set APP_ENV=development for local testing only)."
+    )
 
 class Config:
-    SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-change-me")
+    # Defaults to "production" (the safe choice) when APP_ENV is not set.
+    APP_ENV = os.getenv("APP_ENV", "production").strip().lower()
+    SECRET_KEY = _load_secret_key(APP_ENV)
+    # Flask debug mode is only ever honoured in development.
+    DEBUG = APP_ENV == "development" and os.getenv("FLASK_DEBUG", "0") == "1"
     JWT_EXPIRES_HOURS = int(os.getenv("JWT_EXPIRES_HOURS", "12"))
 
     DB_HOST = os.getenv("DB_HOST", "db")
