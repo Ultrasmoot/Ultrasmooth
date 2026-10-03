@@ -1,8 +1,6 @@
 # Panyasiri
 import datetime
-
 import mysql.connector
-
 from database.db import get_connection
 
 VALID_DECISIONS = {"approve": "Approved", "reject": "Rejected"}
@@ -26,6 +24,30 @@ class ValidationError(Exception):
 
 
 class BookingModel:
+    # lookups
+    @staticmethod
+    def get(booking_id: int):
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            cur.execute(_SELECT_WITH_NAMES + " WHERE b.id = %s", (booking_id,))
+            return cur.fetchone()
+        finally:
+            conn.close()
+
+    @staticmethod
+    def list_mine(user_id: int):
+    # US-4: a requester's own bookings and their current status
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            cur.execute(
+                _SELECT_WITH_NAMES + " WHERE b.requester_id = %s ORDER BY b.start_time DESC",
+                (user_id,),
+            )
+            return cur.fetchall()
+        finally:
+            conn.close()
 
     @staticmethod
     def list_pending():
