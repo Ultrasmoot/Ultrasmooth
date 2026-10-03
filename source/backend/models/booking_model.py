@@ -1,4 +1,3 @@
-# Panyasiri
 import datetime
 import mysql.connector
 from database.db import get_connection
