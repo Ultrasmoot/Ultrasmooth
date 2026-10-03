@@ -1,14 +1,20 @@
 import datetime
 import smtplib
 from email.mime.text import MIMEText
+
 import jwt
 from flask import Blueprint, jsonify, request
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
+
 from config import Config
+from middleware.rate_limit import rate_limit
 from models.user_model import UserModel, ValidationError
+
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
+
+# jwt helper
 def _issue_token(user: dict) -> str:
     payload = {
         "sub": user["id"],
@@ -27,14 +33,16 @@ def _public_user(user: dict) -> dict:
         "role": user["role"],
     }
 
-# verify google id token
+
+# verify Google ID token
 def _verify_google_credential(credential):
     if not credential or not isinstance(credential, str):
         return None, (jsonify({"error": "Missing Google credential."}), 400)
 
     try:
         payload = id_token.verify_oauth2_token(
-            credential, google_requests.Request(), Config.GOOGLE_CLIENT_ID)
+            credential, google_requests.Request(), Config.GOOGLE_CLIENT_ID
+        )
     except ValueError:
         return None, (jsonify({"error": "Invalid Google token."}), 401)
 
@@ -43,11 +51,14 @@ def _verify_google_credential(credential):
     if not google_sub or not email:
         return None, (jsonify({"error": "Invalid Google token."}), 401)
 
-    # only trust a verified google email
+    # Only trust an email address Google itself has verified; otherwise it
+    # could be used to claim (or be linked to) someone else's account.
     if payload.get("email_verified") is not True:
         return None, (jsonify({"error": "Google account email is not verified."}), 403)
 
-    # check the email domain
+    # Server-side domain guard: enforced here regardless of the Cloud
+    # project's Audience setting (Internal/External), so a misconfigured
+    # consent screen or a personal Gmail account can't slip through.
     allowed_domain = Config.ALLOWED_EMAIL_DOMAIN
     if allowed_domain and not email.endswith("@" + allowed_domain):
         return None, (jsonify({"error": f"Only @{allowed_domain} accounts may sign in."}), 403)
@@ -58,8 +69,10 @@ def _verify_google_credential(credential):
         "full_name": payload.get("name", ""),
     }, None
 
-# sign up
+
+# signup
 @auth_bp.post("/signup")
+@rate_limit("signup", limit=10, window_seconds=3600)
 def signup(): # Create-account screen: students only, admin/professor added later (SRS-11, URS-9)
     data = request.get_json(silent=True) or {}
     try:
@@ -68,10 +81,11 @@ def signup(): # Create-account screen: students only, admin/professor added late
         return jsonify({"error": str(e)}), 400
     return jsonify({"token": _issue_token(user), "user": _public_user(user)}), 201
 
+
 # login
 @auth_bp.post("/login")
-def login():
-    # email-password login (SRS-11)
+@rate_limit("login", limit=10, window_seconds=300, by_email=True)
+def login(): # Email/password login (SRS-11)
     data = request.get_json(silent=True) or {}
     email = data.get("email")
     password = data.get("password")
@@ -84,9 +98,10 @@ def login():
 
     return jsonify({"token": _issue_token(user), "user": _public_user(user)}), 200
 
+
 # google login
 @auth_bp.post("/google")
-def google_login(): # check google id token from the frontend
+def google_login(): # Verifies the Google ID token from the frontend's OAuth flow (SRS-11)
     data = request.get_json(silent=True) or {}
     identity, error = _verify_google_credential(data.get("credential"))
     if error:
@@ -98,22 +113,32 @@ def google_login(): # check google id token from the frontend
 
     user, is_new = UserModel.find_or_create_google_user(google_sub, email, full_name)
     if is_new:
-        # new google user needs to choose a role
+        # First-time Google sign-in: ask for a role before creating the account.
+        # google_sub is intentionally NOT returned: the client must send the
+        # Google credential again to complete sign-up (see complete-profile).
         return jsonify({"needs_role": True, "email": email, "full_name": full_name}), 200
 
     return jsonify({"token": _issue_token(user), "user": _public_user(user)}), 200
 
-# google complete profile
+
+# complete profile
 @auth_bp.post("/google/complete-profile")
-def google_complete_profile(): # Finishes a first-time Google sign-up once the user picks a role
+def google_complete_profile():
     data = request.get_json(silent=True) or {}
+    identity, error = _verify_google_credential(data.get("credential"))
+    if error:
+        return error
+
     try:
-        user = UserModel.complete_google_signup(data.get("google_sub"), data.get("email"), data.get("full_name"), data.get("role"))
+        user = UserModel.complete_google_signup(
+            identity["google_sub"], identity["email"], identity["full_name"], data.get("role")
+        )
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"token": _issue_token(user), "user": _public_user(user)}), 201
 
-# me/end point
+
+# me endpoint
 @auth_bp.get("/me")
 def me():
     from middleware.auth_middleware import get_current_user
@@ -123,7 +148,8 @@ def me():
         return jsonify({"error": "Not authenticated."}), 401
     return jsonify({"user": _public_user(user)}), 200
 
-# forgot password
+
+# Forgot Password
 def _send_reset_email(to_email: str, reset_link: str):
     subject = "Reset your VASE password"
     body = (
@@ -133,7 +159,6 @@ def _send_reset_email(to_email: str, reset_link: str):
     )
 
     if not Config.SMTP_HOST:
-        # print reset link if email is not configured
         print(f"[DEV] Password reset link for {to_email}: {reset_link}")
         return
 
@@ -149,8 +174,8 @@ def _send_reset_email(to_email: str, reset_link: str):
 
 
 @auth_bp.post("/forgot-password")
+@rate_limit("forgot-password", limit=5, window_seconds=900, by_email=True)
 def forgot_password():
-    # request a password reset link
     data = request.get_json(silent=True) or {}
     email = (data.get("email") or "").strip().lower()
     if not email:
@@ -167,8 +192,9 @@ def forgot_password():
 
 
 @auth_bp.post("/reset-password")
+@rate_limit("reset-password", limit=10, window_seconds=900)
 def reset_password():
-    # reset password using the token from email
+# Completes a reset using the single-use, time-limited token from the emailed link
     data = request.get_json(silent=True) or {}
     token = data.get("token")
     new_password = data.get("password")
