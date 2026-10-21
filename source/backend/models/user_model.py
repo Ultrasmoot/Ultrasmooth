@@ -192,16 +192,17 @@ class UserModel:
         return None, True
 
     @classmethod
-    def complete_google_signup(cls, google_sub: str, email: str, full_name: str, role: str):
-        if role not in STUDENT_ROLES:
+    def complete_google_signup(cls, google_sub: str, email: str, full_name: str, role: str, year=None):
+        if not isinstance(role, str) or role not in STUDENT_ROLES:
             raise ValidationError("New Google sign-ups can only register with a student role.")
+        year = _clean_year(role, year)  # undergrad must pick a class year
         conn = get_connection()
         try:
             cur = conn.cursor()
             cur.execute(
-                """INSERT INTO users (full_name, email, google_sub, role)
-                   VALUES (%s, %s, %s, %s)""",
-                ((full_name or "")[:MAX_TEXT_LENGTH], (email or "").strip().lower(), google_sub, role),
+                """INSERT INTO users (full_name, email, google_sub, role, year)
+                   VALUES (%s, %s, %s, %s, %s)""",
+                ((full_name or "")[:MAX_TEXT_LENGTH], (email or "").strip().lower(), google_sub, role, year),
             )
             conn.commit()
             return cls.find_by_id(cur.lastrowid)
