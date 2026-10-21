@@ -186,7 +186,9 @@ class UserModel:
     # email login (US-11)
     @classmethod
     def authenticate(cls, email: str, password: str):
-        user = cls.find_by_email((email or "").strip().lower())
+        if not isinstance(email, str) or not isinstance(password, str):
+            return None
+        user = cls.find_by_email(email.strip().lower())
         if not user or not user["is_active"]:
             return None
         if not cls._check_password(password, user["password_hash"]):
@@ -196,24 +198,43 @@ class UserModel:
     # Google login (US-11)
     @classmethod
     def find_or_create_google_user(cls, google_sub: str, email: str, full_name: str):
-        # find existing Google user or return a new user.
+        # Find an existing Google account or link an account by email.
         user = cls.find_by_google_sub(google_sub)
         if user:
             return user, False
 
         user = cls.find_by_email(email)
         if user:
+            # Do not link inactive accounts.
+            if not user["is_active"]:
+                return user, False
+            # Do not link an account to a different Google identity.
+            if user.get("google_sub") and user["google_sub"] != google_sub:
+                raise ValidationError(
+                    "This email is already linked to a different Google account."
+                )
             conn = get_connection()
             try:
                 cur = conn.cursor()
+                # Link the account and clear the old password.
                 cur.execute(
-                    "UPDATE users SET google_sub = %s WHERE id = %s",
-                    (google_sub, user["id"]),
+                    "UPDATE users SET google_sub = %s, password_hash = NULL, email_verified = 1 "
+                    "WHERE id = %s AND is_active = 1 AND (google_sub IS NULL OR google_sub = %s)",
+                    (google_sub, user["id"], google_sub),
                 )
+                linked = cur.rowcount
                 conn.commit()
             finally:
                 conn.close()
-            return cls.find_by_id(user["id"]), False
+            fresh = cls.find_by_id(user["id"])
+            if not linked:
+                if fresh and not fresh["is_active"]:
+                    return fresh, False
+                if not (fresh and fresh.get("google_sub") == google_sub):
+                    raise ValidationError(
+                        "This email is already linked to a different Google account."
+                    )
+            return fresh, False
 
         return None, True
 
@@ -238,14 +259,76 @@ class UserModel:
         finally:
             conn.close()
 
+    # E-mail verification (us-11)
+    @classmethod
+    def create_verification_token(cls, email: str):
+        # Return a token for an active, unverified account
+        if not isinstance(email, str):
+            return None
+        user = cls.find_by_email(email.strip().lower())
+        if not user or not user["is_active"] or user.get("email_verified", 1):
+            return None
+
+        token = secrets.token_urlsafe(32)
+        expires_at = datetime.datetime.utcnow() + datetime.timedelta(
+            minutes=Config.VERIFY_TOKEN_EXPIRES_MINUTES
+        )
+        conn = get_connection()
+        try:
+            cur = conn.cursor()
+            # Retire older links so only the newest one works
+            cur.execute(
+                "UPDATE email_verifications SET used = 1 WHERE user_id = %s AND used = 0",
+                (user["id"],),
+            )
+            cur.execute(
+                "INSERT INTO email_verifications (user_id, token, expires_at) VALUES (%s, %s, %s)",
+                (user["id"], _hash_reset_token(token), expires_at),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+        return token 
+
+    @classmethod
+    def verify_email(cls, token: str):
+        # Verify the token and mark the account as verified.
+        if not isinstance(token, str) or not token or len(token) > 128:
+            raise ValidationError("This verification link is invalid or has expired.")
+        token_hash = _hash_reset_token(token)
+
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            cur.execute(
+                "UPDATE email_verifications SET used = 1 "
+                "WHERE token = %s AND used = 0 AND expires_at > %s",
+                (token_hash, datetime.datetime.utcnow()),
+            )
+            if cur.rowcount != 1:
+                conn.rollback()
+                raise ValidationError("This verification link is invalid or has expired.")
+            cur.execute("SELECT user_id FROM email_verifications WHERE token = %s", (token_hash,))
+            row = cur.fetchone()
+            cur.execute("UPDATE users SET email_verified = 1 WHERE id = %s", (row["user_id"],))
+            cur.execute(
+                "UPDATE email_verifications SET used = 1 WHERE user_id = %s AND used = 0",
+                (row["user_id"],),
+            )
+            conn.commit()
+        except Exception:
+            conn.rollback()
+            raise
+        finally:
+            conn.close()       
+    
     # forgot password
     @classmethod
     def create_reset_token(cls, email: str):
-        """Returns a reset token if the email matches an active account,
-        else None. Callers must not reveal which case occurred — always
-        respond the same way either way, to avoid confirming which emails
-        have accounts."""
-        user = cls.find_by_email((email or "").strip().lower())
+        # Return a reset token for an active account or None
+        if not isinstance(email, str):
+            return None
+        user = cls.find_by_email(email.strip().lower())
         if not user or not user["is_active"]:
             return None
 
@@ -257,8 +340,12 @@ class UserModel:
         try:
             cur = conn.cursor()
             cur.execute(
+                "UPDATE password_resets SET used = 1 WHERE user_id = %s AND used = 0",
+                (user["id"],),
+            )
+            cur.execute(
                 "INSERT INTO password_resets (user_id, token, expires_at) VALUES (%s, %s, %s)",
-                (user["id"], token, expires_at),
+                (user["id"], _hash_reset_token(token), expires_at),
             )
             conn.commit()
         finally:
@@ -272,7 +359,7 @@ class UserModel:
             cur = conn.cursor(dictionary=True)
             cur.execute(
                 "SELECT * FROM password_resets WHERE token = %s AND used = 0 AND expires_at > %s",
-                (token, datetime.datetime.utcnow()),
+                (_hash_reset_token(token), datetime.datetime.utcnow()),
             )
             return cur.fetchone()
         finally:
@@ -286,6 +373,7 @@ class UserModel:
             raise ValidationError("This reset link is invalid or has expired.")
         # validate the password first
         _check_password_rules(new_password)
+        token_hash = _hash_reset_token(token)
 
         conn = get_connection()
         try:
@@ -293,16 +381,21 @@ class UserModel:
             cur.execute(
                 "UPDATE password_resets SET used = 1 "
                 "WHERE token = %s AND used = 0 AND expires_at > %s",
-                (token, datetime.datetime.utcnow()),
+                (token_hash, datetime.datetime.utcnow()),
             )
             if cur.rowcount != 1:
                 conn.rollback()
                 raise ValidationError("This reset link is invalid or has expired.")
-            cur.execute("SELECT user_id FROM password_resets WHERE token = %s", (token,))
+            cur.execute("SELECT user_id FROM password_resets WHERE token = %s", (token_hash,))
             row = cur.fetchone()
             cur.execute(
                 "UPDATE users SET password_hash = %s WHERE id = %s",
                 (cls._hash_password(new_password), row["user_id"]),
+            )
+            # Invalidate other reset links for this user
+            cur.execute(
+                "UPDATE password_resets SET used = 1 WHERE user_id = %s AND used = 0",
+                (row["user_id"],),
             )
             conn.commit()
         except Exception:
