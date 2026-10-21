@@ -79,7 +79,16 @@ def signup(): # Create-account screen: students only, admin/professor added late
         user = UserModel.create_student_account(data)
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
-    return jsonify({"token": _issue_token(user), "user": _public_user(user)}), 201
+    # No session yet: the account works only after the emailed link is opened.
+    try:
+        _send_verification_email(user["email"])
+    except Exception:
+        # The account exists; the user can ask for a fresh link ("Resend verification email").
+        current_app.logger.exception("Could not send verification email")
+    return jsonify({
+        "message": "Account created. Check your email for a verification link, then log in.",
+        "email": user["email"],
+    }), 201
 
 
 # login
@@ -91,10 +100,19 @@ def login(): # Email/password login (SRS-11)
     password = data.get("password")
     if not email or not password:
         return jsonify({"error": "Email and password are required."}), 400
+    if not isinstance(email, str) or not isinstance(password, str):
+        return jsonify({"error": "Email and password must be text."}), 400
 
     user = UserModel.authenticate(email, password)
     if not user:
         return jsonify({"error": "Invalid email or password."}), 401
+    if not user.get("email_verified", 1):
+        # Right password, but the address was never confirmed
+        return jsonify({
+            "error": "Please verify your email first. Check your inbox for the verification link.",
+            "needs_verification": True,
+            "email": user["email"],
+        }), 403
 
     return jsonify({"token": _issue_token(user), "user": _public_user(user)}), 200
 
