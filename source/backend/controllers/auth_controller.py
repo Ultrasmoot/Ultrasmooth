@@ -129,11 +129,14 @@ def google_login(): # Verifies the Google ID token from the frontend's OAuth flo
     email = identity["email"]
     full_name = identity["full_name"]
 
-    user, is_new = UserModel.find_or_create_google_user(google_sub, email, full_name)
+    try:
+        user, is_new = UserModel.find_or_create_google_user(google_sub, email, full_name)
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 403
+    # SRS-13: a deactivated account cannot sign in by any method.
+    if user and not user["is_active"]:
+        return jsonify({"error": "This account has been deactivated."}), 403
     if is_new:
-        # First-time Google sign-in: ask for a role before creating the account.
-        # google_sub is intentionally NOT returned: the client must send the
-        # Google credential again to complete sign-up (see complete-profile).
         return jsonify({"needs_role": True, "email": email, "full_name": full_name}), 200
 
     return jsonify({"token": _issue_token(user), "user": _public_user(user)}), 200
@@ -149,7 +152,8 @@ def google_complete_profile():
 
     try:
         user = UserModel.complete_google_signup(
-            identity["google_sub"], identity["email"], identity["full_name"], data.get("role")
+            identity["google_sub"], identity["email"], identity["full_name"], data.get("role"),
+            year=data.get("year"),
         )
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
