@@ -97,10 +97,14 @@ class UserModel:
     @classmethod
     def create_student_account(cls, data: dict):
         if not isinstance(data.get("role"), str):
-            raise ValidationError("Self sign-up is only available for Ph.D. and Undergraduate students.")
+            raise ValidationError(
+                "Self sign-up is only available for Ph.D. and Undergraduate students."
+            )
         role = data["role"].strip()
         if role not in STUDENT_ROLES:
-            raise ValidationError("Self sign-up is only available for Ph.D. and Undergraduate students.")
+            raise ValidationError(
+                "Self sign-up is only available for Ph.D. and Undergraduate students."
+            )
 
         student_id = data.get("student_id")
         student_id = student_id.strip() if isinstance(student_id, str) else ""
@@ -110,6 +114,7 @@ class UserModel:
         full_name = _clean_text(data.get("full_name"), "Full name", required=True)
         faculty = _clean_text(data.get("faculty"), "Faculty")
         major = _clean_text(data.get("major"), "Major")
+        year = _clean_year(role, data.get("year"))
 
         email = data.get("email")
         email = email.strip().lower() if isinstance(email, str) else ""
@@ -131,8 +136,8 @@ class UserModel:
             cur = conn.cursor()
             cur.execute(
                 """INSERT INTO users
-                   (student_id, full_name, email, password_hash, role, faculty, major)
-                   VALUES (%s, %s, %s, %s, %s, %s, %s)""",
+                   (student_id, full_name, email, password_hash, role, faculty, major, year, email_verified)
+                   VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 0)""",
                 (
                     student_id,
                     full_name,
@@ -141,6 +146,7 @@ class UserModel:
                     role,
                     faculty,
                     major,
+                    year,
                 ),
             )
             conn.commit()
