@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 import re
 import secrets
 
@@ -18,10 +19,15 @@ ALL_ROLES = {"phd_student", "undergrad_student", "professor", "admin"}
 MAX_PASSWORD_BYTES = 72
 MIN_PASSWORD_LENGTH = 8
 MAX_TEXT_LENGTH = 150  # matches VARCHAR(150) columns
+MIN_YEAR, MAX_YEAR = 1, 6  # class year range
 
 
 class ValidationError(Exception):
     pass
+
+def _hash_reset_token(token: str) -> str:
+    #Hash the reset token before storing it
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
 
 def _clean_text(value, field: str, required: bool = False):
@@ -54,12 +60,18 @@ class UserModel:
     def _hash_password(password: str) -> str:
         return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-    # Napakhet - check password
+    # check password
     @staticmethod
     def _check_password(password: str, password_hash: str) -> bool:
-        if not password_hash:
+        if not password_hash or not isinstance(password, str):
             return False
-        return bcrypt.checkpw(password.encode("utf-8"), password_hash.encode("utf-8"))
+        raw = password.encode("utf-8")
+        if len(raw) > MAX_PASSWORD_BYTES:
+            return False
+        try:
+            return bcrypt.checkpw(raw, password_hash.encode("utf-8"))
+        except ValueError:
+            return False  # invalid hash
 
     # lookups
     @staticmethod
