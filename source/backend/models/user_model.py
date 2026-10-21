@@ -31,7 +31,6 @@ def _hash_reset_token(token: str) -> str:
 
 
 def _clean_text(value, field: str, required: bool = False):
-#return a stripped string, rejecting non-string, too long input
     if value is None or value == "":
         if required:
             raise ValidationError(f"{field} is required.")
@@ -44,6 +43,21 @@ def _clean_text(value, field: str, required: bool = False):
     if len(value) > MAX_TEXT_LENGTH:
         raise ValidationError(f"{field} must be at most {MAX_TEXT_LENGTH} characters.")
     return value or None
+
+
+def _clean_year(role, value):
+    if role != "undergrad_student":
+        return None
+    if isinstance(value, bool) or value is None or value == "":
+        raise ValidationError("Year is required for undergraduate students.")
+    if isinstance(value, str):
+        value = value.strip()
+        if not re.fullmatch(r"\d{1,2}", value):
+            raise ValidationError(f"Year must be a number from {MIN_YEAR} to {MAX_YEAR}.")
+        value = int(value)
+    if not isinstance(value, int) or not MIN_YEAR <= value <= MAX_YEAR:
+        raise ValidationError(f"Year must be a number from {MIN_YEAR} to {MAX_YEAR}.")
+    return value
 
 
 def _check_password_rules(password):
