@@ -40,6 +40,8 @@ CREATE TABLE IF NOT EXISTS bookings (
     status ENUM('Pending','Approved','Rejected') NOT NULL DEFAULT 'Pending',
     decided_by INT NULL,
     decided_at TIMESTAMP NULL,
+    checked_in_at DATETIME NULL,
+    checked_out_at DATETIME NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (resource_id) REFERENCES resources(id),
     FOREIGN KEY (requester_id) REFERENCES users(id),
