@@ -69,3 +69,19 @@ CREATE TABLE IF NOT EXISTS password_resets (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+-- one-time check-in codes e-mailed to the student.
+-- Only an HMAC of the code is stored, never the code itself.
+CREATE TABLE IF NOT EXISTS checkin_codes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    booking_id INT NOT NULL,
+    user_id INT NOT NULL,
+    code_hash CHAR(64) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    attempts INT NOT NULL DEFAULT 0,
+    consumed_at DATETIME NULL,
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY (booking_id) REFERENCES bookings(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    INDEX idx_checkin_booking (booking_id, id)
+);
