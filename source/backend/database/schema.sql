@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS users (
     major VARCHAR(150),
     year TINYINT UNSIGNED NULL,
     is_active TINYINT(1) NOT NULL DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	email_verified TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_users_year CHECK (year IS NULL OR year BETWEEN 1 AND 6)
 );
 
 -- US-1 / US-2 (SRS-1 / SRS-2): laboratory resource records.
@@ -61,6 +63,17 @@ CREATE TABLE IF NOT EXISTS announcements (
 
 -- password reset tokens
 CREATE TABLE IF NOT EXISTS password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(128) NOT NULL UNIQUE,
+    expires_at TIMESTAMP NOT NULL,
+    used TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- E-mail verification (SRS-11) single-use, time-limited
+CREATE TABLE IF NOT EXISTS email_verifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     token VARCHAR(128) NOT NULL UNIQUE,
