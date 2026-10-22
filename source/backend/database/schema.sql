@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     role ENUM('phd_student','undergrad_student','professor','admin') NOT NULL,
     faculty VARCHAR(150),
     major VARCHAR(150),
+    year TINYINT UNSIGNED NULL,
     is_active TINYINT(1) NOT NULL DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
