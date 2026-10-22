@@ -4,6 +4,11 @@ from database.db import get_connection
 VALID_STATUSES = {"Available", "In Use", "Maintenance"}
 REQUIRED_FIELDS = ["name", "type", "category", "location", "owner"]
 
+MAINTENANCE_MANAGED_MSG = (
+    "The 'Maintenance' status is managed through Maintenance records "
+    "(report an issue to enter it, resolve the issue to leave it)."
+)
+
 class ValidationError(Exception):
     pass
 
@@ -30,6 +35,8 @@ class ResourceModel:
     @classmethod
     def create(cls, data: dict):
         cls._validate(data)
+        if data.get("status") == "Maintenance":
+            raise ValidationError(MAINTENANCE_MANAGED_MSG)
         conn = get_connection()
         try:
             attempts = 3
@@ -65,6 +72,14 @@ class ResourceModel:
         if not existing:
             raise ValidationError("Resource not found.")
         cls._validate(data, partial=True)
+
+        new_status = data.get("status")
+        if (
+            new_status is not None
+            and new_status != existing["status"]
+            and "Maintenance" in (new_status, existing["status"])
+        ):
+            raise ValidationError(MAINTENANCE_MANAGED_MSG)
 
         merged = {**existing, **{k: v for k, v in data.items() if v is not None}}
         conn = get_connection()
