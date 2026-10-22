@@ -1,8 +1,19 @@
+import hashlib
+import hmac
+import re
+import jwt
+
+from flask import g, jsonify, request
 from functools import wraps
 from config import Config
 from models.user_model import UserModel
-import jwt
-from flask import g, jsonify, request
+
+def password_fingerprint(password_hash) -> str:
+    return hmac.new(
+        Config.SECRET_KEY.encode("utf-8"),
+        (password_hash or "").encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()[:32]
 
 def _decode_token():
     auth_header = request.headers.get("Authorization", "")
@@ -10,7 +21,9 @@ def _decode_token():
         return None
     token = auth_header.split(" ", 1)[1]
     try:
-        return jwt.decode(token, Config.SECRET_KEY, algorithms=["HS256"])
+        return jwt.decode(
+            token, Config.SECRET_KEY, algorithms=["HS256"]
+        )
     except jwt.PyJWTError:
         return None
 
@@ -22,7 +35,19 @@ def get_current_user():
     if not claims:
         g.current_user = None
         return None
-    user = UserModel.find_by_id(claims["sub"])
+    sub = claims.get("sub")
+    if isinstance(sub, bool) or not (
+        isinstance(sub, int) or (isinstance(sub, str) and re.fullmatch(r"\d{1,18}", sub))
+    ):
+        g.current_user = None
+        return None
+    user_id = int(sub)
+    user = UserModel.find_by_id(user_id)
+    if user:
+        token_pwf = claims.get("pwf")
+        current_pwf = password_fingerprint(user.get("password_hash"))
+        if not isinstance(token_pwf, str) or not hmac.compare_digest(token_pwf, current_pwf):
+            user = None
     g.current_user = user if user and user["is_active"] else None
     return g.current_user
 
