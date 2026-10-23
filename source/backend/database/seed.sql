@@ -60,3 +60,12 @@ JOIN (
     SELECT 3, CURDATE() + INTERVAL 2 DAY + INTERVAL 10 HOUR, CURDATE() + INTERVAL 2 DAY + INTERVAL 12 HOUR, 'Soldering workshop prep',    'Rejected'
 ) v
 WHERE u.email = 'student@ku.th';
+
+-- check-in database
+INSERT INTO bookings (resource_id, requester_id, start_time, end_time, purpose, status, decided_by, decided_at)
+SELECT r.id, u.id, NOW() - INTERVAL 1 DAY, NOW() + INTERVAL 7 DAY,
+       'Demo booking for check-in', 'Approved', a.id, NOW()
+FROM resources r
+JOIN users u ON u.email = 'student@ku.th'
+JOIN users a ON a.email = 'admin@ku.th'
+WHERE r.resource_code = 'RES-0001';
