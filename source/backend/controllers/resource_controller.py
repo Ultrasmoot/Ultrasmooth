@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from middleware.auth_middleware import login_required, role_required
 from models.resource_model import ResourceModel, ValidationError
+from models.maintenance_model import MaintenanceModel, ValidationError as MaintenanceValidationError
 
 resource_bp = Blueprint("resources", __name__, url_prefix="/api/resources")
 
@@ -86,3 +87,14 @@ def archive_resource(resource_id):
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"status": "archived"}), 200
+
+
+@resource_bp.post("/<int:resource_id>/restore")
+@role_required("admin")
+def restore_resource(resource_id):
+    try:
+        closed = MaintenanceModel.release_resource(resource_id, get_current_user()["id"])
+    except MaintenanceValidationError as e:
+        return jsonify({"error": str(e)}), 400
+    resource = ResourceModel.get(resource_id)
+    return jsonify({"resource": _serialize(resource), "closed_issues": closed}), 200
