@@ -6,13 +6,16 @@ from middleware.auth_middleware import login_required, role_required
 from controllers.resource_controller import resource_bp
 from controllers.booking_controller import booking_bp
 from controllers.announcement_controller import announcement_bp
+from controllers.maintenance_controller import maintenance_bp  # Jirat
+from controllers.checkin_controller import checkin_bp  # Panisara
 
 def create_app():
     app = Flask(__name__, template_folder="../frontend")
     app.register_blueprint(auth_bp)
     app.register_blueprint(resource_bp)
-    app.register_blueprint(booking_bp)  # Jirat
-    app.register_blueprint(announcement_bp)  # Jirat
+    app.register_blueprint(booking_bp)  
+    app.register_blueprint(announcement_bp) 
+    app.register_blueprint(maintenance_bp)
     
     @app.get("/")
     def index():
