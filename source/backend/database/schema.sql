@@ -98,3 +98,24 @@ CREATE TABLE IF NOT EXISTS checkin_codes (
     FOREIGN KEY (user_id) REFERENCES users(id),
     INDEX idx_checkin_booking (booking_id, id)
 );
+
+CREATE TABLE IF NOT EXISTS maintenance_records (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    resource_id INT NOT NULL,
+    reported_by INT NOT NULL,
+    description VARCHAR(500) NOT NULL,
+    status ENUM('Reported','Open','In Progress','Resolved','Dismissed') NOT NULL DEFAULT 'Reported',
+    issue_date DATE NOT NULL,
+    confirmed_by INT NULL,
+    confirmed_at TIMESTAMP NULL,
+    closed_by INT NULL,
+    closed_at TIMESTAMP NULL,
+    dismiss_reason VARCHAR(255) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (resource_id) REFERENCES resources(id),
+    FOREIGN KEY (reported_by) REFERENCES users(id),
+    FOREIGN KEY (confirmed_by) REFERENCES users(id),
+    FOREIGN KEY (closed_by) REFERENCES users(id),
+    INDEX idx_maint_resource_status (resource_id, status)
+);
