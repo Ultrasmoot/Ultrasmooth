@@ -2895,6 +2895,36 @@
       ? available.slice(0, 8).map(r => resourceCard(r)).join('')
       : '<p class="note" style="margin:0;">No resources are available right now.</p>';
 
+    // Category banners: the 3 biggest categories, each showing its newest resource.
+    const groups = {};
+    list.forEach(r => { (groups[r.category] = groups[r.category] || []).push(r); });
+    const top = Object.entries(groups).sort((a, b) => b[1].length - a[1].length).slice(0, 3);
+    document.getElementById('home-categories').innerHTML = top.length
+      ? top.map(([cat, items]) => {
+          const newest = items.reduce((a, b) => (b.id > a.id ? b : a));
+          return `
+            <div class="banner" data-tone="${toneOf(cat)}" data-goto="resources" data-category="${escapeHtml(cat)}" role="button" tabindex="0">
+              <div class="banner-art">${resIcon(cat)}</div>
+              <div class="banner-in">
+                <div class="banner-top"><h3>${escapeHtml(cat)}</h3><span class="view-all">View All (${items.length}) ${ICON_NEXT}</span></div>
+                ${resourceHCard(newest)}
+              </div>
+            </div>`;
+        }).join('')
+      : '<p class="note" style="margin:0;">No resource categories yet.</p>';
+
+    fillSelect(document.getElementById('hf-category'), 'All categories', [...new Set(list.map(r => r.category))].sort());
+    fillSelect(document.getElementById('hf-location'), 'All locations', [...new Set(list.map(r => r.location))].sort());
+  }
+
+  function renderHomeRequests(bookings, isAdmin){
+    document.getElementById('home-requests-title').textContent = isAdmin ? 'Pending Requests' : 'My Requests';
+    document.getElementById('home-requests-count').textContent = bookings.length;
+    document.getElementById('home-requests').innerHTML = bookings.length
+      ? bookings.slice(0, 8).map(b => requestCard(b, isAdmin)).join('')
+      : `<p class="note" style="margin:0;">${isAdmin ? 'No requests are waiting for review.' : 'You have no requests yet.'}</p>`;
+  }
+
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
