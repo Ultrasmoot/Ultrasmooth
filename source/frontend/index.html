@@ -768,6 +768,26 @@
     #home-sections > .sec:first-child .ann{width:min(86vw,360px);}
   }
 
+  /* logo v3 is slightly wider than tall */
+  .stamp-badge, .brand .stamp-badge, .hero-logo .stamp-badge, .auth-brand .stamp-badge, #create-view .auth-brand .stamp-badge, #login-view .auth-brand .stamp-badge{width:54px; height:44px;}
+  .brand .stamp-badge{width:40px; height:34px;}
+  .hero-logo .stamp-badge{width:130px; height:106px;}
+  .auth-brand .stamp-badge{width:70px; height:57px;}
+  #create-view .auth-brand .stamp-badge, #login-view .auth-brand .stamp-badge{width:120px; height:98px;}
+  @media (max-width: 900px){
+    #login-view .auth-brand .stamp-badge, #create-view .auth-brand .stamp-badge{width:96px; height:78px;}
+  }
+
+  /* logo v4 (orbit V, no star) is wide: ~1.5 : 1 */
+  .stamp-badge, .brand .stamp-badge, .hero-logo .stamp-badge, .auth-brand .stamp-badge, #create-view .auth-brand .stamp-badge, #login-view .auth-brand .stamp-badge{width:56px; height:38px;}
+  .brand .stamp-badge{width:42px; height:30px;}
+  .hero-logo .stamp-badge{width:168px; height:112px;}
+  .auth-brand .stamp-badge{width:80px; height:54px;}
+  #create-view .auth-brand .stamp-badge, #login-view .auth-brand .stamp-badge{width:144px; height:96px;}
+  @media (max-width: 900px){
+    #login-view .auth-brand .stamp-badge, #create-view .auth-brand .stamp-badge{width:108px; height:72px;}
+  }
+
   /* Maintenance */
   .req[data-status="Reported"]{border-left-color:var(--blue);}
   .req[data-status="Open"]{border-left-color:var(--rust);}
