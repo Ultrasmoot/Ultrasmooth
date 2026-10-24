@@ -197,7 +197,7 @@ class MaintenanceModel:
             conn.close()
         return cls.get(new_id)
 
-    # ---------- admin: confirm / dismiss a reported issue ----------
+    # admin: confirm / dismiss a reported issue
     @classmethod
     def confirm(cls, record_id: int, admin_id: int):
         conn = get_connection()
@@ -222,7 +222,7 @@ class MaintenanceModel:
 
     @classmethod
     def dismiss(cls, record_id: int, admin_id: int, reason=None):
-        """Rejects a report. The reason is required and is shown to the reporter."""
+    # Rejects a report. The reason is required and is shown to the reporter
         reason = cls._clean_reason(reason)
         conn = get_connection()
         try:
@@ -313,7 +313,7 @@ class MaintenanceModel:
             conn.close()
         return cls.get(record_id)
 
-    # ---------- admin: put a resource back to Available ----------
+    # admin: put a resource back to Available
     @classmethod
     def release_resource(cls, resource_id: int, admin_id: int) -> int:
         conn = get_connection()
@@ -326,6 +326,9 @@ class MaintenanceModel:
             if resource["status"] != "Maintenance":
                 raise ValidationError("This resource is not in Maintenance.")
             cur.execute(
+                """UPDATE maintenance_records
+                   SET status = 'Resolved', closed_by = %s, closed_at = NOW()
+                   WHERE resource_id = %s AND status IN ('Open','In Progress')""",
                 (admin_id, resource_id),
             )
             closed = cur.rowcount
