@@ -1514,6 +1514,19 @@
   }
 
   let currentUser = null;
+  // Detailed status shown in the account dropdown (the side menu itself only shows the short role label).
+  const BACKEND_ROLE_LABEL = {
+    phd_student: 'Ph.D. Student',
+    undergrad_student: 'Undergraduate Student',
+    professor: 'Professor',
+    admin: 'Lab Administrator'
+  };
+  function statusLabel(user){
+    const base = BACKEND_ROLE_LABEL[user.role] || user.role;
+    // class year only exists for undergraduate students
+    return (user.role === 'undergrad_student' && user.year) ? `${base} Year ${user.year}` : base;
+  }
+  
   function applyRealUser(user){
     currentUser = user;
     const uiRole = BACKEND_TO_UI_ROLE[user.role] || 'user';
