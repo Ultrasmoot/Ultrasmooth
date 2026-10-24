@@ -1,10 +1,11 @@
 from flask import Blueprint, jsonify, request
 
-from middleware.auth_middleware import login_required, role_required
-from models.resource_model import ResourceModel, ValidationError
+from middleware.auth_middleware import get_current_user, login_required, role_required
 from models.maintenance_model import MaintenanceModel, ValidationError as MaintenanceValidationError
+from models.resource_model import ResourceModel, ValidationError
 
 resource_bp = Blueprint("resources", __name__, url_prefix="/api/resources")
+
 
 def _serialize(r: dict) -> dict:
     return {
@@ -30,10 +31,9 @@ def list_resources():
     location = request.args.get("location")
     status = request.args.get("status")
     include_archived = request.args.get("include_archived") == "true"
-    sort_by = request.args.get("sort", "name")
+    sort_by = request.args.get("sort", ResourceModel.DEFAULT_SORT)
     sort_dir = request.args.get("dir", "asc")
 
-    from middleware.auth_middleware import get_current_user
     user = get_current_user()
     # Only admins may ever see archived resources (AD-1: hidden from the active list).
     if include_archived and user["role"] != "admin":
@@ -51,9 +51,11 @@ def list_resources():
 @login_required
 def get_resource(resource_id):
     resource = ResourceModel.get(resource_id)
-    if not resource:
+    # Archived resources are hidden from everyone except admins
+    if not resource or (resource["is_archived"] and get_current_user()["role"] != "admin"):
         return jsonify({"error": "Resource not found."}), 404
     return jsonify({"resource": _serialize(resource)}), 200
+
 
 @resource_bp.post("")
 @role_required("admin")
@@ -65,6 +67,7 @@ def create_resource():
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"resource": _serialize(resource)}), 201
+
 
 @resource_bp.put("/<int:resource_id>")
 @role_required("admin")
@@ -89,9 +92,21 @@ def archive_resource(resource_id):
     return jsonify({"status": "archived"}), 200
 
 
+@resource_bp.post("/<int:resource_id>/unarchive")
+@role_required("admin")
+def unarchive_resource(resource_id):
+    # reverse of archive: puts the resource back on the active list
+    try:
+        ResourceModel.unarchive(resource_id)
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 400
+    return jsonify({"status": "unarchived"}), 200
+
+
 @resource_bp.post("/<int:resource_id>/restore")
 @role_required("admin")
 def restore_resource(resource_id):
+# SRS-7: an administrator returns a resource from Maintenance to Available.
     try:
         closed = MaintenanceModel.release_resource(resource_id, get_current_user()["id"])
     except MaintenanceValidationError as e:
