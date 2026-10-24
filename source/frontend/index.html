@@ -1526,7 +1526,7 @@
     // class year only exists for undergraduate students
     return (user.role === 'undergrad_student' && user.year) ? `${base} Year ${user.year}` : base;
   }
-  
+
   function applyRealUser(user){
     currentUser = user;
     const uiRole = BACKEND_TO_UI_ROLE[user.role] || 'user';
@@ -1538,6 +1538,12 @@
     };
     applyRole(uiRole);
     lockRoleSwitcher();
+    const displayName = user.full_name || user.email;
+    const pn = document.getElementById('profile-name');
+    pn.textContent = displayName;
+    pn.title = displayName;
+    const SIDEBAR_STATUS = {undergrad_student:'Undergraduate Student', phd_student:'Ph.D. Student'};
+    document.getElementById('profile-status').textContent = SIDEBAR_STATUS[user.role] || ROLES[uiRole].label;
   }
 
   function signIn(token, user){
