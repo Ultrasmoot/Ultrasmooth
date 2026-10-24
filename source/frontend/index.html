@@ -673,6 +673,24 @@
       </div>
     </section>
 
+    <!-- MAINTENANCE: everyone reports an issue admin confirms, edits, resolves -->
+    <section class="view" id="view-maintenance">
+      <div class="req-top">
+        <div class="seg req-admin" id="mt-admin-tabs">
+          <button class="filter-chip active" type="button" data-group="reported">Pending review</button>
+          <button class="filter-chip" type="button" data-group="open">In maintenance</button>
+          <button class="filter-chip" type="button" data-group="closed">History</button>
+        </div>
+        <div class="req-top-actions">
+          <button class="btn" id="btn-refresh-maintenance" type="button">Refresh</button>
+          <button class="btn ok" id="btn-report-issue" type="button">+ Report issue</button>
+        </div>
+      </div>
+      <p class="req-note" id="mt-note">Showing issues awaiting review.</p>
+      <div class="req-list" id="mt-list"></div>
+      <p class="note" id="mt-empty" style="display:none; margin-top:10px;">No issues to show.</p>
+    </section>    
+
     <!-- USER & ACCESS (Admin only) access control demo for US-12; account management (US-13) not built yet -->
     <section class="view" id="view-access">
       <div class="panel">
