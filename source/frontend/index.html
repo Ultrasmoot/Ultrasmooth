@@ -1682,18 +1682,58 @@
   document.getElementById('complete-profile-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     if(!pendingGoogleProfile) return;
+    const errBox = document.getElementById('complete-profile-error');
+    const showErr = (msg) => {
+      document.getElementById('complete-profile-error-text').textContent = msg;
+      errBox.classList.add('show');
+    };
+    errBox.classList.remove('show');
+
     const role = document.getElementById('complete-profile-role').value;
-    const {ok, data} = await apiPost('/google/complete-profile', {
-      credential: pendingGoogleCredential,
-      role
-    });
-    if(!ok){
-      alert(data.error || 'Could not complete sign-up.');
-      return;
+    const payload = {credential: pendingGoogleCredential, role};
+    // Undergraduate students must also pick their class year.
+    if(role === 'undergrad_student'){
+      const year = document.getElementById('complete-profile-year').value;
+      if(!year){
+        showErr('Please select your year.');
+        return;
+      }
+      payload.year = Number(year);
     }
+
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try{
+      const {ok, data} = await apiPost('/google/complete-profile', payload);
+      if(!ok){
+        showErr(data.error || 'Could not complete sign-up.');
+        return;
+      }
+      pendingGoogleProfile = null;
+      pendingGoogleCredential = null;
+      signIn(data.token, data.user);
+    }catch(err){
+      showErr('Could not reach the server. Please try again.');
+    }finally{
+      submitBtn.disabled = false;
+    }
+  });
+
+  // Show the Year field only for undergraduate students clear it otherwise.
+  document.getElementById('complete-profile-role').addEventListener('change', (e) => {
+    const isUndergrad = e.target.value === 'undergrad_student';
+    document.getElementById('complete-profile-year-field').style.display = isUndergrad ? 'block' : 'none';
+    if(!isUndergrad) document.getElementById('complete-profile-year').value = '';
+  });
+
+  // Leave the first-time Google sign-up without finishing it (nothing was created yet).
+  document.getElementById('complete-profile-cancel').addEventListener('click', () => {
     pendingGoogleProfile = null;
     pendingGoogleCredential = null;
-    signIn(data.token, data.user);
+    document.getElementById('complete-profile-form').reset();
+    document.getElementById('complete-profile-year-field').style.display = 'none';
+    document.getElementById('complete-profile-error').classList.remove('show');
+    showAuthView('login');
   });
 
   document.getElementById('login-form').addEventListener('submit', async (e) => {
