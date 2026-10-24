@@ -2963,6 +2963,59 @@
     if(mt.ok) renderHomeIssues(mt.data.records, isAdmin);
   }
 
+  /* Home search + filter card */
+  const homeSearch = document.getElementById('home-search');
+  const homeFilterCard = document.getElementById('home-filter-card');
+  let homeSearchTimer = null;
+
+  async function runHomeSearch(){
+    const q = homeSearch.value.trim();
+    const category = document.getElementById('hf-category').value;
+    const location = document.getElementById('hf-location').value;
+    const status = document.getElementById('hf-status').value;
+    const active = !!(q || category || location || status);
+
+    document.getElementById('home-clear-inline').style.display = active ? '' : 'none';
+    document.getElementById('home-results').style.display = active ? 'block' : 'none';
+    document.getElementById('home-sections').style.display = active ? 'none' : 'block';
+    if(!active) return;
+
+    const params = new URLSearchParams();
+    if(q) params.set('q', q);
+    if(category) params.set('category', category);
+    if(location) params.set('location', location);
+    if(status) params.set('status', status);
+    const {ok, data} = await apiAuthGet('/api/resources?' + params.toString());
+    if(!ok){ toast('Could not search resources'); return; }
+    document.getElementById('home-results-title').textContent = `Search results (${data.resources.length})`;
+    document.getElementById('home-results-grid').innerHTML = data.resources.map(r => resourceCard(r)).join('');
+    document.getElementById('home-results-empty').style.display = data.resources.length ? 'none' : 'block';
+  }
+
+  function clearHomeSearch(){
+    homeSearch.value = '';
+    ['hf-category', 'hf-location', 'hf-status'].forEach(id => { document.getElementById(id).value = ''; });
+    homeFilterCard.classList.remove('open');
+    runHomeSearch();
+  }
+
+  homeSearch.addEventListener('input', () => {
+    clearTimeout(homeSearchTimer);
+    homeSearchTimer = setTimeout(runHomeSearch, 250);
+  });
+  homeSearch.addEventListener('focus', () => homeFilterCard.classList.remove('open'));
+  ['hf-category', 'hf-location', 'hf-status'].forEach(id => {
+    document.getElementById(id).addEventListener('change', runHomeSearch);
+  });
+  document.getElementById('home-filter-toggle').addEventListener('click', (e) => {
+    e.stopPropagation();
+    homeFilterCard.classList.toggle('open');
+  });
+  homeFilterCard.addEventListener('click', (e) => e.stopPropagation());
+  document.getElementById('home-clear').addEventListener('click', clearHomeSearch);
+  document.getElementById('home-clear-inline').addEventListener('click', clearHomeSearch);
+  document.addEventListener('click', () => homeFilterCard.classList.remove('open'));
+
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
