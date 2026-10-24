@@ -972,7 +972,7 @@
 
 </style>
 </head>
-<body data-role="admin">
+<body data-role="admin" data-view="home">
 
 <!-- LOGIN / CREATE ACCOUNT SCREENS (US-11 / SRS-11) -->
 <div class="auth-screen" id="auth-screen">
@@ -1387,7 +1387,17 @@
       <p class="req-note" id="mt-note">Showing issues awaiting review.</p>
       <div class="req-list" id="mt-list"></div>
       <p class="note" id="mt-empty" style="display:none; margin-top:10px;">No issues to show.</p>
-    </section>    
+    </section>
+    
+    <!-- check-in/check-out a student confirms an approved booking with a code e-mailed to them -->
+    <section class="view" id="view-checkin">
+      <div class="req-top">
+        <div></div>
+        <div class="req-top-actions"><button class="btn" id="btn-refresh-checkin" type="button">Refresh</button></div>
+      </div>
+      <p class="req-note">You can check in from 15 minutes before an approved booking starts. We e-mail you a code to confirm it is you.</p>
+      <div id="ci-content"></div>
+    </section>
 
     <!-- USER & ACCESS (Admin only) access control demo for US-12; account management (US-13) not built yet -->
     <section class="view" id="view-access">
