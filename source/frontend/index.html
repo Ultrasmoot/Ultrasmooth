@@ -2816,6 +2816,31 @@
       </article>`;
   }
 
+  function resourceHCard(r){
+    return `
+      <div class="hcard" data-tone="${toneOf(r.category)}">
+        <div class="rcard-art">${resIcon(r.category)}<span class="rcard-status ${STATUS_CLASS[r.status] || ''}">${escapeHtml(r.status)}</span></div>
+        <div class="hcard-body">
+          <div class="rcard-code">${escapeHtml(r.resource_code)}</div>
+          <h3>${escapeHtml(r.name)}</h3>
+          <div class="pill" style="width:auto; align-self:flex-start;">${ICON_PIN}<span>${escapeHtml(r.location)}</span></div>
+          <div class="tags"><span class="tag">#${escapeHtml(r.category)}</span><span class="tag plain">${escapeHtml(r.type)}</span></div>
+        </div>
+      </div>`;
+  }
+
+  function requestCard(b, isAdmin){
+    const tone = {Pending:2, Approved:0, Rejected:3}[b.status] ?? 1;
+    const who = b.requester_name || b.requester_email || '';
+    return `
+      <article class="rcard qcard" data-tone="${tone}">
+        <div class="qtop"><b>${escapeHtml(b.resource_name || ('#' + b.resource_id))}</b>${bookingBadge(b.status)}</div>
+        <div class="pill">${ICON_CLOCK}<span>${fmtRange(b.start_time, b.end_time)}</span></div>
+        <p class="qpurpose">${escapeHtml(b.purpose)}</p>
+        ${isAdmin && who ? `<div class="note" style="margin:0;">Requested by ${escapeHtml(who)}</div>` : ''}
+      </article>`;
+  }
+
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
