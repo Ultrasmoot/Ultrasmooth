@@ -795,6 +795,15 @@
     #home-sections > .sec:first-child{padding:0; border-radius:0;}
   }
 
+  /* side bar move and recenter */
+  @media (min-width: 861px){
+    .shell{padding-left:0; transition:padding-left .28s cubic-bezier(.22,.8,.3,1);}
+    .shell:has(.navbar:is(:hover, .open, :focus-within)){padding-left:172px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .shell{transition:none;}
+  }
+
   /* Maintenance */
   .req[data-status="Reported"]{border-left-color:var(--blue);}
   .req[data-status="Open"]{border-left-color:var(--rust);}
