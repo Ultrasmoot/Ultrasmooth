@@ -2841,6 +2841,22 @@
       </article>`;
   }
 
+  /* shared click handling for resource cards (Edit / Archive / Request) */
+  function cardActionHandler(e){
+    const btn = e.target.closest('button[data-action]');
+    if(!btn) return;
+    const id = Number(btn.dataset.id);
+    if(btn.dataset.action === 'edit') openResourceModal(id);
+    if(btn.dataset.action === 'archive') archiveResource(id);
+    if(btn.dataset.action === 'unarchive') unarchiveResource(id);
+    if(btn.dataset.action === 'restore') openRestoreConfirm(id);
+    if(btn.dataset.action === 'book') openBookingModal(id);
+    if(btn.dataset.action === 'report') openMaintenanceModal(id);
+  }
+  ['res-grid', 'home-available', 'home-results-grid'].forEach(id => {
+    document.getElementById(id).addEventListener('click', cardActionHandler);
+  });
+
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
