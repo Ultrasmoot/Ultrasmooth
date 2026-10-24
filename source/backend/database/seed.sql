@@ -61,6 +61,16 @@ JOIN (
 ) v
 WHERE u.email = 'student@ku.th';
 
+INSERT INTO maintenance_records (resource_id, reported_by, description, status, issue_date, confirmed_by, confirmed_at)
+SELECT r.id, a.id, 'Left controller not tracking', 'Open', CURDATE(), a.id, NOW()
+FROM resources r JOIN users a ON a.email = 'admin@ku.th'
+WHERE r.resource_code = 'RES-0004';
+
+INSERT INTO maintenance_records (resource_id, reported_by, description, status, issue_date)
+SELECT r.id, u.id, 'Laser cutter lens looks cracked', 'Reported', CURDATE()
+FROM resources r JOIN users u ON u.email = 'student@ku.th'
+WHERE r.resource_code = 'RES-0005';
+
 -- check-in database
 INSERT INTO bookings (resource_id, requester_id, start_time, end_time, purpose, status, decided_by, decided_at)
 SELECT r.id, u.id, NOW() - INTERVAL 1 DAY, NOW() + INTERVAL 7 DAY,
