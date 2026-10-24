@@ -1868,6 +1868,11 @@
     const firstName = document.getElementById('create-first-name').value.trim();
     const lastName = document.getElementById('create-last-name').value.trim();
     const role = document.getElementById('create-role').value;
+    const year = document.getElementById('create-year').value;
+    if(role === 'undergrad_student' && !year){
+      showCreateError('Please select your year.');
+      return;
+    }
 
     const payload = {
       student_id: sid,
@@ -1876,6 +1881,7 @@
       major: document.getElementById('create-major').value.trim(),
       email, role, password
     };
+    if(role === 'undergrad_student') payload.year = Number(year);
 
     const submitBtn = e.target.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
@@ -1885,9 +1891,15 @@
         showCreateError(data.error || 'Could not create account.');
         return;
       }
-      // Sign-up is limited to Ph.D./Undergraduate Student (see dropdown options)
-      // Lab Admin / Professor accounts are assigned later by an Administrator (SRS-11, URS-9)
-      signIn(data.token, data.user);
+      // Sign-up is limited to Ph.D./Undergraduate Student (see dropdown options).
+      // Lab Admin / Professor accounts are assigned later by an Administrator (SRS-11, URS-9).
+      // No session yet: the account is usable only after the emailed link is opened.
+      createError.classList.remove('show');
+      loginError.classList.remove('show');
+      document.getElementById('login-email').value = data.email || payload.email || '';
+      showLoginNotice(data.message || 'Account created. Check your email for a verification link, then log in.');
+      showResendLink(data.email || payload.email);
+      showAuthView('login');
     } catch(err){
       showCreateError('Could not reach the server. Is the backend running?');
     } finally {
