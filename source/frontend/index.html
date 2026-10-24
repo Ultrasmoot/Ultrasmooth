@@ -2925,6 +2925,44 @@
       : `<p class="note" style="margin:0;">${isAdmin ? 'No requests are waiting for review.' : 'You have no requests yet.'}</p>`;
   }
 
+  // Home: admin sees the reports waiting for review everyone else sees the issues they reported.
+  function issueCard(m, isAdmin){
+    const tone = {'Reported':2, 'Open':1, 'In Progress':1, 'Resolved':0, 'Dismissed':3}[m.status] ?? 1;
+    const who = m.reporter_name || m.reporter_email || '';
+    const when = new Date(m.issue_date + 'T00:00:00').toLocaleDateString([], {dateStyle:'medium'});
+    return `
+      <article class="rcard qcard" data-tone="${tone}">
+        <div class="qtop"><b>${escapeHtml(m.resource_name || ('#' + m.resource_id))}</b>${maintenanceBadge(m.status)}</div>
+        <div class="pill">${ICON_CLOCK}<span>${escapeHtml(when)}</span></div>
+        <p class="qpurpose">${escapeHtml(m.description)}</p>
+        ${isAdmin && who ? `<div class="note" style="margin:0;">Reported by ${escapeHtml(who)}</div>` : ''}
+      </article>`;
+  }
+
+  function renderHomeIssues(records, isAdmin){
+    document.getElementById('home-issues-title').textContent = isAdmin ? 'Pending Report Issues' : 'My Reported Issues';
+    document.getElementById('home-issues-count').textContent = records.length;
+    document.getElementById('home-issues').innerHTML = records.length
+      ? records.slice(0, 8).map(m => issueCard(m, isAdmin)).join('')
+      : `<p class="note" style="margin:0;">${isAdmin ? 'No issue reports are waiting for review.' : 'You have not reported any issues yet.'}</p>`;
+  }
+
+  async function loadHome(){
+    const isAdmin = currentRole === 'admin';
+    const [res, bk, mt] = await Promise.all([
+      apiAuthGet('/api/resources'),
+      apiAuthGet(isAdmin ? '/api/bookings/pending' : '/api/bookings/mine'),
+      apiAuthGet(isAdmin ? '/api/maintenance?group=reported' : '/api/maintenance')
+    ]);
+    if(res.ok){
+      resourceCache = res.data.resources;
+      populateFilterOptions(resourceCache);
+      renderHomeResources(resourceCache);
+    }
+    if(bk.ok) renderHomeRequests(bk.data.bookings, isAdmin);
+    if(mt.ok) renderHomeIssues(mt.data.records, isAdmin);
+  }
+
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
