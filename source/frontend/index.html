@@ -4,9 +4,12 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1B2A49">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAlfUlEQVR42u18d5xU5dX/9zzPLdO2wMLSlGaliFKiUWMGYow1MTHOWIhGBUGNDUuiRt/ZURNjjYIKC1KsiTsoGvsbFTZRg7KoSIu9INLZNjszd+59nvP7485soYmgvvr57flQdNm5e+9z2vd8zzkX6JRO6ZRO6ZRO6ZRO6ZRO6ZRO6ZRO6ZRO6ZRO6ZRO+f9BaBe+n1s/xwzezgW3+jp1+FH8rT5lIiESu/CxZPHjAJLJpP6/U1MsJr8X19z26YvvuwcQAJaC4ClNUkpWSkkAEoABwNi0aRMAYDMAbN4MAOjatSu4ooK7tVm8A0BJKTWBofS35wQTr5naZ3NLLgILiBgBKaANQwr/2S0LACCVItM0obTmrMox50lvaNQ5wTmnb78efMRAe008HlffsgISgpDUPxt30/jP1zed52RbLIAJgGFIaRqGsKWQkpnBYDADXDhXQX6EIgEQETt5N6sUe0zCNU3T610ReWD+g4k7mZlAxN+E5Qtxvf7R2OQf16xvvEq5TgAgArQgkm0Rkag1IBIRmBnM2n8WwCWCMqTRbBhy2Ipnb1vrP//Xd7/G9sNmQiSTST0ucfdB/3794xmZjANBfvjXrJFjBWbdLiN01CUzF75MYDAEEQgEEgQnl8cXMIaPu27W4vuI/h2LxWQqlfr6rCuREEgm9fX3PNXnwSdeTmTSGVMQM0gQMwPsbiMJ+emNGQV7IBDBJBJmXuc9aXwzEXO78XHBAv/f8o4cpLSAVk5Wa+VqL69Yuxra0wJaC9IswCygWVDhb2iWxMX/15JYE2vFrPLac1yt3Ww+n0XeadkbANavH0xf61NVVTEAUD6bF1B5kiYYRKw1CFAkiKUgSCEghYAQAlIQhKDC3wJCEBOgCVBSivw3FR63q4DaBVUKAO07oHJB0NJrpRkKgsnUDFlwQMEMAd/QiQgEZoLvn1QwKWIU9ENCGlbAMu2waQdKghEbH+zXJ/Q0AFrg/6yvMbASI5EQ114a39Cv/56XRML2+0FbNIQCljZMWwJEhRDTCsq4GDvJR3dgEDNYQ0hm7soBi74JBXzJRf14N/HaqfvULf9oLCm9T9bFz5oz+W7ayzFAtAW83OZhMDPZBup7VlbeZ9rGJwHLbBk+bO9nb7okvqEdtN1JYfLD3s7HYeZl1u9vWdjNEHb5iwuXnrVhY+ZKpT0msB+S2oFnBhV0oLRhBUU4IJdFQoGHulcMmPL09ImZbVycElWgFUNA65cv2OowKoeM5sHLwckkeFu5Y6dRUPE/ptX8s+/dc55J1TfmDiZizWDfWaktiW2RCzwzEDL27ltx4T9nX3fP9q69U8i1pkamikgkwSKBqi/H57GYRLv8ErAk9j/2ipUbNzXtL6A0gwTapTGtGQTWkKbo3iX4j8VP3HYqEWXb58YVQ6po/fIFVJscrb5KQo4m5hsLqkYramc8tHM5LSGSCyAGb1ghVqxI5a++9YGhj7/49pvp5mZDiML9U+GPQgIuHq3W2guES4x9+nWf+Px9z8/qFx1t9Ae82gVV6quhH98bmVlOfm5T+JLjujUVLXAnrkOJRIL89FBlHnD85Uvrm7L7CChNRIJBoMI9MzNrrVFWXrrxD5OOHfTbo47aFP3t7AD69/dqk2O8LS/89hoOz1v07p5ehvZozLp75LK5cs/TIQZ5hqBcMBxcUxKR7/755P1WEpHrnyeLZJL0rlTCiEYTxiv/vt4bddI189ZsTP+SvZwCIAsaQJsDcBHaKSZDdi2xX1r23B0/VZoFgK9UVRYR2Xkz3rzYUcZ5Tt4rDwXM1yNhvvzOscM+Kv77jh2hRqZScf3rC277yVvvfvpi3nG0ICHaYFxrHvCkaRs9K+yq1+feluQt3PWKh5fv05hRh2Qd94i8q0YSeG/DssqITHiaobWCKFxWkH9d7eZgWea7hmWnBpblJv8xPmJD8Z6/sgJaH+TSO456e9mqF5xsWhMJgYICwFuTE1prDgQt9eODhxw4+6bzV+zMgbWFHZapOKkJM948v0WF73UzzdBawQyWQqqW944Y1OXgiUcNbPryvBCTglJqxIlXptbV506GyntEMLiAIoo3rzUjXBLOnPzTQwb96YrTViVqlvVd1+Qdphhj8nn1A9fVe0jBVsbxsqZBGUOQwwzpelyhISqEYcFzMgDrPIgEmEgIkhAmZCCMILmflFp08uRzhy1OJFjsamYnZjaGHX/ZO5ubnP0FlN4eomq1Kito9Kksvem1R2+4JhqNGrW1td7OpR9NzJC/mfz6Uldb+3r5jCKQAQE3XNrVKjFy59wzbvjsaGK+sa0Q0d6Drrhlzl5Pv7hkeTqTsYSfcKl9CiISHpMwupaaf1/27OTTLntgyXnSDu7f3JBt9jznk5KSwH9J5D++6Efd6/v37duaFxSzmPr4km4fZ2i/Zkcf29Tsns3C7JnPZTQAwYVoTARPWmFLsrv6yEE9hp17zJ71xq6cfjSakETkRn+TnNnsNNzq5Vo0EQlwIVK3y68+SmLh5R00NLacXldXd+OoUaOyO5WAWROI+KnFqy1mKmHtQYAMBggMAkMBoveX3W+hptFvvPXxuJynbWL2mMhozysCDK2VsIM2evboVr1EMyQ1PvqX2LD6La9369ZEowawvvD733fPXzZ58YrsbGUFj/HyGQ2QED5st9xss2t36danbtWG04G+d+8SUTV6tB/DDx/e72+mUGmGMAqn3Vr9djxbEgCrnKv7XT9j/nEAOBpNyC81fyJGrEaeOKpPRgq8adgRQUR5IchlhtDak8GA+bIP9zbwdjAo1dYm1bMLF5Zuqm8828s7IEFySwxCRBpCiqCFZc/fd+2rAOgvY4+oBzNFE/ONWA3LRIIFMxMX6p0tIgLFamrkhOo688IxQ9eeOTgYC0j1qZCWALXlPCkFea7HjsJBOyzEdkjTJpMaiMmbLj9rdVlJ+Elp2r4nbs+giSAIcD3FX2zYfK4UhNrabSfiRCIhYjUsfQ0yTfjpQMHMtEdF8PeWdD8NRMpsww6ZJWXlssR2b7597OD/JBIsUtshyqKjqyQAvnPm/JNzSvQksPJDTzuwUEA/phVAaUlkNhG5rQZCxLXJMV4qTiqZJE1EXICR3AGiEXEqHlfTJ45yR1bXmWPGDE0LUk8adgAC0D5ML1SsRCQEebusAD8Zx8AABvTuOss0AGaIDjC0/R36ni6166ChKTNmYlX1ECCpE4mOVDEzUzKZ1Kk4KWYmAvH0iaNcEHDT2GH/PWQgH9wtrCf1KMHNFZbzs6njRlzFYCpCum1W9LVJxcxy3ZrNF+Ydx4fK3LExQQxmkDSESh9y8D6PtvfyXZHIF83MzMRkrPFhOhX07J+PkALEWLFLMHQbyVgO+/nldQ1NzoHQXmvS2fLC7P/hSTNg7Nmj9PZXHr3hCkSjBgrJmJmJiPiGucv7rW3Sf8xk84cyc2MkZD1477hh1b9+1EdDW4aXHSGfAmJTp14++Sd173z8Ui7TooUQotU82soVj6RldC23/77kydtOY8QksOvkYBG5nXNP3YwM2+O9TLPHDIP8zAXLNtXAnpGhN8YHvbtbzYpCMvYqyktmGaYFrbmtuPD9rehyPhNKEJ7rYFNj82nPPvtsKWprPTBTIpEQBOCPDy3vt3J19l8NWXluOqeGpvM4vMENTBs/bfFNqTipaGK+Ufwdq6mRX1aApVLLWRDw4adrL8q7CoKorVDn9qUoC8Mg9OpVMYML3r3rwpSKQy9bxpbjqdEq70AzCz/Ja23YYTIEP31jfNC7sViN3C0FFAg7/DI64lFTqEZQIRn7rrEthxEEVo5Hvac+tfIXxRi9YkgVgYjXNGevZTPUN9u8yVFuXms352UaN6nmjL7q+idW7lebHOONxmjtx+QdN0f88JbUl/7p/n0bGluO067DTCSogNKIWuGaJmGJgCWWPTv1qn8BoFQqvhvWDwEQz1i85ASWwb2V6ygwCx+kCEA5bkW5/T8AaHBNjHevXUfEiMXkpeeeuC4SDs41LBs+NOwI8FotrZCI3LzLq1avmyCFQG0tWmM+az5U5bNaCDIBCDAMaAUYFn++rmUkACzAArEtpFNgYtuAwooVBAALl34wwfFgEZGibYRcZmhpGujWpXQOEXk7gc6+hC5JgZmNjQ1Ows277QpTVoFImQxbuPmvvzlwaaymRiSJ9G73S2OIAQAN2LP7LEMSNHylFlnSjp7OACBZ5dGSyR1+7jXThwNJHY0mDCkEGwLNfuXMTAQI4VengkCGKRq2TNjRxHyjFa4SMRIsYjU1EsyEVErNmz+/fHN98xkq74AIErwFOAYxgwxD6OYxh+7/t91NvtHEApmKx9X51Yt/71FwmOdkFBEkgZURCBsW5V6fdEHohlhNjayJxfRuoaC2OOu769zJly+0LaoT0hR+cYgOzOgWEUk5LsSyjz4/hwCsDnaVmhmGFPdLK+STYwSPtXaNQMQgnVs1elj/V8FMC6pGq1hNjaQCPBQAv7CGwx8zB5AknYrHVQF6YtpDr53iuFRJ0KqNC/bBMvvARAnDQkk4MO/6i07/AojJXZ1+iNWwrE2O8SY9WPfDRkdUubmMEkIIELS0AtKUelO/ysjpQ2lofvDyWBHK4muZGCgkY92zonSmaVmA5ja+bausBxBBapVHfX3zqQ89/e8uHzx/ST5WUyPvPXdEta2bppSURKQVLDHscKkZsuiTAZWh0+KjujbGUikRj6dEKh5XM//1XveLHlh29fj7lrz6yLy3ll9f/daKC+Ysm3fd3JVjKn83hJlZrFm7aYKbd3xv5KIK2jM/LCwD2GdgZbWffHexA8osUnFSdz75YY+NjfQ311Mm2CtgTwOWZeZ7lMp48uT9PorVsGwPm7+eLk8BDv55yv0Vs+YtejeX9yoImgswqBWDFqNFIRQowwrIfQd0O++FmddVR6MJo7Y2qQBw4vFlB2+uzx0mhbWhX7l6ZtKvhjf40A4aIL7s4WVjN6f5FpDR2807YO3nTCtUCjj162df8IM+8Ytu+/GbKz9/yclltBBScCtPUmBpIRSEFOURs27J03f8cBvF1U4ytSySSeIX3l4TevjVL17IefJwN5tWgiBAUgdCAVkS0CdPGz/ysW3xVcbXooBCMr7mot9uGnbC5Y85iiZAuQoEo33saUWNBcrC9Txsqs+dx8z3EZECwCOr68zkSUPfAPBGm3svs1JxyjMzXTBn6R0NWTkpm02DlecJIkGCQGDleXlhCzxERN4P49dNcpUGkdDsJ3QQ2mp1zRqmYVFl9y7TiUgXDMDbhcPXXFdnjvvPF4/lPHm4l017giAAgVAkJCsjeuLtZ458LJGYbyS3QRZ+bUNLxWS8z157zLItk5m17Hj4W7mNhPZ0Q3P2oPjldx3qO1JCLJ44yi12jxCrkQCQig/N3/rSF/0unLPi+YxnTmppalTEniaC4femWWiGITmv9+6/55SJ19zeZ3ND88+0l2c/+RbohraKlAGSAQMbxp54wFwAWFD71frSsZoamUySXr16dejsRfR4xjWPVrkWD2DBJIVh2V6Z7Z1x+5nDp0e3c/hfqwJQiJ9z77z0jYAl3iBpUhGS+qdPhcZZmyYEkXZcD59+tn4iAL5szi8vvmDOuxPvf/3zileuH+NxTUwn5q3sf+H9y69c8cH6upY8fuakGzwwS9YFu2cGa1bSDsEg7+Wrj+31ydKPm37nuLAESPl960K0LaZhZiUNE+Vl4QfP+dWvGhCNGvQVWot+OIyrxLMLS6+dt/Zpx7NOyGebPWYmaQVFMGCle5WLX909buRDO6LJvyYFMBVvqCYWE6kURMjgGUJQm9lvAYGobY5IatdBuiV3YvVfasqUproWT0x7efHalWOnLHrzzLvr3vlodXpZcw63ODm3WzbdqMAwChR3gdEnMJikICoNBe+sqamxGhtbzlKeAyYW/qCVH36KWU8zS9Mkb8i+vWcxgMTo0XrnoeZ8IxUnddu8pXt++KH5clNejMmlGzwBwApGZNCWn/WpEEfeefbwZxJfcvi7nYTbN8kn/X3lGKHpuL4D97shuyRFsx5/7aNMi9PVT8Z+l4Boi9leXznKCpXI/nt0ufilWX+ccvY9C99yED6IvTxAAtrLg1grDRb+DEZHwo+ItLRsYVD+wzkXHLzPUefceOpHq+ofcXMZBR+DF+yMW38eC0NUdgm9sOSp247d6RYpM0WrFsja5Bjv8gfePmR9Iz/qKPTzci2uZggrXCaDpvfaoAp12lXxUZ9Fd+Lwd8sDfEuIq9nzPw6Mm/7WPW7WG29EzCmX/DDecs35pzR2KY3ME1IWKuO2Q+voDAwiASeXxfp1DeMJQMi25kghoNxcXuUzGqyY/Z4ztadXW8c0iLRpB1ASsqcSEa/f1HSpm8+jYxnYevhgZlimQb16dp2uNCMa/fLh3QSzKNLSl8xZeuYXDXp+i+P1y+fSeQhhhktKZYntzjjlyPBProqP+qxYE+zWYNaOORam2uQY78IHlx/x4oqGJaw4f/fZB4y9+Rd7fRaNDiatGT26hGZISZr9Id6ONHXhIArWLKE9nct7w35z6R2jDho88EF2WzIgaRUGqKjN2tsiWoHKYZAw4GXSh47sPyt2wS0HZbLuD1i5Gq2VbxvuJwFNQspwQHz09LRTnwNABei7Q0NLEun33nvPHle9ZPKGFtyfd5wge7m8YYUt0zJbSoM0fubEEROO23dfx+9N0E4ndPHVQg7LZDKpBRGfNe2dGxvT6uWg4FtmnT9iUiLBIpFIiAKUE09WX/1GOGgvRiEZMxfbk9Qh9hVGobSrGO9/Uf+7cw8r3xw2+alAKAKQn8SpUE60frbAroJIGYEwCOqxscPK6z9Z1zgp7zKJQgeKhGgbWyUATNowTXQpj8wkGpAr8D68XUNLsKhNjvGufWT5kD/9M13b4sqLsk0NrlZahUq7WqEALerfNXD41HEHzCxSIDvqTeyWAorJ5y//WNZ37NTl87MuXx2k7DH3nT9i5sgJdWYySbpYxkejCUFEXFEWnCWlaE2W7StiLtLVhcpYuXk0NKZ/mUjcHendvWIKoKA1izb8WswfrbEfWmtJOsc9e1fcMSlxe9emltxJ2nMAKrQc280nke9I0rYofdSRgx/cEe/jw8akpiTpCTPePv/99dn/ZPJ8iNO02THsgGkHbBk0vduuPf+gI24+84AlxXC8K1PeO6MAitXUyNrkGG/CjLePWfI5v+556vA9Qu5h08875KWR1XXm4uk+dm/rQvmYevSIPeaapDaDhCxyH61tuY70BIG1cjwuX/hFemwyvs+rysn+V9ohURiQbZc/WuOQsoIRCPYW3nTiXu8sej89Pu9xhACv7ZuoFXYxQ5FhUllJ8B//c85pq7bF+yQSLICEqE2O8W6Y+1G/M+9Z/ERzTtzrZLKRfDajrJJy2zbF8t4VwZ/ed+6BV+5L5CQKXrKruVR8KcWQYErF42pi9ZJLGjJ41su73cvN3Ojbx416PTGfjWLhtGWjDLGYvP6KiRu7dil/XJoBsPb5gg5JeAt7UZ7C2vUN47VmRCLWzEAg6Ddrt/xeIihmGKZBFeWBvzKzqG9snug5DojaPRO1MYHMWlimwN79K6cxQO2bLkVmNZkkLZDUF8xedu7KtY2Lsq48MdvU6Eg7SIFggMsDuPmMI3ofcscZQ17y+9ZfPeTstAL8xYkqoiTpc6vf/GuDI+5U2qNeZXzK1IkHvxZNzDeSY8jbUV3GAPr3rZxp+rWo2Hpoa0uCzuV0OjPy5+OvH3Lqj4bPQb45y0LK4rJB2wIFa2Ha0s2lV99++gFPHH3ODcdlHTWQtad4q2ciEJEiaYnSsL3ooVsmvdK+6RKr4VZm9ZqHlh10xr1v/299Wk3PtbR0U04GwdIyO2SJf+1VGTy8+txhVx19UK8WH36T+joWNbY3TFUgEKtw9tTFD9dn6FKCQmWErp189sjHRlbXmV/mdoWFC3r0jovfCAbEIghTAKQ6Dqx0LEMEQXmaaHNG/W7M/rSRWT1n2CGGINWKngBorXUgGETYlrOIyF2/ueUyN+9y+62XYs1RHNYzJNCtPDiNiDgaTfh9AwCpOKmH//1plwn3vXPzhxtyC7M5dVQ23aTtUCkFw/bqLmF13iOXjIz+eezQN2I1LMF+RPi6CIRtdpconhLMEBOmv/W3jGuczsqDRfnnqyeM/FM0Md9YPHHkTsW8Ik3drTw80zCMdjCet10SEqRWHjbXp0+666677K5lkXukYCq09PyPMTNISM9J5w49cL97T5jwp/3TLc6PWbsgItmB7PBXpzQTCdsS6y4979i5sZoaWVk5hFPxuGJmuvCBlWc9/86mxekcfu/kcrZiIBQO5ruG6fYxw3oNv/ec4dVKa2qFl1/zOtVWCohWLZCUiqtzq9+a3uLZ8VxLsxswufGAAd3O0wwajdF6Z12v2DM+6ajhj9kWbWKQ9HshtO1uHoiglXJc3eOpusZf//WMIfNNlXtfGAHBhX0oIlJ2KAKCfubsQyJr125sucxVLImE8jM8t2ElEpoZrjBM6lHZ5W/H/fDQplQ8ruam4uqKR5Ydc9bUt19Ztzk3uymdH+A4DkKhAEqCVDOwZ/jge8454IpxP+69wY/1xLsb63dKAcXyedy9dTe2KPucbNPmXCBcYgZtuu3KEwZ+Gk3Ml1/pRgo09cW/PWlTeST4mDRtMKC2GM1B8eDADCEInqe4PuNOFEQMQQ+QaYOZlc/jAASmbt263PaHv1SXNaezp2gv77ccixdmrVmzAkkhrZBdFjabDh/W/Q6A8Ye/L//xb6e+89Tn63PPpbPqMK082JaBSEi+MKBHMDrnghGn3BgftDRWw5KZ6asUVbulgCLUvHDG4lMyyvxjPt3gCsO0ycuuO/6QbncX24G7QpIygAF7VM4yJTMzy0Jq7IBS2mlEsnKRTmcOP+vSmwZWlEdmkduSF4ZtgpE3Q2WGdjOv/fXUfRe+tnTt2S7LUoA9MANaK83MEKaw7IAsjVif9u8RueKO8SP2Ld3vmP7n3Pv246vWZl9O59QJiiUMwSgNyf/dq0foZw+eP+KYP5065F9IsCiGG/pGtje3Qcb5jQVwYt4n/d7/bPPbTt4tgXKVES41I4Y7Zeb5oy7eWXJpBwNcGPbzKxY2NDkHEyuFIk+/FWLxt2pIWkav7qVTF6ZuvODC6YvGNXvmZMUIBUz+b8+w9Ysje69fdd5f5q3IZFRfQCmt2ZKmDds2UB4JLqwI4Y7nHrjw2VtfLRv23oqPJ6XTLScrI0gCGvCyuZKQ/UxFWeDuW04btIBbWd2USH0Du8A7EqMtChB/uOqNexQCZayyHgNSQqGii/0MwFQ5ZNdfL1Ac4PrJWVWzmjP6YJX32uZyuP3kRIGYIJJa5fWmxsy4Uy6964m7J/xg5s1PrHyu3rX3vPWUga8TAy+fdkN1S1YPIACWHZamVOlIQPztgD3L75k15boPr39m3ZHjpq59pslZFxVWECxtWMiuLg1ZqfKy0OybYsPeKZRfIlYzhFJxUqk4vtXDBwAqWvals985fn0Lns6mm5QgEhBElimdEYN6DLry6P4ft1+r+eotY3/ssPrhf3S786EF7zans10LRQG1nyHiduMsYM0MIts0swP797r5iAMHPHTCj3tu+vNDS0f8971V16UdOVroLEpD9qIuEePem84e9VTPn/7KvuXBD07fsKnhfBEoGyiEAS+9nsMB85VQwHxo2EDr8Ylj9t9YoDhFbEiKvm2L3zoEJRKCq6r4N1PqXvHYPNTLtWgAgqQkKZA+YA97/2vjw1cXD3HXmwcxSamUOvjXV89Yuzk7nt2cB6J2GyrtFMC62EVTSjOZVlBYpkTAkmBpw8s2ry0N0fT9u+Nvc6pv/+zPL6QP+eDjjyZmsrlT7PJeUE4abrZ5ZThsz+vfLfDE9Sfvv0hxG6Hoby2SxndADCST+rpBJx/IEId6uYxPDwPQymPLCkYyMPsgkVgTT6UI2HUXjSGGFFIYtFf/2fXp98ZnXBYCVOhUUfGXhtYF5oEkSUNahoSUDCL+gPPpJwd0yTz85LzJK17YiAFPPffB6afdtfgsM9x1T2GVgbKZZmQ3pg4ZOuDhgZZak39vwfqTfn3RJiAhoonRorChqPAdEgKA8dPe+l1GWXc76QaPiIwC4e7ZkVKjzM7fce+4EZfHEsusVHLo7m6MEzPTsOMnLWxo8UYJVoq1JvbrCgkSJE0LpmWBVI4Fq0Uhk54c3Lf8mQen3fDB0xvQe8GLH/1izcbGM8kKDbODEaQ3rIIdsJ7ov2fPOVf/ovfbt94zt+fcp1+NwTDO+Fl0VCySPuWVFStSuzXv+Y0nYdbePiC7rePhl/HSyaZ1gwqcf/H9y+ZN/u3QV6KJ+UblkA2cisX0rlSExWR89ISb7s982vCDfKbZkHYYQhBI5SCF+KSsxP5PZUX4+QP69Hzl4qpJzanXsvu8+/5nsbGT607yRHBQKFIGIQDlNP2zrFQ8MPnyH7503/QHzLn3//2Yx6d5j7psHZJTIZTLXO1ff3/qvzSvFEDyO3n4rQowJCmh0bZVUZgvZ6WQyznBdVo9ddkDyyfcceaQVFtIr5HrB3enyiGjGUhh8PIYA1VbXL4KK4akCIhh/fIFtF/vEqr8XZWMYsFj0+fM+4M0VVOXUnOhReqV/n16LPn5b8duWpfrWfn+ZxtHrWtsuP2KKYt/YkcqShWFoXQTApT5Z5DMhyb9bvjLmxYudP9415zDDn/Em+YofWzeZdN1Xeh8sxcsKZXDDtxvyjvPANEoxPa2cb4zIeiC+94a2+BYD7mZJg+AUWwBas1gaBaGRcGADUvqp0ojgepjD+iy4OiDerXsTvV35+y5+6PX8NImHeqxfnPLoEwmd3BTc8thWgZ62ZEuMIWG27Q2E7ADz5RVlD521rEDFmyqe0rd9siywz5dven0vKuO08IqyTt5aOVAAB75NLXsUmJ++M4zdx1ARM62ie/vlAKYEvPeLvtolbsir2Qv7Tkes6+ENlTib48bwQhJQTDI+0RK8XrAEnWWSe+HTWOt4/GmkHDcAb26IAdgxZosutpWpDGbK8vn3O5g6ilAe2Q8by/X1XsJKbvl825fbUYMOxiBFAJOejPgZd4PBYPP9u3b6+mq43u8eWXVrdbCFfU/as7pk7O53LFaBEo9Nw8vnwXAqtDcEYX5FM+wg8bAPUqvenFO1c27Mu32rSugOFpy+YPvHL+uUT/tOB6053gMFsLvGba+WYTBikAkTUtIKwApBKAVWOWhPNcjIiUFEwnBrqtBRAZJKRkSRAIQAiADhWkJuE4LBOfXBG37P6VlwRf3H7Rf7XnDsebMS2/uueKjDUfmFH7puvpHCtJWyoNyHbBWSpAA/MYLtfWamZUGysrCzRedNWbw+fGfr/4qC+H/pyGoWGRNmrXouI0tcooW9kDlOvDyOWi/k8Wt42X+xiMD0KpIJWgWKHaimIlIkJCGvx0p/QNnraBdRwlDfB4OGEtJ4/XSsLXowtjQ/1Ynb+ZX3vtiZH3G+KkGjlJM+2hIeK4D7eVRnL71u12FPaPWxfzWXrEnTNvo071k5n9q/jyet3hJx3c6CSeTpBMJFslz6Nnqf9a9umyVGtfM+jRHiwPZCJlEAmB/uVN5qjWkCiJIKYtz0IW3Yml4bh5aeTnLkGtJeB9JoZeFA+abZWUlSw4a3P2D+NAeaV9X8wOH/PoP/9pQnx1Bhi2Vp6A8B2AFAnmFYQhRbLJzYTu7dfmDC8QzEViztA3SQwf1u/c1gIp1x3ddqOPYSdukmyTg6keWDtrc7B6U89z9icUAx1NdTCkqGDBBBGLtOa632TKMFmnItQLemoBpfi6F8UlZ0Fp19OHhdYe1W+lvN+kkBiNlLK+K8ciTrl6wvj57GHm5PADfkworr9xhp6jjVnuHrzIUS1N06xJY8M4/bv+J0v8jgO926NmKjPPbc3HVfgTvxtMOWAlg5ZYIpv2A1I6eMunHNxHFaAEAozFaJ6vAINLdowlNFPdOuvjOexpbPj8s7+Vk6zhJ60oBo+NYSrFEoVbMTAA0M9mmpD37VE55S/N3Hnpu1wO2MtQEi+JSXOWQ0YxUCqlUXLczQYrFagRiwPrl3VuvVTlkAw9evpyTVVW8vYKtyC0tXLiw9OzEw+81tXg9hL9a2eFFB7RVj6fAoLa9mUVrklReEnhv6dO3Dyu+k+e7DD13WgHfuBQWtY84/bo7V61NX6LyWQ9go2j1tOXBt4s7TL4WNLOyAkG5954VF/zv7Oumfh+g546b8t+iFMfCRw7ba4ZtCaVZCxBt/SYMamuatfZ7C2/QBEgETF59RmzkwwBoQW1S4Xsk/6cK8DF6Qky55uzlZWHrWUhLEKjjO3XbTbT7W1xt44mstTbtAFV2K/nrGccd1xSNJiR9T0LPd0IBPqe0gpRm7N2/IhkOWswgbn3zWWGEsX3Dpp1eFJM0IkHx4dWXnzwNSIja2qrvlfV/JxSQSqVULBaTf7/jisV9elZMNQJhQyvtEqAIUMysiaD9PQNWAClmdhULGQnZevBevcYffdBBLbHYiq/1lcL/fyThtqxKQFww15iHxf5Qs75B/dxTHrRyi2Pore93YABCCIQC5sb99u513uOTL3+s+FYUfA+FvmP3wqYhcNJFd477ZNXaE7LZXA/TtGylPfYUZ6UgJxwK5MrKSl47fPiA+689P74au/lqmU7ZjkEQAEMKmIaEaQgI8t/ILqlDApGdR/ZNMLSxGulbdkc0WshZIhpNGFu+batTOqVTOqVTOqVTOqVTOqVTOqVTOqVTOqVTOqVTOqVTOqVTtiv/D4MZb1nR1ImcAAAAAElFTkSuQmCC">
 <title>VASE — Lab Data Management</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=Bai+Jamjuree:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --paper:#F5F2EA;
@@ -47,7 +50,6 @@
   body[data-role="admin"] .req-admin{display:inline-flex !important;}
   .req-admin-cell{display:none !important;}
   body[data-role="admin"] .req-admin-cell{display:table-cell !important;}
-
   .req-booker{display:none !important;}
   body[data-role="user"] .req-booker{display:inline-flex !important;}
   .req-announcer{display:none !important;}
@@ -58,85 +60,6 @@
   body[data-role="professor"] .professor-note{display:inline-flex !important;}
   .nav-item.req-admin-nav{display:none !important;}
   body[data-role="admin"] .nav-item.req-admin-nav{display:flex !important;}
-
-  /* Shell */
-  .shell{display:grid; grid-template-columns:216px 1fr; min-height:100vh;}
-
-  /* Rail */
-  .rail{border-right:1px solid var(--line); padding:20px 14px; display:flex; flex-direction:column; background:rgba(255,255,255,0.55);}
-  .stamp{display:flex; align-items:center; gap:10px; margin-bottom:26px; padding-bottom:16px; border-bottom:1px dashed var(--line);}
-  .stamp-badge{width:38px; height:38px; border:2px solid var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:13px; letter-spacing:0.5px; flex-shrink:0; transform:rotate(-6deg);}
-  .stamp-text{line-height:1.15;}
-  .stamp-text .name{font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:14.5px; letter-spacing:0.5px;}
-  .stamp-text .sub{font-size:9.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:1px; margin-top:2px;}
-
-  .nav{display:flex; flex-direction:column; gap:2px;}
-  .nav-item{display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--radius); color:var(--ink-soft); font-size:13.5px; font-weight:500; cursor:pointer; border:1px solid transparent; background:none; text-align:left; width:100%;}
-  .nav-item .ico{width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:currentColor;}
-  .nav-item:hover{color:var(--ink); background:rgba(22,35,63,0.045);}
-  .nav-item.active{color:var(--ink); background:var(--panel); border:1px solid var(--line); font-weight:600;}
-  .nav-item.active::before{content:""; width:5px; height:5px; border-radius:50%; background:var(--green); margin-right:2px;}
-
-  .rail-foot{margin-top:auto; padding-top:16px; border-top:1px dashed var(--line); font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-faint); line-height:1.6;}
-  .rail-foot .dot{color:var(--rust);}
-
-  /* Main */
-  .main{padding:22px 30px 50px;}
-  .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; gap:16px;}
-  .topbar h1{font-family:'IBM Plex Mono', monospace; font-size:19px; font-weight:700; margin:0; letter-spacing:-0.2px;}
-  .topbar .desc{color:var(--ink-faint); font-size:12.5px; margin-top:3px;}
-  .search{display:flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--panel); padding:8px 12px; border-radius:var(--radius); min-width:230px;}
-  .search svg{color:var(--ink-faint); flex-shrink:0;}
-  .search input{border:none; outline:none; background:none; font-size:13px; width:100%; font-family:'IBM Plex Sans', sans-serif; color:var(--ink);}
-
-  .role-select{position:relative;}
-  .role-chip{display:flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--panel); padding:6px 10px 6px 6px; border-radius:20px; cursor:pointer;}
-  .role-chip .av{width:24px; height:24px; border-radius:50%; background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono', monospace; font-size:10.5px; font-weight:700; flex-shrink:0;}
-  .role-chip .rt{font-size:12px; line-height:1.2;}
-  .role-chip .rt b{display:block; font-size:12.5px;}
-  .role-chip .rt span{color:var(--ink-faint); font-size:10.5px;}
-  .role-chip .caret{color:var(--ink-faint); margin-left:2px;}
-  .role-menu{position:absolute; top:calc(100% + 8px); right:0; background:var(--panel); border:1px solid var(--line); border-radius:4px; min-width:210px; box-shadow:0 10px 30px rgba(22,35,63,0.15); z-index:50; display:none; overflow:hidden;}
-  .role-menu.open{display:block;}
-  .role-menu .eyebrow{padding:9px 12px 6px; font-family:'IBM Plex Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--ink-faint);}
-  .role-menu button{width:100%; text-align:left; padding:9px 12px; border:none; background:none; cursor:pointer; display:flex; flex-direction:column; gap:1px;}
-  .role-menu button:hover{background:rgba(22,35,63,0.05);}
-  .role-menu button b{font-size:12.5px; color:var(--ink);}
-  .role-menu button span{font-size:10.5px; color:var(--ink-faint);}
-  .role-menu button.active{background:var(--green-bg);}
-  .role-menu button.active b{color:var(--green);}
-
-  .view{display:none;}
-  .view.active{display:block;}
-
-  /* KPI cards */
-  .kpis{display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:18px;}
-  .kpi{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; position:relative; overflow:hidden;}
-  .kpi::before{content:""; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--accent, var(--ink));}
-  .kpi .lbl{font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:var(--ink-faint); font-weight:600;}
-  .kpi .val{font-family:'IBM Plex Mono', monospace; font-size:26px; font-weight:700; margin-top:6px;}
-  .kpi .cap{font-size:11px; color:var(--ink-soft); margin-top:3px;}
-
-  .grid-2{display:grid; grid-template-columns:1.3fr 1fr; gap:14px; align-items:start;}
-  .panel{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px 18px;}
-  .panel-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px; gap:10px; flex-wrap:wrap;}
-  .panel-head h2{font-family:'IBM Plex Mono', monospace; font-size:12.5px; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin:0; color:var(--ink);}
-  .panel-head .n{font-size:11px; color:var(--ink-faint);}
-
-  .util-row{margin-bottom:12px;}
-  .util-row:last-child{margin-bottom:0;}
-  .util-top{display:flex; justify-content:space-between; font-size:12px; margin-bottom:5px;}
-  .util-top b{font-weight:600;}
-  .util-top span{color:var(--ink-faint); font-family:'IBM Plex Mono', monospace; font-size:11.5px;}
-  .util-track{height:7px; background:rgba(22,35,63,0.08); border-radius:3px; overflow:hidden;}
-  .util-fill{height:100%; border-radius:3px;}
-
-  .feed{list-style:none; margin:0; padding:0;}
-  .feed li{display:flex; gap:10px; padding:9px 0; border-bottom:1px dashed var(--line); font-size:12.5px;}
-  .feed li:last-child{border-bottom:none; padding-bottom:0;}
-  .feed .time{font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-faint); white-space:nowrap; padding-top:1px;}
-  .feed .txt b{font-weight:600;}
-  .feed .txt{color:var(--ink-soft); line-height:1.4;}
 
   .badge{display:inline-flex; align-items:center; gap:5px; font-family:'IBM Plex Mono', monospace; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.4px; padding:3px 8px; border-radius:20px;}
   .badge::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor;}
@@ -150,21 +73,6 @@
   .filter-chip.active{background:var(--ink); color:#fff; border-color:var(--ink);}
   .spacer{flex:1;}
   .af-select{border:1px solid var(--line); background:var(--panel); padding:6px 10px; border-radius:20px; font-size:11.5px; color:var(--ink-soft); font-family:inherit; cursor:pointer;}
-
-  .res-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;}
-  .tag-card{background:var(--panel); border:1.5px dashed var(--line); border-radius:6px; padding:14px 15px 15px; position:relative;}
-  .tag-card::before, .tag-card::after{content:""; position:absolute; width:9px; height:9px; border-radius:50%; background:var(--paper); border:1.5px dashed var(--line); top:50%; transform:translateY(-50%);}
-  .tag-card::before{left:-6px;}
-  .tag-card::after{right:-6px;}
-  .tag-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;}
-  .tag-cat{font-family:'IBM Plex Mono', monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:1px; color:var(--ink-faint);}
-  .tag-name{font-size:14.5px; font-weight:600; margin:4px 0 0; line-height:1.3;}
-  .qr{width:34px; height:34px; background:linear-gradient(90deg, var(--ink) 0 3px, transparent 3px 6px) repeat-x, linear-gradient(0deg, var(--ink) 0 3px, transparent 3px 6px) repeat-y; background-size:6px 6px; border:1.5px solid var(--ink); border-radius:3px; flex-shrink:0; cursor:pointer;}
-  .qr:hover{outline:2px solid var(--green); outline-offset:2px;}
-  .tag-meta{font-size:11.5px; color:var(--ink-soft); line-height:1.7; margin-top:10px;}
-  .tag-meta .k{color:var(--ink-faint);}
-  .tag-foot{margin-top:12px; padding-top:10px; border-top:1px dashed var(--line); display:flex; justify-content:space-between; align-items:center; gap:6px;}
-  .tag-hint{font-size:10px; color:var(--ink-faint); font-family:'IBM Plex Mono',monospace;}
 
   table{width:100%; border-collapse:collapse; font-size:12.5px;}
   thead th{text-align:left; font-family:'IBM Plex Mono', monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.8px; color:var(--ink-faint); font-weight:600; padding:0 10px 10px; border-bottom:1px solid var(--line);}
@@ -193,11 +101,242 @@
   .toast{position:fixed; bottom:20px; right:20px; background:var(--ink); color:#fff; padding:10px 16px; border-radius:4px; font-size:12.5px; font-family:'IBM Plex Mono', monospace; opacity:0; transform:translateY(8px); transition:all .25s ease; z-index:200; pointer-events:none; max-width:280px;}
   .toast.show{opacity:1; transform:translateY(0);}
 
-  @media (max-width: 880px){
-    .shell{grid-template-columns:1fr;}
-    .rail{display:none;}
-    .kpis, .res-grid{grid-template-columns:1fr 1fr;}
-    .grid-2{grid-template-columns:1fr;}
+  /* shell (redesign) */
+  body.authed{font-family:var(--font-body); font-size:15px; line-height:1.5;}
+  .view{display:none;}
+  .view.active{display:block;}
+  .stamp-badge{width:38px; height:38px; border:2px solid var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:13px; letter-spacing:0.5px; flex-shrink:0; transform:rotate(-6deg);}
+
+  .shell{min-height:100vh; position:relative;}
+  .hero-bg{position:absolute; top:0; left:0; right:0; height:340px; z-index:0; pointer-events:none; background:linear-gradient(to bottom, rgba(44,95,138,0.10), rgba(44,95,138,0));}
+
+  /* navbar */
+  .navbar{position:sticky; top:0; z-index:60; transition:background .25s, box-shadow .25s;}
+  .navbar.scrolled{background:rgba(245,242,234,0.82); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 1px 0 var(--line), 0 8px 20px rgba(22,35,63,0.06);}
+  .navbar-in{max-width:1180px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:20px; padding:12px 24px;}
+  .navbar-right{display:flex; align-items:center; gap:32px;}
+  .brand{display:flex; align-items:center; gap:10px; background:none; border:none; padding:0; cursor:pointer; color:var(--ink); text-align:left;}
+  .brand .stamp-badge{background:#fff;}
+  .brand-text{line-height:1.15;}
+  .brand-text .name{font-family:var(--font-head); font-weight:700; font-size:18px; letter-spacing:0.04em;}
+  .brand-text .sub{font-size:11.5px; color:var(--ink-faint); margin-top:1px;}
+
+  .nav{display:flex; align-items:center; gap:28px;}
+  .nav-item{background:none; border:none; border-bottom:2px solid transparent; padding:6px 0; font-size:14px; font-weight:500; color:var(--ink-soft); cursor:pointer; transition:color .2s, border-color .2s; white-space:nowrap;}
+  .nav-item:hover{color:var(--ink); border-bottom-color:var(--ink);}
+  .nav-item.active{color:var(--ink); font-weight:600; border-bottom-color:var(--blue);}
+
+  .profile{position:relative;}
+  .avatar-btn{width:40px; height:40px; border-radius:50%; border:2px solid var(--ink); background:#fff; color:var(--ink); font-family:var(--font-head); font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s, color .2s;}
+  .avatar-btn:hover{background:var(--ink); color:#fff;}
+  .role-menu{position:absolute; top:calc(100% + 10px); right:0; width:232px; background:#fff; border:1px solid var(--line); border-radius:16px; box-shadow:0 14px 40px rgba(22,35,63,0.16); padding:12px; z-index:80; display:none;}
+  .role-menu.open{display:block;}
+  .role-menu .eyebrow{font-size:12px; color:var(--ink-faint); padding:2px 4px 6px;}
+  .menu-user{display:flex; flex-direction:column; gap:2px; padding:0 4px 10px; margin-bottom:6px; border-bottom:1px solid var(--line); word-break:break-all;}
+  .menu-user b{font-size:14px;}
+  .menu-user span{font-size:12px; color:var(--ink-soft);}
+  .role-menu button{width:100%; text-align:left; padding:9px 10px; border:none; background:none; cursor:pointer; display:flex; flex-direction:column; gap:1px; border-radius:10px;}
+  .role-menu button:hover{background:rgba(22,35,63,0.05);}
+  .role-menu button b{font-size:12.5px; color:var(--ink);}
+  .role-menu button span{font-size:10.5px; color:var(--ink-faint);}
+  .role-menu button.active{background:var(--blue-bg);}
+  .role-menu button.active b{color:var(--blue);}
+
+  /* page */
+  .page{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:6px 24px 72px;}
+  .page-head{margin:20px 0 22px;}
+  body[data-view="home"] .page-head{display:none;}
+  .page-head h1{font-family:var(--font-head); font-size:30px; font-weight:700; margin:0;}
+  .page-head .desc{color:var(--ink-soft); font-size:15px; margin-top:4px;}
+
+  .hero-logo{display:none; flex-direction:column; align-items:center; text-align:center; padding:26px 0 20px;}
+  body[data-view="home"] .hero-logo{display:flex;}
+  .hero-logo .stamp-badge{width:84px; height:84px; font-size:32px; border-width:3px; background:#fff; margin-bottom:12px; box-shadow:0 8px 22px rgba(22,35,63,0.10);}
+  .hero-logo .name{font-family:var(--font-head); font-weight:700; font-size:26px; letter-spacing:0.08em;}
+  .hero-logo .sub{font-size:14px; color:var(--ink-soft); margin-top:2px;}
+
+  /* floating search */
+  .home-search-wrap{display:none; position:relative; width:min(660px,100%); margin:4px auto 0; z-index:20;}
+  body[data-view="home"] .home-search-wrap{display:block;}
+  .home-search{display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px 16px; box-shadow:0 10px 28px rgba(22,35,63,0.10);}
+  .home-search svg{flex-shrink:0; color:var(--ink-soft);}
+  .home-search input{flex:1; min-width:0; border:none; outline:none; background:none; font-family:inherit; font-size:15px; color:var(--ink);}
+  .home-search .sep{width:1px; height:24px; background:var(--line);}
+  .icon-btn{background:none; border:none; cursor:pointer; color:var(--ink-soft); display:flex; align-items:center; padding:2px; border-radius:6px;}
+  .icon-btn:hover{color:var(--ink); background:rgba(22,35,63,0.06);}
+  .link-btn{background:none; border:none; cursor:pointer; color:var(--ink-faint); font-size:13px; padding:2px 4px;}
+  .link-btn:hover{color:var(--ink);}
+  .filter-card{position:absolute; top:calc(100% + 8px); left:0; right:0; background:#fff; border:1px solid var(--line); border-radius:16px; box-shadow:0 14px 40px rgba(22,35,63,0.16); padding:16px; display:none; grid-template-columns:1fr 1fr 1fr; gap:12px;}
+  .filter-card.open{display:grid;}
+  .filter-card label{display:block; font-size:11px; font-weight:600; color:var(--ink-soft); margin-bottom:5px;}
+  .filter-card select{width:100%;}
+
+  .fld{padding:9px 14px; border:1px solid var(--line); border-radius:999px; font-family:inherit; font-size:13px; background:#fff; color:var(--ink); outline:none;}
+  .fld:focus{border-color:var(--blue);}
+  .fld.grow{flex:1; min-width:180px;}
+  .fld-check{display:flex; align-items:center; gap:7px; cursor:pointer; white-space:nowrap;}
+  .bar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; background:#fff; border:1px solid var(--line); border-radius:16px; padding:12px; box-shadow:0 4px 16px rgba(22,35,63,0.06); margin-bottom:20px;}
+
+  /* sections */
+  .sec{margin-top:36px;}
+  .sec-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; flex-wrap:wrap;}
+  .sec-head h2{font-family:var(--font-head); font-size:23px; font-weight:700; margin:0;}
+  .view-all{display:inline-flex; align-items:center; gap:6px; background:none; border:none; cursor:pointer; font-size:14.5px; font-weight:500; color:var(--ink); padding:4px 8px; transition:color .2s;}
+  .view-all:hover{color:var(--ink-faint);}
+  .h-row{display:flex; gap:16px; overflow-x:auto; padding:6px 4px 16px; scroll-snap-type:x proximity;}
+  .h-row > *{scroll-snap-align:start;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(236px, 1fr)); gap:18px;}
+
+  [data-tone="0"]{--tone-bg:var(--blue-bg); --tone-fg:var(--blue); --g1:rgba(44,95,138,.15); --g2:rgba(44,95,138,.05);}
+  [data-tone="1"]{--tone-bg:var(--amber-bg); --tone-fg:var(--amber); --g1:rgba(149,101,28,.15); --g2:rgba(149,101,28,.05);}
+  [data-tone="2"]{--tone-bg:#E6E8EE; --tone-fg:var(--ink); --g1:rgba(22,35,63,.12); --g2:rgba(22,35,63,.04);}
+  [data-tone="3"]{--tone-bg:var(--rust-bg); --tone-fg:var(--rust); --g1:rgba(160,59,42,.14); --g2:rgba(160,59,42,.04);}
+
+  /* resource cards */
+  .rcard{background:var(--panel); border-radius:16px; padding:14px; width:252px; flex-shrink:0; position:relative; display:flex; flex-direction:column; box-shadow:0 2px 12px rgba(22,35,63,0.07); transition:transform .2s, box-shadow .2s;}
+  .rcard:hover{transform:translateY(-3px); box-shadow:0 10px 26px rgba(22,35,63,0.12);}
+  .grid > .rcard{width:auto;}
+  .rcard-art{position:relative; height:118px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:var(--tone-bg); color:var(--tone-fg); overflow:hidden;}
+  .rcard-art svg{width:54px; height:54px; opacity:.85;}
+  .rcard-status{position:absolute; top:10px; right:10px; color:#fff; font-size:11.5px; font-weight:700; padding:4px 9px; border-radius:5px 5px 5px 18px;}
+  .st-available{background:var(--green);} .st-inuse{background:var(--amber);} .st-maintenance{background:var(--rust);}
+  .rcard-code{font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--ink-faint); margin-top:10px;}
+  .rcard h3{font-family:var(--font-head); font-size:17px; font-weight:600; line-height:1.3; margin:3px 0 8px; min-height:42px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+  .pill{display:flex; align-items:center; gap:6px; width:100%; background:rgba(22,35,63,0.06); border-radius:999px; padding:5px 10px; font-size:13px; color:var(--ink);}
+  .pill svg{flex-shrink:0;}
+  .tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; font-size:11.5px;}
+  .tag{padding:3px 9px; border-radius:999px; background:var(--tone-bg); color:var(--tone-fg); font-weight:500;}
+  .tag.plain{background:rgba(22,35,63,0.07); color:var(--ink-soft);}
+  .rcard-actions{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px;}
+  .rcard-actions .btn{margin-right:0;}
+
+  .qcard{width:280px; gap:10px;}
+  .qtop{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .qtop b{font-size:15px; line-height:1.3;}
+  .qpurpose{margin:0; font-size:13px; color:var(--ink-soft); line-height:1.45; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+
+  /* category banners */
+  .banner{position:relative; border-radius:18px; padding:22px 28px 26px; min-height:230px; overflow:hidden; cursor:pointer; margin-bottom:18px; background:linear-gradient(90deg, var(--g1), var(--g2));}
+  .banner-art{position:absolute; right:28px; bottom:-8px; width:210px; height:210px; opacity:.22; color:var(--tone-fg); pointer-events:none;}
+  .banner-art svg{width:100%; height:100%; stroke-width:1.2;}
+  .banner-in{position:relative; z-index:1;}
+  .banner-top{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px;}
+  .banner-top h3{font-family:var(--font-head); font-size:23px; font-weight:700; margin:0;}
+  .hcard{display:flex; gap:16px; background:rgba(255,255,255,0.72); border-radius:14px; padding:14px; max-width:640px; align-items:stretch;}
+  .hcard .rcard-art{width:150px; height:auto; min-height:104px; flex-shrink:0;}
+  .hcard-body{display:flex; flex-direction:column; justify-content:center; min-width:0; flex:1;}
+  .hcard-body .rcard-code{margin-top:0;}
+  .hcard-body h3{min-height:0; margin-bottom:8px;}
+
+  /* announcements */
+  .ann{width:320px; flex-shrink:0; background:#fff; border-radius:16px; padding:16px; box-shadow:0 2px 12px rgba(22,35,63,0.07); display:flex; flex-direction:column; gap:8px; border-left:4px solid var(--blue);}
+  .ann.pinned{background:var(--amber-bg); border-left-color:var(--amber);}
+  .ann-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .ann-title{display:flex; flex-direction:column; align-items:flex-start; gap:6px; font-size:15px;}
+  .ann-actions{display:flex; gap:4px; white-space:nowrap;}
+  .ann-actions .btn{margin-right:0;}
+  .ann-body{margin:0; font-size:13px; color:var(--ink-soft); line-height:1.5; white-space:pre-wrap; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden;}
+  .ann-meta{margin:auto 0 0; font-size:11px; color:var(--ink-faint);}
+
+  /* panels, controls (redesign)*/
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px 20px 20px; box-shadow:0 4px 16px rgba(22,35,63,0.06); overflow-x:auto;}
+  .panel-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; gap:10px; flex-wrap:wrap;}
+  .panel-head h2{font-family:var(--font-head); font-size:20px; font-weight:700; margin:0;}
+  .btn{border-radius:999px; padding:6px 12px;}
+  .filter-chip{padding:7px 14px;}
+  .modal-box{border-radius:18px; animation:slideUp .28s ease-out;}
+  .toast{border-radius:12px;}
+  @keyframes slideUp{from{opacity:0; transform:translateY(18px) scale(.96);} to{opacity:1; transform:translateY(0) scale(1);}}
+
+  @media (max-width: 860px){
+    .navbar-in{flex-wrap:wrap; gap:8px 12px; padding:10px 16px;}
+    .navbar-right{display:contents;}
+    .brand{order:1; margin-right:auto;}
+    .profile{order:2;}
+    .nav{order:3; width:100%; overflow-x:auto; gap:22px; padding-bottom:2px;}
+    .page{padding:6px 16px 56px;}
+    .filter-card{grid-template-columns:1fr;}
+    .hcard{flex-direction:column;}
+    .hcard .rcard-art{width:100%; min-height:96px;}
+    .banner-art{width:140px; height:140px;}
+    .grid{grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));}
+  }
+
+  :root{
+    --font-body:'Anuphan','IBM Plex Sans Thai','Sarabun',sans-serif;
+    --font-head:'Bai Jamjuree','Anuphan','Sarabun',sans-serif;
+  }
+  .btn{font-family:var(--font-body); font-size:13.5px; font-weight:600; letter-spacing:0; text-transform:none; padding:8px 16px; border-radius:10px;}
+  .btn.ok{background:var(--ink); border-color:var(--ink); color:#fff;}
+  .btn.ok:hover{background:#0F1A31;}
+  .btn.no{color:var(--rust); border-color:rgba(160,59,42,0.35);}
+  .badge{font-family:var(--font-body); font-size:12px; font-weight:600; letter-spacing:0; text-transform:none; padding:3px 10px;}
+  .toast{font-family:var(--font-body); font-size:13.5px;}
+  .modal-box h3{font-family:var(--font-head); font-size:19px; font-weight:600; text-transform:none; letter-spacing:0;}
+  .modal-box .field label{text-transform:none; letter-spacing:0; font-size:13px; font-weight:600; color:var(--ink-soft);}
+  .avatar-btn:focus-visible, .nav-item:focus-visible, .brand:focus-visible{box-shadow:0 0 0 3px rgba(44,95,138,0.35); outline:none;}
+
+  /* requests - booking cards */
+  .req-top{display:flex; align-items:center; justify-content:space-between; gap:12px 20px; flex-wrap:wrap;}
+  .req-top-actions{display:flex; gap:8px;}
+  .seg{display:inline-flex; gap:2px; padding:4px; background:rgba(22,35,63,0.07); border-radius:12px;}
+  .seg .filter-chip{border:none; background:none; border-radius:9px; padding:7px 16px; font-size:14px; font-weight:500; color:var(--ink-soft); font-family:inherit;}
+  .seg .filter-chip:hover{color:var(--ink);}
+  .seg .filter-chip.active{background:#fff; color:var(--ink); font-weight:600; box-shadow:0 1px 3px rgba(22,35,63,0.16);}
+  .req-note{margin:10px 2px 18px; font-size:14px; color:var(--ink-soft);}
+
+  .req-list{display:flex; flex-direction:column; gap:14px;}
+  .req{background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--ink-faint); border-radius:14px; overflow:hidden; box-shadow:0 1px 2px rgba(22,35,63,0.05); transition:border-color .2s;}
+  .req[data-status="Pending"]{border-left-color:var(--amber);}
+  .req[data-status="Approved"]{border-left-color:var(--green);}
+  .req[data-status="Rejected"]{border-left-color:var(--rust);}
+  .req-row{display:flex; gap:20px; padding:18px 20px; align-items:flex-start;}
+
+  .leaf{width:64px; flex-shrink:0; border:1.5px solid var(--ink); border-radius:10px; overflow:hidden; text-align:center; background:#fff;}
+  .leaf-mon{display:block; background:var(--ink); color:#fff; font-size:12.5px; font-weight:600; padding:3px 0; letter-spacing:.04em;}
+  .leaf-day{display:block; font-family:var(--font-head); font-size:28px; font-weight:700; line-height:1.15; padding-top:4px;}
+  .leaf-wd{display:block; font-size:12.5px; color:var(--ink-faint); padding-bottom:5px;}
+
+  .req-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:8px;}
+  .req-title{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .req-title h3{margin:0; font-family:var(--font-head); font-size:20px; font-weight:600; line-height:1.25;}
+  .req-when{display:flex; align-items:center; flex-wrap:wrap; gap:4px 8px; font-size:14.5px; color:var(--ink); font-variant-numeric:tabular-nums;}
+  .req-when svg{color:var(--ink-faint); flex-shrink:0;}
+  .dur{background:var(--blue-bg); color:var(--blue); border-radius:6px; padding:1px 8px; font-size:13px; font-weight:600;}
+  .req-purpose{margin:0; font-size:14.5px; color:var(--ink-soft); line-height:1.55;}
+  .req-purpose b{color:var(--ink); font-weight:600; margin-right:8px;}
+  .req-foot{display:flex; align-items:center; gap:8px 18px; flex-wrap:wrap; margin-top:4px; padding-top:12px; border-top:1px solid var(--line); font-size:13.5px; color:var(--ink-soft);}
+  .who{display:flex; align-items:center; gap:10px; min-width:0;}
+  .who-av{width:30px; height:30px; border-radius:50%; background:var(--blue-bg); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0;}
+  .who b{color:var(--ink); font-weight:600;}
+  .who span{color:var(--ink-faint); margin-left:6px; word-break:break-all;}
+
+  .req-actions{display:flex; gap:8px; flex-shrink:0; align-self:center;}
+  .req-btn{font-family:inherit; font-size:14px; font-weight:600; padding:9px 18px; border-radius:10px; cursor:pointer; border:1.5px solid transparent; transition:background .15s, border-color .15s;}
+  .req-btn:focus-visible{outline:2px solid var(--blue); outline-offset:2px;}
+  .req-btn:disabled{opacity:.55; cursor:default;}
+  .req-btn.approve{background:var(--ink); color:#fff;}
+  .req-btn.approve:hover{background:#0F1A31;}
+  .req-btn.decline{background:#fff; color:var(--rust); border-color:rgba(160,59,42,0.35);}
+  .req-btn.decline:hover{background:var(--rust-bg);}
+
+  .req-confirm{display:none; align-items:center; justify-content:space-between; gap:12px 20px; flex-wrap:wrap; padding:14px 20px; background:var(--ink); color:#fff; font-size:14.5px;}
+  .req.asking .req-confirm{display:flex; animation:confirmIn .22s ease-out;}
+  .req.asking.is-decline .req-confirm{background:var(--rust);}
+  .req-confirm p{margin:0; max-width:560px; line-height:1.5;}
+  .req-confirm-btns{display:flex; gap:8px;}
+  .req-confirm .req-btn.back{background:transparent; color:#fff; border-color:rgba(255,255,255,0.45);}
+  .req-confirm .req-btn.back:hover{background:rgba(255,255,255,0.12);}
+  .req-confirm .req-btn.go{background:#fff; color:var(--ink);}
+  .req.is-decline .req-confirm .req-btn.go{color:var(--rust);}
+  @keyframes confirmIn{from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .req.asking .req-confirm{animation:none;} }
+  @media (max-width: 640px){
+    .req-row{flex-wrap:wrap; gap:14px; padding:16px;}
+    .leaf{width:56px;}
+    .req-actions{width:100%;}
+    .req-actions .req-btn{flex:1;}
+    .req-confirm{padding:14px 16px;}
   }
 
   /* Login / Create account screens (US-11 / SRS-11) */
@@ -283,6 +422,323 @@
   .g-email{font-size:12px; color:#5f6368;}
   .g-row.g-other .g-av{background:#f1f3f4 !important; color:#5f6368;}
   .g-foot{padding:16px 24px 24px; font-size:12px; color:#5f6368; line-height:1.5; border-top:1px solid #e8eaed; margin-top:8px;}
+
+  /* Theme and color */
+  :root{
+    --paper:#F6EFDD;
+    --panel:#FFFCF4;
+    --cream-deep:#EDE2C8;
+    --ink:#1B2A49;
+    --ink-deep:#101A31;
+    --ink-soft:#5A5F70;
+    --ink-faint:#8E8A7E;
+    --line:rgba(27,42,73,0.14);
+    --green:#3E6B4F;
+    --green-deep:#2F5640;
+    --green-bg:#DEE9D8;
+    --amber:#8A5A32;         
+    --amber-bg:#EEDFC8;
+    --brown:#8A5A32;
+    --brown-soft:#B08A62;
+    --rust:#A03B2A;
+    --rust-bg:#F2DDD5;
+    --blue:#2B4470;           
+    --blue-bg:#E2E6EF;
+    --radius:10px;
+    --shadow-sm:0 1px 3px rgba(74,50,25,0.08);
+    --shadow-md:0 6px 20px rgba(74,50,25,0.10);
+    --shadow-lg:0 18px 48px rgba(27,42,73,0.18);
+  }
+  body{background:var(--paper);}
+  ::selection{background:var(--green); color:#fff;}
+  :focus-visible{outline:2px solid var(--green); outline-offset:2px;}
+  .avatar-btn:focus-visible, .nav-item:focus-visible, .brand:focus-visible{box-shadow:0 0 0 3px rgba(62,107,79,0.35); outline:none;}
+
+  .hero-bg{height:420px; background:radial-gradient(900px 320px at 50% 0, rgba(176,138,98,0.16), rgba(176,138,98,0));}
+
+  /* navbar */
+  .navbar{background:var(--paper); box-shadow:0 1px 0 var(--line);}
+  .navbar.scrolled{background:rgba(246,239,221,0.88); box-shadow:0 1px 0 var(--line), 0 8px 24px rgba(74,50,25,0.08);}
+  .stamp-badge{border-color:var(--ink); color:var(--ink);}
+  .brand .stamp-badge{background:var(--ink); color:var(--paper); border-color:var(--ink); box-shadow:3px 3px 0 var(--brown-soft);}
+  .brand-text .name{color:var(--ink);}
+  .nav-item:hover{border-bottom-color:var(--brown-soft);}
+  .nav-item.active{border-bottom-color:var(--green); color:var(--ink);}
+  .avatar-btn{background:var(--cream-deep); border-color:var(--ink);}
+  .avatar-btn:hover{background:var(--ink); color:var(--paper);}
+  .role-menu{background:var(--panel); border-radius:18px; box-shadow:var(--shadow-lg);}
+  .role-menu button:hover{background:rgba(138,90,50,0.08);}
+  .role-menu button.active{background:var(--green-bg);}
+  .role-menu button.active b{color:var(--green-deep);}
+
+  /* hero card (home) */
+  .hero-logo{
+    position:relative; overflow:hidden; margin-top:14px; padding:46px 24px 78px;
+    border-radius:28px; color:var(--paper);
+    background:
+      radial-gradient(520px 260px at 88% 0%, rgba(62,107,79,0.55), rgba(62,107,79,0) 70%),
+      radial-gradient(420px 260px at 0% 100%, rgba(176,138,98,0.28), rgba(176,138,98,0) 70%),
+      var(--ink);
+    box-shadow:var(--shadow-lg);
+  }
+  .hero-logo::before, .hero-logo::after{content:""; position:absolute; border:1.5px solid rgba(246,239,221,0.10); border-radius:50%; pointer-events:none;}
+  .hero-logo::before{width:360px; height:360px; right:-90px; top:-150px;}
+  .hero-logo::after{width:240px; height:240px; left:-70px; bottom:-130px;}
+  .hero-logo > *{position:relative; z-index:1;}
+  .hero-logo .stamp-badge{background:var(--paper); color:var(--ink); border-color:var(--brown-soft); box-shadow:0 0 0 6px rgba(246,239,221,0.10);}
+  .hero-logo .name{color:var(--paper); font-size:32px;}
+  .hero-logo .sub{color:rgba(246,239,221,0.74); font-size:14.5px;}
+  .home-search-wrap{margin-top:-30px;}
+  .home-search{background:var(--panel); border:1px solid var(--cream-deep); border-radius:16px; box-shadow:var(--shadow-lg);}
+  .home-search:focus-within{border-color:var(--green); box-shadow:0 0 0 3px rgba(62,107,79,0.20), var(--shadow-lg);}
+  .icon-btn:hover{background:rgba(138,90,50,0.10);}
+  .filter-card{background:var(--panel); border-radius:18px; box-shadow:var(--shadow-lg);}
+
+  /* inputs */
+  .fld{background:var(--panel);}
+  .fld:focus{border-color:var(--green);}
+  .bar{background:var(--panel); border-radius:18px; box-shadow:var(--shadow-sm);}
+  .field input, .field select{background:var(--panel);}
+  .field input:focus, .field select:focus{outline:none; border-color:var(--green); box-shadow:0 0 0 3px rgba(62,107,79,0.16);}
+
+  /* section headings */
+  .sec-head h2{color:var(--ink); position:relative; padding-bottom:8px;}
+  .sec-head h2::after{content:""; position:absolute; left:0; bottom:0; width:30px; height:3px; border-radius:3px; background:var(--brown-soft);}
+  .view-all{color:var(--brown);}
+  .view-all:hover{color:var(--ink);}
+  .page-head h1{color:var(--ink);}
+
+  /* categories tones */
+  [data-tone="0"]{--tone-bg:#E1E6F0; --tone-fg:#2B4470; --g1:rgba(43,68,112,.16); --g2:rgba(43,68,112,.04);}
+  [data-tone="1"]{--tone-bg:#EEDFC8; --tone-fg:#8A5A32; --g1:rgba(138,90,50,.18); --g2:rgba(138,90,50,.05);}
+  [data-tone="2"]{--tone-bg:#DEE9D8; --tone-fg:#3E6B4F; --g1:rgba(62,107,79,.18); --g2:rgba(62,107,79,.05);}
+  [data-tone="3"]{--tone-bg:#EADFD2; --tone-fg:#6B4A2E; --g1:rgba(107,74,46,.16); --g2:rgba(107,74,46,.04);}
+
+  /* cards */
+  .rcard{background:var(--panel); border:1px solid rgba(138,90,50,0.12); border-radius:20px; box-shadow:var(--shadow-sm);}
+  .rcard:hover{transform:translateY(-3px); box-shadow:var(--shadow-md);}
+  .rcard-art{border-radius:14px;}
+  .rcard-code{color:var(--brown-soft);}
+  .rcard h3{color:var(--ink);}
+  .pill{background:var(--cream-deep); color:var(--ink);}
+  .tag.plain{background:var(--cream-deep); color:var(--ink-soft);}
+  .st-available{background:var(--green);} .st-inuse{background:var(--brown);} .st-maintenance{background:var(--rust);}
+  .ann{background:var(--panel); border:1px solid rgba(138,90,50,0.12); border-left:4px solid var(--ink); border-radius:18px; box-shadow:var(--shadow-sm);}
+  .ann.pinned{background:var(--amber-bg); border-left-color:var(--brown);}
+  .banner{border-radius:22px; border:1px solid rgba(138,90,50,0.12);}
+  .hcard{background:rgba(255,252,244,0.80); border-radius:16px;}
+  .panel{background:var(--panel); border-radius:20px; box-shadow:var(--shadow-sm);}
+  .modal-box{background:var(--panel); border-radius:22px; box-shadow:var(--shadow-lg);}
+  .modal-backdrop{background:rgba(16,26,49,0.45);}
+
+  /* buttons */
+  .btn{background:var(--panel); color:var(--ink); border-color:rgba(138,90,50,0.30);}
+  .btn:hover{background:var(--cream-deep);}
+  .btn.ok{background:var(--green); border-color:var(--green); color:#fff;}
+  .btn.ok:hover{background:var(--green-deep);}
+  .btn.no{background:var(--panel); color:var(--rust); border-color:rgba(160,59,42,0.35);}
+  .btn.no:hover{background:var(--rust-bg);}
+  .filter-chip{background:var(--panel); border-color:rgba(138,90,50,0.25);}
+  .filter-chip.active{background:var(--ink); border-color:var(--ink); color:var(--paper);}
+  .seg{background:var(--cream-deep);}
+  .seg .filter-chip.active{background:var(--panel); box-shadow:var(--shadow-sm);}
+  .toast{background:var(--ink); color:var(--paper);}
+
+  /* requests */
+  .req{background:var(--panel); border:1px solid rgba(138,90,50,0.14); border-left:4px solid var(--ink-faint); border-radius:16px; box-shadow:var(--shadow-sm);}
+  .req[data-status="Pending"]{border-left-color:var(--brown);}
+  .req[data-status="Approved"]{border-left-color:var(--green);}
+  .leaf{background:var(--panel); border-color:var(--ink);}
+  .leaf-mon{background:var(--ink); color:var(--paper);}
+  .dur{background:var(--blue-bg); color:var(--blue);}
+  .who-av{background:var(--cream-deep); color:var(--brown);}
+  .req-btn.approve{background:var(--green); color:#fff;}
+  .req-btn.approve:hover{background:var(--green-deep);}
+  .req-btn.decline{background:var(--panel);}
+  .req-btn:focus-visible{outline-color:var(--green);}
+  .req-confirm{background:var(--ink);}
+  .req-confirm .req-btn.go{background:var(--paper); color:var(--ink);}
+
+  /* tables */
+  thead th{color:var(--brown); border-bottom:1px solid rgba(138,90,50,0.28);}
+  tbody td{border-bottom:1px dashed rgba(138,90,50,0.25);}
+  tbody tr:hover td{background:rgba(237,226,200,0.35);}
+
+  /* login / create account */
+  .auth-screen{background:linear-gradient(var(--ink) 0 260px, var(--paper) 260px);}
+  .auth-card{background:var(--panel); border:1px solid rgba(138,90,50,0.16); border-radius:24px; box-shadow:var(--shadow-lg); border-top:5px solid var(--green);}
+  .auth-brand .stamp-badge{background:var(--ink); color:var(--paper); border-color:var(--ink); box-shadow:3px 3px 0 var(--brown-soft);}
+  .auth-brand .name{font-family:var(--font-head); font-size:18px; letter-spacing:.1em; color:var(--ink);}
+  .auth-brand .sub{font-family:var(--font-body); font-size:12px; text-transform:none; letter-spacing:0; color:var(--brown);}
+  .auth-card h2{font-family:var(--font-head); font-size:22px; color:var(--ink);}
+  .auth-card .field input, .auth-card .field select{border-radius:10px;}
+  .auth-card .field input:focus, .auth-card .field select:focus{border-color:var(--green);}
+  .row-between a, .switch-form a{color:var(--brown);}
+  .btn-primary{background:var(--ink); border-radius:10px; font-family:var(--font-body); padding:12px;}
+  .btn-primary:hover{background:var(--green);}
+  .btn-google{background:var(--panel); border-radius:10px; font-family:var(--font-body);}
+  .btn-google:hover{background:var(--cream-deep);}
+  .login-divider{font-family:var(--font-body); font-size:12px; text-transform:none; letter-spacing:0;}
+  .login-error{border-radius:10px; font-family:var(--font-body); font-size:12.5px;}
+  .login-notice{border-radius:10px; font-family:var(--font-body); font-size:12.5px;}
+
+  @media (max-width: 860px){
+    .hero-logo{padding:36px 18px 70px; border-radius:22px;}
+    .hero-logo .name{font-size:28px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .rcard, .rcard:hover{transition:none; transform:none;}
+    .modal-box{animation:none;}
+  }
+
+
+  .hero-logo{
+    background:
+      radial-gradient(520px 280px at 85% 0%, rgba(214,226,208,0.22), rgba(214,226,208,0) 70%),
+      radial-gradient(460px 280px at 0% 100%, rgba(196,160,120,0.22), rgba(196,160,120,0) 70%),
+      linear-gradient(135deg, #2C3F66 0%, #34506A 50%, #4A6E5C 100%);
+    box-shadow:0 14px 36px rgba(44,63,102,0.16);
+  }
+  .hero-logo::before, .hero-logo::after{border-color:rgba(246,239,221,0.14);}
+  .hero-logo .stamp-badge{box-shadow:0 0 0 6px rgba(246,239,221,0.12);}
+  .hero-logo .sub{color:rgba(246,239,221,0.82);}
+  .home-search{box-shadow:0 10px 26px rgba(44,63,102,0.14);}
+
+  /* Login */
+  .auth-screen{
+    background:
+      radial-gradient(720px 460px at 8% 0%, rgba(43,68,112,0.16), rgba(43,68,112,0) 70%),
+      radial-gradient(640px 460px at 100% 100%, rgba(62,107,79,0.16), rgba(62,107,79,0) 70%),
+      radial-gradient(500px 360px at 95% 5%, rgba(176,138,98,0.14), rgba(176,138,98,0) 70%),
+      var(--paper);
+  }
+  .auth-card{
+    border:1px solid rgba(138,90,50,0.14);
+    box-shadow:0 18px 50px rgba(74,50,25,0.10);
+    border-radius:24px;
+  }
+  .auth-brand .stamp-badge{box-shadow:2px 2px 0 var(--brown-soft);}
+  .btn-primary{background:linear-gradient(135deg, #2C3F66, #34506A);}
+  .btn-primary:hover{background:linear-gradient(135deg, #34506A, #3E6B4F);}
+  .btn-google{border-color:rgba(138,90,50,0.22);}
+
+  /* page + floating side menu (slides out on hover) */
+  :root{
+    --paper:#FBF8EF;
+    --panel:#FFFEFA;
+    --cream-deep:#F2EAD5;
+  }
+  .hero-bg{background:radial-gradient(900px 320px at 50% 0, rgba(176,138,98,0.09), rgba(176,138,98,0));}
+  .hero-logo{
+    background:
+      radial-gradient(520px 280px at 85% 0%, rgba(226,236,220,0.24), rgba(226,236,220,0) 70%),
+      radial-gradient(460px 280px at 0% 100%, rgba(205,172,135,0.22), rgba(205,172,135,0) 70%),
+      linear-gradient(135deg, #34476F 0%, #3E5D74 50%, #567A66 100%);
+    box-shadow:0 12px 30px rgba(52,71,111,0.14);
+  }
+  .auth-screen{
+    background:
+      radial-gradient(720px 460px at 8% 0%, rgba(43,68,112,0.09), rgba(43,68,112,0) 70%),
+      radial-gradient(640px 460px at 100% 100%, rgba(62,107,79,0.09), rgba(62,107,79,0) 70%),
+      var(--paper);
+  }
+
+  .page{padding:26px 32px 72px;}
+
+  .navbar, .navbar.scrolled{position:fixed; top:0; left:0; bottom:0; width:0; background:none; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none; z-index:70;}
+  .navbar-in{
+    position:absolute; top:14px; left:14px; bottom:14px; width:236px; max-width:none; margin:0;
+    flex-direction:column; align-items:stretch; justify-content:flex-start; gap:16px; padding:20px 14px 16px;
+    background:var(--panel); border:1px solid rgba(138,90,50,0.14); border-radius:24px;
+    box-shadow:0 18px 48px rgba(74,50,25,0.16);
+    transform:translateX(calc(-100% - 24px)); opacity:0; pointer-events:none;
+    transition:transform .3s cubic-bezier(.22,.8,.3,1) .12s, opacity .2s ease .12s;
+  }
+  .navbar:hover .navbar-in, .navbar.open .navbar-in, .navbar:focus-within .navbar-in{
+    transform:none; opacity:1; pointer-events:auto; transition-delay:0s;
+  }
+  .nav-edge{position:fixed; top:0; left:0; bottom:0; width:14px;}
+  .nav-handle{
+    position:fixed; left:0; top:50%; transform:translateY(-50%); width:22px; height:72px; padding:0;
+    border:1px solid rgba(138,90,50,0.18); border-left:none; border-radius:0 14px 14px 0;
+    background:var(--panel); color:var(--brown); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    box-shadow:2px 2px 10px rgba(74,50,25,0.10); transition:opacity .2s, background .2s;
+  }
+  .nav-handle:hover{background:var(--cream-deep);}
+  .navbar:hover .nav-handle, .navbar.open .nav-handle, .navbar:focus-within .nav-handle{opacity:0; pointer-events:none;}
+
+  .brand{padding:2px 4px 14px; border-bottom:1px solid rgba(138,90,50,0.18); width:100%;}
+  .navbar-right{flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:16px; min-height:0;}
+  .nav{flex-direction:column; align-items:stretch; gap:4px; width:100%; overflow:visible;}
+  .nav-item{width:100%; text-align:left; padding:11px 14px; border:none; border-bottom:none; border-radius:14px; font-size:15px; color:var(--ink-soft);}
+  .nav-item:hover{background:var(--cream-deep); color:var(--ink); border-bottom:none;}
+  .nav-item.active{background:var(--green-bg); color:var(--green-deep); font-weight:600; border-bottom:none; box-shadow:inset 3px 0 0 var(--green);}
+  .profile{align-self:flex-start;}
+  .role-menu{top:auto; bottom:calc(100% + 10px); left:0; right:auto;}
+
+  @media (max-width: 860px){
+    .navbar-in{flex-wrap:nowrap; padding:20px 14px 16px; gap:16px;}
+    .navbar-right{display:flex;}
+    .brand{order:0; margin-right:0;}
+    .profile{order:0;}
+    .nav{order:0; width:100%; overflow:visible; gap:4px; padding-bottom:0;}
+    .page{padding:22px 20px 56px 30px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .navbar-in{transition:none;}
+  }
+
+  /* Icon rail menu (always visible, expands on hover) + palest hero */
+  .hero-logo{
+    color:var(--ink);
+    background:
+      radial-gradient(520px 280px at 88% 0%, rgba(255,255,255,0.65), rgba(255,255,255,0) 70%),
+      radial-gradient(460px 280px at 0% 100%, rgba(238,223,200,0.65), rgba(238,223,200,0) 70%),
+      linear-gradient(135deg, #DDE6F0 0%, #DCE8E3 55%, #E7ECD9 100%);
+    border:1px solid rgba(27,42,73,0.06);
+    box-shadow:0 8px 24px rgba(74,50,25,0.07);
+  }
+  .hero-logo::before, .hero-logo::after{border-color:rgba(27,42,73,0.07);}
+  .hero-logo .stamp-badge{background:var(--panel); color:var(--ink); border-color:var(--brown-soft); box-shadow:0 0 0 6px rgba(255,255,255,0.55);}
+  .hero-logo .name{color:var(--ink);}
+  .hero-logo .sub{color:var(--ink-soft);}
+  .home-search{border:1px solid rgba(27,42,73,0.08); box-shadow:0 8px 22px rgba(74,50,25,0.10);}
+
+  /* rail - replaces the hidden drawer */
+  .nav-edge, .nav-handle{display:none !important;}
+  .navbar-in, .navbar:hover .navbar-in, .navbar.open .navbar-in, .navbar:focus-within .navbar-in{
+    transform:none; opacity:1; pointer-events:auto; transition-delay:0s;
+  }
+  .navbar-in{
+    width:64px; padding:16px 10px 14px; gap:14px;
+    box-shadow:0 8px 28px rgba(74,50,25,0.10);
+    transition:width .28s cubic-bezier(.22,.8,.3,1), box-shadow .28s;
+  }
+  .navbar:hover .navbar-in, .navbar.open .navbar-in, .navbar:focus-within .navbar-in{
+    width:236px; box-shadow:0 18px 48px rgba(74,50,25,0.16);
+  }
+  .brand{padding:2px 2px 14px; gap:12px;}
+  .brand-text, .nl{
+    max-width:0; opacity:0; overflow:hidden; white-space:nowrap;
+    transition:max-width .28s cubic-bezier(.22,.8,.3,1), opacity .18s;
+  }
+  .navbar:hover .brand-text, .navbar.open .brand-text, .navbar:focus-within .brand-text,
+  .navbar:hover .nl, .navbar.open .nl, .navbar:focus-within .nl{max-width:170px; opacity:1; transition-delay:.06s;}
+  .nav-item{display:flex; align-items:center; gap:14px; padding:11px 10px;}
+  .nav-item .ni{width:22px; height:22px; flex-shrink:0;}
+  .nav-item.active .ni{color:var(--green-deep);}
+  .profile{margin-left:1px;}
+
+  .page{padding:26px 32px 72px 94px;}
+  @media (min-width:1400px){ .page{padding-right:94px;} }
+  @media (max-width: 860px){
+    .page{padding:22px 16px 56px 86px;}
+    .navbar-in{padding:16px 10px 14px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .navbar-in, .brand-text, .nl{transition:none;}
+  }
+
   /* Maintenance */
   .req[data-status="Reported"]{border-left-color:var(--blue);}
   .req[data-status="Open"]{border-left-color:var(--rust);}
@@ -306,6 +762,10 @@
   .mt-next{font-size:13px; font-weight:600; margin:2px 0 8px; color:var(--ink);}
   .req-top-actions{align-items:center; flex-wrap:wrap;}
   .refresh-stamp{font-size:12px; color:var(--ink-soft); white-space:nowrap;}
+
+  /* Resources filter bar */
+  .fld-archived{margin-left:auto;}
+
   body:not([data-role="admin"]) #view-maintenance .req-top-actions #btn-report-issue{order:1;}
   body:not([data-role="admin"]) #view-maintenance .req-top-actions #btn-refresh-maintenance{order:2;}
   body:not([data-role="admin"]) #view-maintenance .req-top-actions .refresh-stamp{order:3;}
@@ -333,6 +793,33 @@
   #mt-list .req.is-decline .req-reason::placeholder{color:#A8776E;}
   #mt-list .req.is-decline .req-reason:focus{outline:none; border-color:#A03B2A; box-shadow:0 0 0 3px rgba(160,59,42,0.15);}
   #mt-list .req.is-decline .req-reason.invalid{border-color:#A03B2A; box-shadow:0 0 0 3px rgba(160,59,42,0.28);}
+
+  /* Requests confirm bars */
+  #bk-list .req.asking .req-confirm{background:#E3F4EA; color:#1F4D37; border-top:1px solid #BFE3CE;}
+  #bk-list .req.asking .req-confirm .req-btn.back{background:transparent; color:#2F6F4F; border-color:rgba(47,111,79,0.45);}
+  #bk-list .req.asking .req-confirm .req-btn.back:hover{background:rgba(47,111,79,0.10);}
+  #bk-list .req.asking .req-confirm .req-btn.go{background:#2F6F4F; color:#fff; border-color:#2F6F4F;}
+  #bk-list .req.asking .req-confirm .req-btn.go:hover{background:#265A40;}
+  #bk-list .req.asking.is-decline .req-confirm{background:#FBE4E0; color:#7A2A1E; border-top-color:#F0C2BA;}
+  #bk-list .req.asking.is-decline .req-confirm .req-btn.back{color:#A03B2A; border-color:rgba(160,59,42,0.45);}
+  #bk-list .req.asking.is-decline .req-confirm .req-btn.back:hover{background:rgba(160,59,42,0.08);}
+  #bk-list .req.asking.is-decline .req-confirm .req-btn.go{background:#A03B2A; color:#fff; border-color:#A03B2A;}
+  #bk-list .req.asking.is-decline .req-confirm .req-btn.go:hover{background:#8A3223;}
+  #bk-list .req-reason{display:none;}
+  #bk-list .req.is-decline .req-confirm.with-reason .req-confirm-text{flex:1 1 100%; max-width:none;}
+  #bk-list .req.is-decline .req-reason{display:block; flex:1 1 260px; min-width:0; background:#fff; color:#3A1A15; border:1px solid #E3A99F; border-radius:8px; padding:9px 12px; font:inherit; font-size:14px;}
+  #bk-list .req.is-decline .req-reason::placeholder{color:#A8776E;}
+  #bk-list .req.is-decline .req-reason:focus{outline:none; border-color:#A03B2A; box-shadow:0 0 0 3px rgba(160,59,42,0.15);}
+  #bk-list .req.is-decline .req-reason.invalid{border-color:#A03B2A; box-shadow:0 0 0 3px rgba(160,59,42,0.28);}
+
+/* Optional reject reason */
+  .req-reason{display:none;}
+  .req.is-decline .req-confirm.with-reason .req-confirm-text{flex:1 1 100%; max-width:none;}
+  .req.is-decline .req-reason{display:block; flex:1 1 260px; min-width:0; background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.45); color:#fff; border-radius:8px; padding:9px 12px; font:inherit; font-size:14px;}
+  .req.is-decline .req-reason::placeholder{color:rgba(255,255,255,0.72);}
+  .req.is-decline .req-reason:focus{outline:none; border-color:#fff;}
+  .ci-ok{background:var(--green-bg); color:var(--green); padding:10px 12px; border-radius:8px; margin:12px 0;}
+
 
 </style>
 </head>
@@ -513,49 +1000,43 @@
 
 </div>
 
-<div class="shell"> 
+<div class="shell">
+  <div class="hero-bg"></div>
 
-  <aside class="rail">
-    <div class="stamp">
-      <div class="stamp-badge">V</div>
-      <div class="stamp-text"><div class="name">VASE</div><div class="sub">Software Eng. Lab</div></div>
-    </div>
-    <nav class="nav">
-      <button class="nav-item active" data-view="home">
-        <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 7L8 2L14 7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 6V13.5H12.5V6" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
-        Home
+  <!-- NAVBAR (replaces the old left sidebar) -->
+  <header class="navbar" id="navbar">
+    <div class="navbar-in">
+      <button class="brand" id="brand-home" type="button" aria-label="VASE home">
+        <div class="stamp-badge">V</div>
+        <div class="brand-text"><div class="name">VASE</div><div class="sub">Software Eng. Lab</div></div>
       </button>
-      <!-- Resources for US1, US2 -->
-      <button class="nav-item" data-view="resources">
-        <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg></span>
-        Resources
-      </button>
-      <button class="nav-item" data-view="bookings">
-        <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1.5V3.5M11 1.5V3.5M2.5 6H13.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
-        Requests
-      </button>
-      <button class="nav-item req-admin-nav" data-view="access">
-        <span class="ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.7" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 14C2.9 10.8 5.1 9.2 8 9.2C10.9 9.2 13.1 10.8 13.5 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
-        User & Access
-      </button>
-    </nav>
-  </aside>
 
-  <main class="main">
-    <div class="topbar">
-      <div>
-        <h1 id="page-title">Home</h1>
-        <div class="desc" id="page-desc">You're signed in — more features arrive in later iterations</div>
-      </div>
-      <div style="display:flex; align-items:center; gap:12px;">
-        <!-- role menu -->
-        <div class="role-select" id="role-select">
-          <div class="role-chip" id="role-chip">
-            <div class="av" id="role-av">SA</div>
-            <div class="rt"><b id="role-name">System Admin</b><span id="role-label">Administrator</span></div>
-            <svg class="caret" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.4"/></svg>
+      <div class="navbar-right">
+        <nav class="nav" id="main-nav">
+          <button class="nav-item active" data-view="home" aria-label="Home"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.8L12 3.5l8.5 7.3"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/></svg><span class="nl">Home</span></button>
+          <!-- Resources (US-1: all roles can view/search, US-2: admin-only manage actions) -->
+          <button class="nav-item" data-view="resources" aria-label="Resources"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.2v9.6L12 21l-8-4.2V7.2L12 3z"/><path d="M4 7.2l8 4.3 8-4.3"/><path d="M12 11.5V21"/></svg><span class="nl">Resources</span></button>
+          <!-- Requests (US-3: students submit, US-4: students track own status; US-5: admin approves/rejects) -->
+          <button class="nav-item" data-view="bookings" aria-label="Requests"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4.5" width="14" height="16.5" rx="2.5"/><path d="M9 4.5V3.5h6v1"/><path d="M8.8 13l2.3 2.3 4.2-4.6"/></svg><span class="nl">Requests</span></button>
+          <!-- Maintenance (US-6: every role can report an issue, US-7: admin confirms/edits/resolves) -->
+          <button class="nav-item" data-view="maintenance" aria-label="Maintenance"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5a4 4 0 0 0-4.6 5.2L4.5 16.1a1.8 1.8 0 0 0 2.5 2.5l5.4-5.4a4 4 0 0 0 5.2-4.6l-2.4 2.4-2.3-.7-.7-2.3z"/></svg><span class="nl">Maintenance</span></button>
+          <!-- Check in / Check out (US-10) (students only) -->
+          <button class="nav-item req-booker-nav" data-view="checkin" aria-label="Check in/out"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M15 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/></svg><span class="nl">Check in/out</span></button>
+          <button class="nav-item req-admin-nav" data-view="access" aria-label="User and Access"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19c.6-3.2 2.9-5 5.5-5s4.9 1.8 5.5 5"/><path d="M16 5.6a3.1 3.1 0 010 5.8"/><path d="M17.5 14.3c1.7.6 2.7 2.2 3 4.7"/></svg><span class="nl">User &amp; Access</span></button>
+        </nav>
+
+        <!-- profile menu -->
+        <div class="profile role-select" id="role-select">
+          <button class="avatar-btn" id="role-chip" type="button" aria-label="Account menu"><span id="role-av">SA</span></button>
+          <!-- name + status only visible while the side menu is expanded -->
+          <div class="profile-info" id="profile-info">
+            <div class="profile-info-in">
+              <div class="profile-name" id="profile-name">System Admin</div>
+              <div class="profile-status" id="profile-status">Administrator</div>
+            </div>
           </div>
           <div class="role-menu" id="role-menu">
+            <div class="menu-user"><b id="role-name">System Admin</b><span id="role-label">Administrator</span></div>
             <div class="eyebrow">View as</div>
             <button data-role="user"><b>Napakhet</b><span>Lab User (Student)</span></button>
             <button data-role="professor"><b>Aj. Somchai</b><span>Professor (view-only)</span></button>
@@ -563,6 +1044,49 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="nav-edge" aria-hidden="true"></div>
+    <button class="nav-handle" id="nav-handle" type="button" aria-label="Open menu">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M7.5 4.5L13 10l-5.5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </header>
+
+  <main class="page">
+
+    <!-- Big logo + floating search (Home only) -->
+    <section class="hero-logo">
+      <div class="stamp-badge">V</div>
+      <div class="name">VASE</div>
+      <div class="sub">Lab Data Management · Software Eng. Lab</div>
+    </section>
+
+    <div class="home-search-wrap" id="home-search-wrap">
+      <div class="home-search">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.7"/><path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <input id="home-search" type="text" placeholder="Search resources" autocomplete="off">
+        <button class="link-btn" id="home-clear-inline" type="button" style="display:none;">Clear</button>
+        <span class="sep"></span>
+        <button class="icon-btn" id="home-filter-toggle" type="button" aria-label="Filters">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="filter-card" id="home-filter-card">
+        <div><label for="hf-category">Category</label><select class="fld" id="hf-category"><option value="">All categories</option></select></div>
+        <div><label for="hf-location">Location</label><select class="fld" id="hf-location"><option value="">All locations</option></select></div>
+        <div><label for="hf-status">Status</label>
+          <select class="fld" id="hf-status">
+            <option value="">All statuses</option>
+            <option>Available</option>
+            <option>In Use</option>
+            <option>Maintenance</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-head">
+      <h1 id="page-title">Home</h1>
+      <div class="desc" id="page-desc">You're signed in — more features arrive in later iterations</div>
     </div>
 
 
@@ -581,96 +1105,58 @@
       </div>
     </section>
 
-    <!-- RESOURCES-view resources -->
+    <!-- RESOURCES US-1 (view/search, all roles) and US-2 (manage, admin only) -->
     <section class="view" id="view-resources">
-      <div class="panel">
-        <div class="panel-head">
-          <h2>Resources</h2>
-          <button class="btn ok req-admin" id="btn-add-resource" type="button">+ Add Resource</button> <!-- Jirat -->
-        </div>
-
-        <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
-          <input id="res-search" placeholder="Search by name…" style="flex:1; min-width:160px; padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; font-family:inherit;">
-          <select id="res-filter-category" style="padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; font-family:inherit;"><option value="">All categories</option></select>
-          <select id="res-filter-location" style="padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; font-family:inherit;"><option value="">All locations</option></select>
-          <select id="res-filter-status" style="padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; font-family:inherit;">
-            <option value="">All statuses</option>
-            <option>Available</option>
-            <option>In Use</option>
-            <option>Maintenance</option>
-          </select>
-          <select id="res-sort" style="padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; font-family:inherit;">
-            <option value="name">Sort: Name</option>
-            <option value="category">Sort: Category</option>
-            <option value="location">Sort: Location</option>
-            <option value="availability">Sort: Availability</option>
-            <option value="status">Sort: Status</option>
-          </select>
-          <label style="display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; cursor:pointer; white-space:nowrap;">
-            <input type="checkbox" id="res-filter-availability">
-            Available now
-          </label>
-          <label class="req-admin" style="display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid var(--line); border-radius:3px; font-size:12.5px; cursor:pointer; white-space:nowrap;">
-            <input type="checkbox" id="res-show-archived">
-            Show archived
-          </label>
-        </div>
-
-        <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
-          <thead>
-            <tr style="text-align:left; border-bottom:1px solid var(--line); color:var(--ink-faint); text-transform:uppercase; font-size:10.5px; letter-spacing:0.5px;">
-              <th style="padding:8px 6px;">Code</th>
-              <th style="padding:8px 6px;">Name</th>
-              <th style="padding:8px 6px;">Type</th>
-              <th style="padding:8px 6px;">Category</th>
-              <th style="padding:8px 6px;">Location</th>
-              <th style="padding:8px 6px;">Status</th>
-              <th class="req-admin-cell" style="padding:8px 6px;">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="res-tbody"></tbody>
-        </table>
-        <p class="note" id="res-empty" style="display:none; margin-top:10px;">No resources found.</p>
+      <div class="bar">
+        <input class="fld grow" id="res-search" placeholder="Search by name…">
+        <select class="fld" id="res-filter-category"><option value="">All categories</option></select>
+        <select class="fld" id="res-filter-location"><option value="">All locations</option></select>
+        <select class="fld" id="res-filter-status">
+          <option value="">All statuses</option>
+          <option>Available</option>
+          <option>In Use</option>
+          <option>Maintenance</option>
+        </select>
+        <select class="fld" id="res-sort">
+          <option value="status" selected>Sort: Status</option>
+          <option value="name">Sort: Name</option>
+          <option value="category">Sort: Category</option>
+          <option value="location">Sort: Location</option>
+          <option value="availability">Sort: Availability</option>
+        </select>
+        <label class="fld fld-check"><input type="checkbox" id="res-filter-availability"> Available now</label>
+        <label class="fld fld-check fld-archived req-admin"><input type="checkbox" id="res-show-archived"> Show archived</label>
       </div>
+      <div class="sec-head" style="margin-top:0;">
+        <span class="note" id="res-count" style="font-style:normal;"></span>
+        <button class="btn ok req-admin" id="btn-add-resource" type="button">+ Add Resource</button>
+      </div>
+      <div class="grid" id="res-grid"></div>
+      <p class="note" id="res-empty" style="display:none; margin-top:10px;">No resources found.</p>
     </section>
 
     <!-- REQUESTS: students submit + track their own (US-3/US-4); admin reviews the pending queue (US-5) -->
     <section class="view" id="view-bookings">
-      <div class="panel">
-        <div class="panel-head">
-          <h2>Requests</h2>
-          <div>
-            <button class="btn" id="btn-refresh-bookings" type="button">↻ Refresh</button>
-            <button class="btn ok req-booker" id="btn-new-booking" type="button">+ New booking</button>
-          </div>
-        </div>
-        <div class="toolbar req-admin" id="admin-bk-tabs" style="margin-bottom:12px;">
+      <div class="req-top">
+        <div class="seg req-admin" id="admin-bk-tabs">
           <button class="filter-chip active" type="button" data-tab="pending">Pending</button>
           <button class="filter-chip" type="button" data-tab="history">History</button>
         </div>
-        <p class="note req-admin" id="admin-bk-note" style="margin:0 0 10px;">Showing requests awaiting your review.</p>
-        <div class="toolbar req-booker" id="booking-filters" style="margin-bottom:12px;">
+        <div class="seg req-booker" id="booking-filters">
           <button class="filter-chip active" type="button" data-filter="All">All</button>
           <button class="filter-chip" type="button" data-filter="Pending">Pending</button>
           <button class="filter-chip" type="button" data-filter="Approved">Approved</button>
           <button class="filter-chip" type="button" data-filter="Rejected">Rejected</button>
         </div>
-        <p class="note req-booker" id="booking-filter-note" style="margin:0 0 10px;">These are your booking requests and their current status.</p>
-        <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
-          <thead>
-            <tr style="text-align:left; border-bottom:1px solid var(--line); color:var(--ink-faint); text-transform:uppercase; font-size:10.5px; letter-spacing:0.5px;">
-              <th style="padding:8px 6px;">Resource</th>
-              <th class="req-admin-cell" style="padding:8px 6px;">Requester</th>
-              <th style="padding:8px 6px;">Time</th>
-              <th style="padding:8px 6px;">Purpose</th>
-              <th style="padding:8px 6px;">Status</th>
-              <th id="bk-last-th" style="padding:8px 6px;">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="bk-tbody"></tbody>
-        </table>
-        <p class="note" id="bk-empty" style="display:none; margin-top:10px;">No requests to show.</p>
+        <div class="req-top-actions">
+          <button class="btn" id="btn-refresh-bookings" type="button">Refresh</button>
+          <button class="btn ok req-booker" id="btn-new-booking" type="button">+ New booking</button>
+        </div>
       </div>
+      <p class="req-note req-admin" id="admin-bk-note">Showing requests awaiting your review.</p>
+      <p class="req-note req-booker" id="booking-filter-note">These are your booking requests and their current status.</p>
+      <div class="req-list" id="bk-list"></div>
+      <p class="note" id="bk-empty" style="display:none; margin-top:10px;">No requests to show.</p>
     </section>
 
     <!-- USER & ACCESS (Admin only) access control demo for US-12; account management (US-13) not built yet -->
@@ -1049,7 +1535,6 @@
     return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
-  /*filter option*/
   function populateFilterOptions(resources){
     const catSel = document.getElementById('res-filter-category');
     const locSel = document.getElementById('res-filter-location');
@@ -1068,30 +1553,17 @@
   }
 
   function renderResources(resources){
-    const tbody = document.getElementById('res-tbody');
+    const grid = document.getElementById('res-grid');
     const empty = document.getElementById('res-empty');
+    document.getElementById('res-count').textContent = `${resources.length} resource${resources.length === 1 ? '' : 's'}`;
 
     if(resources.length === 0){
-      tbody.innerHTML = '';
+      grid.innerHTML = '';
       empty.style.display = 'block';
       return;
     }
     empty.style.display = 'none';
-
-    tbody.innerHTML = resources.map(r => `
-      <tr style="border-bottom:1px solid var(--line);" data-id="${r.id}">
-        <td style="padding:8px 6px; font-family:'IBM Plex Mono',monospace; font-size:11px;">${escapeHtml(r.resource_code)}</td>
-        <td style="padding:8px 6px;">${escapeHtml(r.name)}</td>
-        <td style="padding:8px 6px;">${escapeHtml(r.type)}</td>
-        <td style="padding:8px 6px;">${escapeHtml(r.category)}</td>
-        <td style="padding:8px 6px;">${escapeHtml(r.location)}</td>
-        <td style="padding:8px 6px;">${escapeHtml(r.status)}${r.is_archived ? ' <span style="font-size:10px; color:var(--muted); border:1px solid var(--line); border-radius:3px; padding:1px 5px;">Archived</span>' : ''}</td>
-        <td class="req-admin-cell" style="padding:8px 6px; white-space:nowrap;">
-          <button class="btn" type="button" data-action="edit" data-id="${r.id}">Edit</button>
-          ${r.is_archived ? '' : `<button class="btn no" type="button" data-action="archive" data-id="${r.id}">Archive</button>`}
-        </td>
-      </tr>
-    `).join('');
+    grid.innerHTML = resources.map(r => resourceCard(r, {manage: true})).join('');
   }
 
   async function loadResources(){
@@ -1101,6 +1573,10 @@
     const location = document.getElementById('res-filter-location').value;
     const statusEl = document.getElementById('res-filter-status');
     const availableOnly = document.getElementById('res-filter-availability').checked;
+    // "Available now" is a separate filter dimension from the detailed
+    // status dropdown (SRS-1/URS-1: filter by category/location/availability
+    // /status independently). When it's checked it takes priority so the
+    // two controls never disagree silently.
     const status = availableOnly ? 'Available' : statusEl.value;
     statusEl.disabled = availableOnly;
     const sort = document.getElementById('res-sort').value;
@@ -1118,7 +1594,7 @@
       return;
     }
     resourceCache = data.resources;
-    populateFilterOptions(resourceCache);
+    if(!q && !category && !location && !status) populateFilterOptions(resourceCache);
     renderResources(resourceCache);
   }
 
@@ -1129,22 +1605,16 @@
     document.getElementById(id).addEventListener('change', () => loadResources());
   });
 
-  document.getElementById('res-tbody').addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-action]');
-    if(!btn) return;
-    const id = Number(btn.dataset.id);
-    if(btn.dataset.action === 'edit') openResourceModal(id);
-    if(btn.dataset.action === 'archive') archiveResource(id);
-  });
 
   function closeModal(){
     document.getElementById('modal-backdrop').classList.remove('open');
   }
 
-  // open resource modal
   function openResourceModal(resourceId = null){
     editingResourceId = resourceId;
     const resource = resourceId ? resourceCache.find(r => r.id === resourceId) : null;
+    // Iteration 4 "Maintenance" is set/cleared only by maintenance records
+    const statusLocked = resource?.status === 'Maintenance';
 
     document.getElementById('modal-box').innerHTML = `
       <h3>${resource ? 'Edit Resource' : 'Add Resource'}</h3>
@@ -1157,11 +1627,14 @@
         <div class="field"><label>Owner</label><input id="res-owner" required value="${escapeHtml(resource?.owner)}"></div>
         <div class="field">
           <label>Status</label>
+          ${statusLocked ? `
+          <select id="res-status" disabled><option selected>Maintenance</option></select>
+          <p class="note" style="margin:6px 0 0;">Maintenance is set by reporting an issue. When the repair is done, return the resource to Available.</p>
+          <button class="btn ok" type="button" id="res-restore" style="margin-top:8px;">Return to Available</button>` : `
           <select id="res-status">
             <option ${resource?.status === 'Available' || !resource ? 'selected' : ''}>Available</option>
             <option ${resource?.status === 'In Use' ? 'selected' : ''}>In Use</option>
-            <option ${resource?.status === 'Maintenance' ? 'selected' : ''}>Maintenance</option>
-          </select>
+          </select>`}
         </div>
         <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
           <button class="btn no" type="button" id="resource-form-cancel">Cancel</button>
@@ -1172,6 +1645,8 @@
     document.getElementById('modal-backdrop').classList.add('open');
     document.getElementById('resource-form-cancel').addEventListener('click', closeModal);
     document.getElementById('resource-form').addEventListener('submit', submitResourceForm);
+    const restoreBtn = document.getElementById('res-restore');
+    if(restoreBtn) restoreBtn.addEventListener('click', () => openRestoreConfirm(resourceId));
   }
   document.getElementById('btn-add-resource').addEventListener('click', () => openResourceModal(null));
 
@@ -1215,7 +1690,47 @@
     loadResources();
   }
 
-  /* Requests (US-3/US-4/US-5)*/
+  async function unarchiveResource(id){
+    const {ok, data} = await apiAuthSend('POST', `/api/resources/${id}/unarchive`);
+    if(!ok){
+      toast(data.error || 'Could not unarchive resource');
+      return;
+    }
+    toast('Resource unarchived');
+    loadResources();
+  }
+
+  // SRS-7: Maintenance -> Available. Open issues of the resource are resolved together with it.
+  function openRestoreConfirm(id){
+    const r = resourceCache.find(x => x.id === id);
+    document.getElementById('modal-box').innerHTML = `
+      <h3>Return to Available?</h3>
+      <div id="restore-error" class="login-error"><span>⚠</span><span id="restore-error-text"></span></div>
+      <p class="note" style="margin:0 0 14px;">${escapeHtml(r ? r.name : 'This resource')} will be set back to Available and can be booked again. Any open maintenance issues for it will be marked Resolved.</p>
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button class="btn no" type="button" id="restore-cancel">Cancel</button>
+        <button class="btn ok" type="button" id="restore-go">Yes, return to Available</button>
+      </div>`;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('restore-cancel').addEventListener('click', closeModal);
+    document.getElementById('restore-go').addEventListener('click', async (e) => {
+      const go = e.currentTarget;
+      go.disabled = true;
+      document.getElementById('restore-error').classList.remove('show');
+      const {ok, data} = await apiAuthSend('POST', `/api/resources/${id}/restore`);
+      if(!ok){
+        document.getElementById('restore-error-text').textContent = data.error || 'Could not update the resource.';
+        document.getElementById('restore-error').classList.add('show');
+        go.disabled = false;
+        return;
+      }
+      closeModal();
+      toast('Resource is Available again');
+      loadResources();
+    });
+  }
+
+  /* Requests (US-3/US-4/US-5) */
   function fmtRange(startIso, endIso){
     const opts = {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'};
     return `${new Date(startIso).toLocaleString([], opts)} – ${new Date(endIso).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
@@ -1247,7 +1762,6 @@
     document.getElementById('admin-bk-note').textContent = adminTab === 'history'
       ? 'Requests already decided, newest first — with the time of the decision.'
       : 'Showing requests awaiting your review.';
-    document.getElementById('bk-last-th').textContent = adminTab === 'history' ? 'Decided at' : 'Actions';
     loadBookings();
   });
 
@@ -1257,32 +1771,103 @@
     const {ok, data} = await apiAuthGet(path);
     if(!ok){
       if(!silent) toast(data.error || 'Could not load requests');
-      return;
+      return false;
     }
     renderBookings(data.bookings, isAdmin);
+    return true;
   }
 
   // SRS-4: status changes made by a Lab Manager/Administrator show up on their
   // own — manual Refresh button plus a quiet background reload every 30 s while
   // the Requests view is open (skipped when the tab is hidden or a form is open).
-  document.getElementById('btn-refresh-bookings').addEventListener('click', () => loadBookings());
+  setupRefreshButton('btn-refresh-bookings', () => loadBookings());
   setInterval(() => {
     const onRequests = document.getElementById('view-bookings').classList.contains('active');
     const modalOpen = document.getElementById('modal-backdrop').classList.contains('open');
-    if(document.body.classList.contains('authed') && onRequests && !modalOpen && !document.hidden){
+    if(document.body.classList.contains('authed') && onRequests && !modalOpen && !document.hidden && !document.querySelector('#bk-list .req.asking')){
       loadBookings(true);
     }
   }, 30000);
 
+  function fmtDuration(ms){
+    const m = Math.max(0, Math.round(ms / 60000));
+    if(m < 60) return `${m} min`;
+    const d = Math.floor(m / 1440), h = Math.floor((m % 1440) / 60), mm = m % 60;
+    const parts = [];
+    if(d) parts.push(`${d} ${d > 1 ? 'days' : 'day'}`);
+    if(h) parts.push(`${h} h`);
+    if(mm && !d) parts.push(`${mm} min`);
+    return parts.join(' ');
+  }
+
+  function initialsOf(name){
+    return String(name || '?').split(/\s+/).filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase() || '?';
+  }
+
+  function bookingWhen(b){
+    const s = new Date(b.start_time), e = new Date(b.end_time);
+    const t = d => d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    const dt = d => d.toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
+    return s.toDateString() === e.toDateString() ? `${t(s)} – ${t(e)}` : `${dt(s)} to ${dt(e)}`;
+  }
+
+  function bookingCard(b, isAdmin){
+    const s = new Date(b.start_time), e = new Date(b.end_time);
+    const resName = b.resource_name || `#${b.resource_id}`;
+    const who = b.requester_name || b.requester_email || `User #${b.requester_id}`;
+    const showEmail = b.requester_email && b.requester_email !== who;
+    const decided = b.decided_at ? `Decided ${new Date(b.decided_at).toLocaleString([], {dateStyle:'medium', timeStyle:'short'})}` : '';
+    const canDecide = isAdmin && b.status === 'Pending';
+    return `
+      <article class="req" data-id="${b.id}" data-status="${escapeHtml(b.status)}" data-name="${escapeHtml(resName)}">
+        <div class="req-row">
+          <div class="leaf" aria-hidden="true">
+            <span class="leaf-mon">${s.toLocaleString('en-US', {month:'short'})}</span>
+            <span class="leaf-day">${s.getDate()}</span>
+            <span class="leaf-wd">${s.toLocaleString('en-US', {weekday:'short'})}</span>
+          </div>
+          <div class="req-body">
+            <div class="req-title"><h3>${escapeHtml(resName)}</h3>${bookingBadge(b.status)}</div>
+            <div class="req-when">${ICON_CLOCK}<span>${bookingWhen(b)}</span><span class="dur">${fmtDuration(e - s)}</span></div>
+            <p class="req-purpose"><b>Purpose</b>${escapeHtml(b.purpose)}</p>
+            ${b.status === 'Rejected' && b.decision_reason ? `<p class="req-purpose"><b>Reason</b>${escapeHtml(b.decision_reason)}</p>` : ''}
+            ${(isAdmin || decided) ? `<div class="req-foot">
+              ${isAdmin ? `<div class="who"><span class="who-av">${escapeHtml(initialsOf(who))}</span><div><b>${escapeHtml(who)}</b>${showEmail ? `<span>${escapeHtml(b.requester_email)}</span>` : ''}</div></div>` : ''}
+              ${decided ? `<span>${decided}</span>` : ''}
+            </div>` : ''}
+          </div>
+          ${canDecide ? `<div class="req-actions">
+            <button class="req-btn decline" type="button" data-act="ask-reject">Reject</button>
+            <button class="req-btn approve" type="button" data-act="ask-approve">Approve</button>
+          </div>` : ''}
+        </div>
+        ${canDecide ? `<div class="req-confirm with-reason">
+          <p class="req-confirm-text"></p>
+          <input class="req-reason" type="text" maxlength="255" placeholder="Reason for rejecting (optional)" aria-label="Reason for rejecting (optional)">
+          <div class="req-confirm-btns">
+            <button class="req-btn back" type="button" data-act="cancel">Go back</button>
+            <button class="req-btn go" type="button" data-act="confirm">Confirm</button>
+          </div>
+        </div>` : ''}
+      </article>`;
+  }
+
   function renderBookings(bookings, isAdmin){
-    const tbody = document.getElementById('bk-tbody');
+    const list = document.getElementById('bk-list');
     const empty = document.getElementById('bk-empty');
     const filtered = isAdmin || bookingFilter === 'All'
       ? bookings
       : bookings.filter(b => b.status === bookingFilter);
 
+    if(isAdmin){
+      const n = filtered.length;
+      document.getElementById('admin-bk-note').textContent = adminTab === 'history'
+        ? 'Decided requests, newest first.'
+        : (n === 0 ? 'All caught up — nothing is waiting for review.' : `${n} ${n === 1 ? 'request is' : 'requests are'} waiting for your review.`);
+    }
+
     if(!filtered.length){
-      tbody.innerHTML = '';
+      list.innerHTML = '';
       empty.textContent = isAdmin
         ? (adminTab === 'history' ? 'No decided requests yet.' : 'No requests to show.')
         : `No ${bookingFilter === 'All' ? '' : bookingFilter.toLowerCase() + ' '}requests to show.`;
@@ -1290,54 +1875,67 @@
       return;
     }
     empty.style.display = 'none';
-    // Names come from the backend (JOINed), not from the client-side resource cache.
-    const resourceName = b => b.resource_name || `#${b.resource_id}`;
-    const requesterName = b => b.requester_name || b.requester_email || `User #${b.requester_id}`;
-    tbody.innerHTML = filtered.map(b => `<tr>
-      <td style="padding:8px 6px;">${escapeHtml(resourceName(b))}</td>
-      <td class="req-admin-cell" style="padding:8px 6px;">${escapeHtml(requesterName(b))}${b.requester_email ? `<div class="note" style="margin:0; font-size:11px;">${escapeHtml(b.requester_email)}</div>` : ''}</td>
-      <td style="padding:8px 6px;" class="mono">${fmtRange(b.start_time, b.end_time)}</td>
-      <td style="padding:8px 6px; max-width:200px; white-space:normal;">${escapeHtml(b.purpose)}</td>
-      <td style="padding:8px 6px;">${bookingBadge(b.status)}</td>
-      <td style="padding:8px 6px; white-space:nowrap;">
-        ${isAdmin && adminTab === 'history'
-          ? `<span class="mono">${b.decided_at ? new Date(b.decided_at).toLocaleString([], {dateStyle:'medium', timeStyle:'short'}) : ''}</span>`
-          : isAdmin && b.status === 'Pending'
-          ? `<button class="btn ok" type="button" data-act="approve" data-id="${b.id}">Approve</button>
-             <button class="btn no" type="button" data-act="reject" data-id="${b.id}">Reject</button>`
-          : ''}
-      </td>
-    </tr>`).join('');
+    list.innerHTML = filtered.map(b => bookingCard(b, isAdmin)).join('');
   }
 
-
-  // request decision
-  document.getElementById('bk-tbody').addEventListener('click', async (e) => {
+  // Approve / Reject: first click opens an inline confirm bar on the card, second click sends it.
+  document.getElementById('bk-list').addEventListener('click', async (e) => {
     const btn = e.target.closest('button[data-act]');
     if(!btn) return;
-    const decision = btn.dataset.act; // approve and reject
-    const {ok, data} = await apiAuthSend('POST', `/api/bookings/${btn.dataset.id}/decide`, {decision});
-    if(!ok){
-      toast(data.error || 'Could not update request');
+    const card = btn.closest('.req');
+    const act = btn.dataset.act;
+
+    if(act === 'ask-approve' || act === 'ask-reject'){
+      document.querySelectorAll('#bk-list .req.asking').forEach(c => c.classList.remove('asking', 'is-decline'));
+      const decline = act === 'ask-reject';
+      card.classList.add('asking');
+      card.classList.toggle('is-decline', decline);
+      card.dataset.decision = decline ? 'reject' : 'approve';
+      card.querySelector('.req-confirm-text').textContent = decline
+        ? `Reject the request for ${card.dataset.name}? The requester will see it as rejected.`
+        : `Approve the request for ${card.dataset.name}? The requester will see it as approved.`;
+      const go = card.querySelector('.req-btn.go');
+      go.textContent = decline ? 'Yes, reject' : 'Yes, approve';
+      const reasonBox = card.querySelector('.req-reason');
+      if(reasonBox) reasonBox.value = '';
+      (decline && reasonBox ? reasonBox : go).focus();
       return;
     }
-    toast(`Request ${decision}d`);
-    loadBookings();
+    if(act === 'cancel'){
+      card.classList.remove('asking', 'is-decline');
+      return;
+    }
+    if(act === 'confirm'){
+      const decision = card.dataset.decision;
+      btn.disabled = true;
+      // Optional note, only sent when rejecting; the requester sees it on their request.
+      const reason = decision === 'reject' ? (card.querySelector('.req-reason')?.value.trim() || '') : '';
+      const {ok, data} = await apiAuthSend('POST', `/api/bookings/${card.dataset.id}/decide`, reason ? {decision, reason} : {decision});
+      if(!ok){
+        btn.disabled = false;
+        toast(data.error || 'Could not update request');
+        return;
+      }
+      toast(decision === 'approve' ? 'Request approved' : 'Request rejected');
+      loadBookings();
+    }
   });
 
-  async function openBookingModal(){
+  async function openBookingModal(preselectId){
     if(!resourceCache.length){
       const {ok, data} = await apiAuthGet('/api/resources');
       if(ok) resourceCache = data.resources;
     }
-    // Only offer resources that can actually be booked (Available, not archived).
-    // Fetched fresh each time so a status change by an admin is reflected;
-    // the backend re-checks this anyway.
-    let bookable = resourceCache.filter(r => r.status === 'Available');
-    const fresh = await apiAuthGet('/api/resources?status=Available');
-    if(fresh.ok) bookable = fresh.data.resources;
+    // Offer every resource that can be booked: Available or In Use (an In Use
+    // resource can still be reserved for a later time slot), but not
+    // Maintenance or archived. Fetched fresh each time so a status change by an
+    // admin is reflected; the backend re-checks this anyway.
+    const isBookable = r => (r.status === 'Available' || r.status === 'In Use') && !r.is_archived;
+    let bookable = resourceCache.filter(isBookable);
+    const fresh = await apiAuthGet('/api/resources');
+    if(fresh.ok) bookable = fresh.data.resources.filter(isBookable);
     const opts = bookable.length
-      ? bookable.map(r => `<option value="${r.id}">${escapeHtml(r.name)}</option>`).join('')
+      ? bookable.map(r => `<option value="${r.id}">${escapeHtml(r.name)}${r.status === 'In Use' ? ' (in use now)' : ''}</option>`).join('')
       : '<option value="" disabled selected>No resources available</option>';
     document.getElementById('modal-box').innerHTML = `
       <h3>New booking request</h3>
@@ -1354,10 +1952,14 @@
       </form>
     `;
     document.getElementById('modal-backdrop').classList.add('open');
+    if(preselectId){
+      const sel = document.getElementById('bk-resource');
+      if(sel) sel.value = String(preselectId);
+    }
     document.getElementById('booking-form-cancel').addEventListener('click', closeModal);
     document.getElementById('booking-form').addEventListener('submit', submitBookingForm);
   }
-  document.getElementById('btn-new-booking').addEventListener('click', openBookingModal);
+  document.getElementById('btn-new-booking').addEventListener('click', () => openBookingModal());
 
   async function submitBookingForm(e){
     e.preventDefault();
@@ -1385,7 +1987,7 @@
   }
 
   /* Announcements */
-  async function loadAnnouncements(){
+    async function loadAnnouncements(){
     const {ok, data} = await apiAuthGet('/api/announcements');
     if(!ok){
       toast(data.error || 'Could not load announcements');
@@ -1405,20 +2007,20 @@
     empty.style.display = 'none';
     const me = currentUser; // set in applyRealUser(); null if not yet restored
     list.innerHTML = items.map(a => `
-      <div style="padding:12px 0; border-bottom:1px solid var(--line); ${a.is_pinned ? 'background:var(--amber-bg);' : ''}">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
-          <div>
-            ${a.is_pinned ? '<span class="badge b-amber" style="margin-right:6px;">Pinned</span>' : ''}
+      <article class="ann ${a.is_pinned ? 'pinned' : ''}">
+        <div class="ann-top">
+          <div class="ann-title">
+            ${a.is_pinned ? '<span class="badge b-amber">Pinned</span>' : ''}
             <b>${escapeHtml(a.title)}</b>
           </div>
-          <div style="display:flex; gap:6px; white-space:nowrap;">
+          <div class="ann-actions">
             <button class="btn req-announcer" type="button" data-act="pin" data-id="${a.id}">${a.is_pinned ? 'Unpin' : 'Pin'}</button>
             ${me && me.id === a.author_id ? `<button class="btn no" type="button" data-act="delete" data-id="${a.id}">Delete</button>` : ''}
           </div>
         </div>
-        <p class="note" style="margin:4px 0 0; white-space:pre-wrap;">${escapeHtml(a.body)}</p>
-        <p class="note" style="margin:6px 0 0; font-size:11px;">Posted ${new Date(a.created_at).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}</p>
-      </div>
+        <p class="ann-body">${escapeHtml(a.body)}</p>
+        <p class="ann-meta">Posted ${new Date(a.created_at).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}</p>
+      </article>
     `).join('');
   }
 
