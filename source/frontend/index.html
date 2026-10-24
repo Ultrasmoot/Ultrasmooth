@@ -2880,6 +2880,21 @@
     document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
   });
 
+  /* Home data */
+  function fillSelect(sel, firstLabel, values){
+    const prev = sel.value;
+    sel.innerHTML = `<option value="">${firstLabel}</option>` +
+      values.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+    sel.value = prev;
+  }
+
+  function renderHomeResources(list){
+    const available = list.filter(r => r.status === 'Available');
+    document.getElementById('home-available-count').textContent = available.length;
+    document.getElementById('home-available').innerHTML = available.length
+      ? available.slice(0, 8).map(r => resourceCard(r)).join('')
+      : '<p class="note" style="margin:0;">No resources are available right now.</p>';
+
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
