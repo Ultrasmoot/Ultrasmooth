@@ -904,6 +904,19 @@
   #bk-list .req.is-decline .req-reason:focus{outline:none; border-color:#A03B2A; box-shadow:0 0 0 3px rgba(160,59,42,0.15);}
   #bk-list .req.is-decline .req-reason.invalid{border-color:#A03B2A; box-shadow:0 0 0 3px rgba(160,59,42,0.28);}
 
+  /* Check in / out (Iteration 4) — student-only nav item, plus a few small styles for the code step */
+  .nav-item.req-booker-nav{display:none !important;}
+  body[data-role="user"] .nav-item.req-booker-nav{display:flex !important;}
+  .req-btn.approve:disabled{opacity:.45; cursor:not-allowed;}
+  .ci-h{font-size:12px; letter-spacing:.6px; text-transform:uppercase; color:var(--ink-faint); margin:22px 0 10px;}
+  .ci-h:first-child{margin-top:0;}
+  .ci-box{background:var(--paper); padding:10px 12px; border-radius:8px; font-size:13.5px; line-height:1.7; margin:12px 0 4px;}
+  .ci-otp{width:100%; font-family:'IBM Plex Mono',monospace; font-size:26px; letter-spacing:10px; text-align:center; padding:10px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--ink);}
+  .ci-foot{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:16px;}
+  .ci-link{background:none; border:0; color:var(--blue); cursor:pointer; font-size:13.5px; padding:0;}
+  .ci-link:disabled{color:var(--ink-faint); cursor:not-allowed;}
+  #ci-error{margin-top:10px;}
+
 /* Optional reject reason */
   .req-reason{display:none;}
   .req.is-decline .req-confirm.with-reason .req-confirm-text{flex:1 1 100%; max-width:none;}
