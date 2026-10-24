@@ -2366,6 +2366,54 @@
     loadBookings();
   }
 
+  /* Check in / Check out (US-10) */
+  const CI_RES_BADGE = {'Available':'b-green', 'In Use':'b-amber', 'Maintenance':'b-rust'};
+  let checkinData = {in_use: [], ready: [], done: []};
+  let ciFlow = null;      // {id, step: 1|2|3, hint, expiresAt, resendAt, attemptsLeft, locked}
+  let ciTimer = null;
+
+  function ciTime(iso){
+    return new Date(iso).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', hour12:false});
+  }
+  function ciMask(email){
+    const [name, domain] = String(email || '').split('@');
+    return domain ? `${name.slice(0, 1)}*****@${domain}` : '*****';
+  }
+  function ciBooking(id){
+    return [...checkinData.ready, ...checkinData.in_use].find(b => b.id === id);
+  }
+
+  function ciCard(b, kind){
+    const d = new Date(b.start_time);
+    const badge = `<span class="badge ${CI_RES_BADGE[b.resource_status] || ''}">${escapeHtml(b.resource_status)}</span>`;
+    let foot = '', actions = '';
+    if(kind === 'ready'){
+      foot = `<span>${escapeHtml(b.block_reason || 'Ready to check in.')}</span>`;
+      actions = `<button class="req-btn approve" type="button" data-ci="in" ${b.can_check_in ? '' : 'disabled'}>Check in</button>`;
+    } else if(kind === 'in_use'){
+      foot = `<span>Checked in at ${ciTime(b.checked_in_at)} · booked until ${ciTime(b.end_time)}</span>`;
+      actions = `<button class="req-btn approve" type="button" data-ci="out">Check out</button>`;
+    } else {
+      foot = `<span>${ciTime(b.checked_in_at)} → ${ciTime(b.checked_out_at)}</span>`;
+    }
+    return `
+      <article class="req" data-id="${b.id}">
+        <div class="req-row">
+          <div class="leaf" aria-hidden="true">
+            <span class="leaf-mon">${d.toLocaleString('en-US', {month:'short'})}</span>
+            <span class="leaf-day">${d.getDate()}</span>
+            <span class="leaf-wd">${d.toLocaleString('en-US', {weekday:'short'})}</span>
+          </div>
+          <div class="req-body">
+            <div class="req-title"><h3>${escapeHtml(b.resource_name)}</h3>${kind === 'done' ? '' : badge}</div>
+            <p class="req-purpose"><b>${escapeHtml(b.resource_code)}</b>${ciTime(b.start_time)}–${ciTime(b.end_time)} · ${escapeHtml(b.purpose)}</p>
+            <div class="req-foot">${foot}</div>
+          </div>
+          ${actions ? `<div class="req-actions">${actions}</div>` : ''}
+        </div>
+      </article>`;
+  }
+
   
   /* Announcements */
     async function loadAnnouncements(){
