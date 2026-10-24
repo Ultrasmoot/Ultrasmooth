@@ -3486,8 +3486,8 @@
   if (new URLSearchParams(window.location.search).get('reset_token')) {
     showAuthView('reset-password');
   }
-
-  // Handle email verification links and remove the token from the URL.
+  
+  // backend, drop the token from the address bar (single-use), and tell the user on the login screen.
   (async function handleVerifyLink(){
     const token = new URLSearchParams(window.location.search).get('verify_token');
     if(!token) return;
@@ -3499,7 +3499,7 @@
         showLoginNotice(data.message || 'Email verified. You can now log in.');
       } else {
         showLoginError(data.error || 'This verification link is invalid or has expired.');
-        showResendLink();   // Let the user request a new link.
+        showResendLink();   // lets the user ask for a fresh link
       }
     } catch(err){
       showLoginError('Could not reach the server. Is the backend running?');
