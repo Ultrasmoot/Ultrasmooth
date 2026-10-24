@@ -739,6 +739,50 @@
     .navbar-in, .brand-text, .nl{transition:none;}
   }
 
+  /* Create account: horizontal two-panel layout (fits one screen)*/
+  #create-view{width:940px; max-width:100%; padding:40px 44px;}
+  #create-view.active{
+    display:grid; grid-template-columns:250px minmax(0,1fr); column-gap:52px;
+    grid-template-areas:"brand form" "title form" "err form" "switch form";
+    grid-template-rows:auto auto auto 1fr; align-items:start;
+    background:linear-gradient(160deg,#E3EAF2 0%,#E7EEE5 100%) 0 0/320px 100% no-repeat, var(--panel);
+  }
+  #create-view .auth-brand{grid-area:brand; align-items:flex-start; margin-bottom:18px;}
+  #create-view .auth-brand .stamp-badge{width:54px; height:54px; font-size:20px; margin-bottom:12px;}
+  #create-view h2{grid-area:title; text-align:left; font-size:28px; line-height:1.2; margin:0 0 14px;}
+  #create-view .login-error{grid-area:err; margin:0 0 14px;}
+  #create-view .switch-form{grid-area:switch; align-self:end; text-align:left; margin:0;}
+  #create-view form{
+    grid-area:form; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); column-gap:16px; align-content:start;
+  }
+  #create-view .field{margin-bottom:14px;}
+  #create-view .field-row{display:contents;}
+  #create-view form > .field:nth-child(1){order:1;}
+  #create-view form > .field-row:nth-child(2) > .field:nth-child(1){order:2;}
+  #create-view form > .field-row:nth-child(2) > .field:nth-child(2){order:3;}
+  #create-view form > .field-row:nth-child(3) > .field:nth-child(1){order:4;}
+  #create-view form > .field-row:nth-child(3) > .field:nth-child(2){order:5;}
+  #create-view form > .field:nth-child(6){order:6;}
+  #create-view form > .field:nth-child(5){order:7; grid-column:span 2;}
+  #create-view form > #student-fields{order:8;}
+  #create-view form > .field:nth-child(7){order:9;}
+  #create-view form > .field:nth-child(8){order:10;}
+  #create-view form > .btn-primary{order:11; align-self:end; margin-bottom:14px;}
+  #create-view form > .auth-hint{order:12; grid-column:1 / -1; margin:2px 0 0;}
+
+  @media (max-width: 900px){
+    #create-view{width:460px; padding:34px 28px 28px;}
+    #create-view.active{display:block; background:var(--panel);}
+    #create-view .auth-brand{align-items:center; margin-bottom:22px;}
+    #create-view .auth-brand .stamp-badge{width:46px; height:46px; font-size:17px; margin-bottom:10px;}
+    #create-view h2{text-align:center; font-size:22px; margin:0 0 22px;}
+    #create-view .switch-form{text-align:center; margin-top:18px;}
+    #create-view form{display:block;}
+    #create-view .field-row{display:flex; gap:12px;}
+    #create-view form > .btn-primary{margin-bottom:0;}
+    #create-view form > .auth-hint{margin:-2px 0 16px;}
+  }
+
   /* Announcements = the one featured block */
   #home-sections > .sec:first-child{
     margin-top:34px; padding:26px 28px 22px; border-radius:28px;
