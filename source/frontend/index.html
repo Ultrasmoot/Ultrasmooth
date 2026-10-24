@@ -3016,6 +3016,14 @@
   document.getElementById('home-clear-inline').addEventListener('click', clearHomeSearch);
   document.addEventListener('click', () => homeFilterCard.classList.remove('open'));
 
+  /* floating side menu: tap/click support for touch screens */
+  (function(){
+    const nb = document.getElementById('navbar');
+    document.getElementById('nav-handle').addEventListener('click', (e) => { e.stopPropagation(); nb.classList.toggle('open'); });
+    nb.addEventListener('click', (e) => { if(e.target.closest('.nav-item')) nb.classList.remove('open'); });
+    document.addEventListener('click', (e) => { if(!e.target.closest('.navbar-in')) nb.classList.remove('open'); });
+  })();
+
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
