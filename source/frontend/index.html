@@ -1554,11 +1554,21 @@
     document.body.classList.add('authed');
     applyRealUser(user);
     loadAnnouncements();
+    loadHome();
   }
 
   function signOut(){
     // JWTs are stateless, so logging out is just discarding the token
     // client-side; reloading resets all in-memory app state cleanly.
+    localStorage.removeItem('vase_token');
+    localStorage.removeItem('vase_user');
+    window.location.reload();
+  }
+
+  // An expired/invalid token on an authenticated call: drop the session and
+  // reload, which lands on the login page instead of leaving a dead screen.
+  function handleExpiredSession(){
+    if(!localStorage.getItem('vase_token')) return;
     localStorage.removeItem('vase_token');
     localStorage.removeItem('vase_user');
     window.location.reload();
