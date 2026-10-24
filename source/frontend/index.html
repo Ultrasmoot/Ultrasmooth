@@ -1692,8 +1692,8 @@
   }
 
   //Google sign in
-  let pendingGoogleProfile = null; // holds email and name while first time Google user pick role
-  let pendingGoogleCredential = null; // save Google token
+  let pendingGoogleProfile = null; // holds {email, full_name} for display while a first-time Google user picks a role
+  let pendingGoogleCredential = null; // Google ID token, re-sent so the backend can verify it again
 
   async function handleGoogleCredential(response){
     loginError.classList.remove('show');
@@ -1703,7 +1703,7 @@
       return;
     }
     if(data.needs_role){
-      // first time Google sign in ask for a role before creating account
+      // First-time Google sign-in: no role on file yet — ask before creating the account.
       pendingGoogleProfile = data;
       pendingGoogleCredential = response.credential;
       document.getElementById('g-profile-name').textContent = data.full_name || data.email;
@@ -1716,7 +1716,6 @@
 
   window.addEventListener('load', () => {
     if(!window.google || !google.accounts){
-      // GSI script failed to load (leave the button inert rather than crash)
       return;
     }
     google.accounts.id.initialize({
