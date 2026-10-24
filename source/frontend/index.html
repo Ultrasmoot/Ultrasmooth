@@ -2857,6 +2857,29 @@
     document.getElementById(id).addEventListener('click', cardActionHandler);
   });
 
+  /* navigation helpers ("View All" links, banners, logo) */
+  function goView(key, filters = {}){
+    if(key === 'resources'){
+      document.getElementById('res-filter-category').value = filters.category || '';
+      document.getElementById('res-filter-location').value = '';
+      document.getElementById('res-filter-status').value = filters.status || '';
+      document.getElementById('res-filter-availability').checked = false;
+      document.getElementById('res-search').value = '';
+    }
+    const btn = document.querySelector(`.nav-item[data-view="${key}"]`);
+    if(btn) btn.click();
+  }
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-goto]');
+    if(t) goView(t.dataset.goto, {category: t.dataset.category, status: t.dataset.status});
+  });
+  document.getElementById('brand-home').addEventListener('click', () => goView('home'));
+
+  // navbar gets a frosted background once the page is scrolled
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+  });
+
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
