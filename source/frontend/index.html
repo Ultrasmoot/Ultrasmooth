@@ -2784,7 +2784,37 @@
 
   const STATUS_CLASS = {'Available':'st-available', 'In Use':'st-inuse', 'Maintenance':'st-maintenance'};
 
-
+  function resourceCard(r, opts = {}){
+    const manage = !!opts.manage;
+    const actions = [];
+    if(manage){
+      actions.push(`<button class="btn req-admin" type="button" data-action="edit" data-id="${r.id}">Edit</button>`);
+      if(r.is_archived){
+        actions.push(`<button class="btn ok req-admin" type="button" data-action="unarchive" data-id="${r.id}">Unarchive</button>`);
+      }else{
+        actions.push(`<button class="btn no req-admin" type="button" data-action="archive" data-id="${r.id}">Archive</button>`);
+        if(r.status === 'Maintenance'){
+          actions.push(`<button class="btn req-admin" type="button" data-action="restore" data-id="${r.id}">Return to Available</button>`);
+        }
+      }
+    }
+    if((r.status === 'Available' || r.status === 'In Use') && !r.is_archived){
+      actions.push(`<button class="btn ok req-booker" type="button" data-action="book" data-id="${r.id}">Request</button>`);
+    }
+    // Iteration 4 (US-6): every role can report a problem with a resource.
+    if(manage && !r.is_archived){
+      actions.push(`<button class="btn" type="button" data-action="report" data-id="${r.id}">Report issue</button>`);
+    }
+    return `
+      <article class="rcard" data-tone="${toneOf(r.category)}">
+        <div class="rcard-art">${resIcon(r.category)}<span class="rcard-status ${STATUS_CLASS[r.status] || ''}">${escapeHtml(r.status)}</span></div>
+        <div class="rcard-code">${escapeHtml(r.resource_code)}${r.is_archived ? ' · Archived' : ''}</div>
+        <h3 title="${escapeHtml(r.name)}">${escapeHtml(r.name)}</h3>
+        <div class="pill">${ICON_PIN}<span>${escapeHtml(r.location)}</span></div>
+        <div class="tags"><span class="tag">#${escapeHtml(r.category)}</span><span class="tag plain">${escapeHtml(r.type)}</span></div>
+        <div class="rcard-actions">${actions.join('')}</div>
+      </article>`;
+  }
 
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
