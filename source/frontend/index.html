@@ -1428,9 +1428,12 @@
     currentRole = key;
     document.body.dataset.role = key;
     const r = ROLES[key];
-    document.getElementById('role-av').textContent = r.initials;
-    document.getElementById('role-name').textContent = r.name;
-    document.getElementById('role-label').textContent = r.label;
+    const setText = (id, txt) => { const el = document.getElementById(id); if(el) el.textContent = txt; };
+    setText('role-av', r.initials);
+    setText('role-name', r.name);
+    setText('role-label', r.label);
+    setText('profile-name', r.name);
+    setText('profile-status', r.label);
     document.querySelectorAll('#role-menu button').forEach(b=>b.classList.toggle('active', b.dataset.role===key));
     document.getElementById('role-menu').classList.remove('open');
   }
@@ -1468,6 +1471,8 @@
     home: ["Home", "You're signed in — more features arrive in later iterations"],
     resources: ["Resources", "View, search, and filter laboratory resources (US-1)"],
     bookings: ["Requests", "Submit and track booking requests (US-3/US-4/US-5)"],
+    maintenance: ["Maintenance", "Report resource issues and track repairs"],
+    checkin: ["Check in / Check out", "Check in to your approved bookings"],
     access: ["User & Access", "Manage accounts, roles, and permissions"]
   };
   document.querySelectorAll('.nav-item').forEach(btn=>{
@@ -2366,7 +2371,7 @@
     loadBookings();
   }
 
-  /* Check in / Check out (US-10) */
+  /* Check in / Check out */
   const CI_RES_BADGE = {'Available':'b-green', 'In Use':'b-amber', 'Maintenance':'b-rust'};
   let checkinData = {in_use: [], ready: [], done: []};
   let ciFlow = null;      // {id, step: 1|2|3, hint, expiresAt, resendAt, attemptsLeft, locked}
