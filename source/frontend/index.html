@@ -1213,18 +1213,63 @@
     </div>
 
 
-    <!-- HOME (placeholder — Dashboard itself is built in a later iteration) -->
+    <!-- HOME -->
     <section class="view active" id="view-home">
-      <div class="panel" style="margin-bottom:16px;">
-        <div class="panel-head"><h2>Announcements</h2>
-          <button class="btn ok req-announcer" id="btn-new-announcement" type="button">+ New announcement</button>
+
+      <!-- search results (shown instead of the sections while searching) -->
+      <div id="home-results" style="display:none; margin-top:34px;">
+        <div class="sec-head">
+          <h2 id="home-results-title">Search results</h2>
+          <button class="view-all" id="home-clear" type="button">Clear ✕</button>
         </div>
-        <div id="announcements-list"></div>
-        <p class="note" id="announcements-empty" style="display:none; margin:0;">No announcements yet.</p>
+        <div class="grid" id="home-results-grid"></div>
+        <p class="note" id="home-results-empty" style="display:none;">No resources match your search.</p>
       </div>
-      <div class="panel">
-        <div class="panel-head"><h2>Signed in</h2></div>
-        <p class="note" style="margin:0;">You're logged in to VASE. This iteration adds Resource management (US-1/US-2), password recovery, and Booking & Request management (US-3/US-4/US-5). Maintenance and the operations dashboard will be developed in later iterations.</p>
+
+      <div id="home-sections">
+        <div class="sec" style="margin-top:30px;">
+          <div class="sec-head">
+            <h2>Announcements</h2>
+            <button class="btn ok req-announcer" id="btn-new-announcement" type="button">+ New announcement</button>
+          </div>
+          <div id="announcements-list" class="h-row"></div>
+          <p class="note" id="announcements-empty" style="display:none; margin:0;">No announcements yet.</p>
+        </div>
+
+        <div class="sec">
+          <div class="sec-head">
+            <h2>Available Resources</h2>
+            <button class="view-all" type="button" data-goto="resources" data-status="Available">View All (<span id="home-available-count">0</span>)
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M8.5 6.5L12 10l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <div class="h-row" id="home-available"></div>
+        </div>
+
+        <div class="sec">
+          <div class="sec-head">
+            <h2 id="home-requests-title">My Requests</h2>
+            <button class="view-all" type="button" data-goto="bookings">View All (<span id="home-requests-count">0</span>)
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M8.5 6.5L12 10l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <div class="h-row" id="home-requests"></div>
+        </div>
+
+        <div class="sec">
+          <div class="sec-head">
+            <h2 id="home-issues-title">My Reported Issues</h2>
+            <button class="view-all" type="button" data-goto="maintenance">View All (<span id="home-issues-count">0</span>)
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M8.5 6.5L12 10l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <div class="h-row" id="home-issues"></div>
+        </div>
+
+        <div class="sec">
+          <div class="sec-head"><h2>Resource Categories</h2></div>
+          <div id="home-categories"></div>
+        </div>
       </div>
     </section>
 
