@@ -788,6 +788,13 @@
     #login-view .auth-brand .stamp-badge, #create-view .auth-brand .stamp-badge{width:108px; height:72px;}
   }
 
+  /* Announcements: remove the cream frame, keep the bigger heading and cards */
+  #home-sections > .sec:first-child{background:none; border:none; box-shadow:none; border-radius:0; padding:0;}
+  #home-sections > .sec:first-child .h-row{padding:6px 4px 16px;}
+  @media (max-width: 860px){
+    #home-sections > .sec:first-child{padding:0; border-radius:0;}
+  }
+
   /* Maintenance */
   .req[data-status="Reported"]{border-left-color:var(--blue);}
   .req[data-status="Open"]{border-left-color:var(--rust);}
