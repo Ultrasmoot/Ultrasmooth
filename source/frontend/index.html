@@ -283,6 +283,57 @@
   .g-email{font-size:12px; color:#5f6368;}
   .g-row.g-other .g-av{background:#f1f3f4 !important; color:#5f6368;}
   .g-foot{padding:16px 24px 24px; font-size:12px; color:#5f6368; line-height:1.5; border-top:1px solid #e8eaed; margin-top:8px;}
+  /* Maintenance */
+  .req[data-status="Reported"]{border-left-color:var(--blue);}
+  .req[data-status="Open"]{border-left-color:var(--rust);}
+  .req[data-status="In Progress"]{border-left-color:var(--amber);}
+  .req[data-status="Resolved"]{border-left-color:var(--green);}
+  .req[data-status="Dismissed"]{border-left-color:var(--ink-faint);}
+  .badge.b-faint{background:rgba(22,35,63,0.08); color:var(--ink-soft);}
+  .req-btn.neutral{background:var(--panel); color:var(--ink); border-color:var(--line);}
+  .req-btn.neutral:hover{background:var(--paper);}
+  .req-confirm{background:var(--green);}
+  .modal-box{max-height:92vh; overflow-y:auto;}
+  .mt-prior{margin:0 0 12px;}
+  .mt-rep{border:1px solid var(--line); border-radius:10px; padding:9px 12px; background:var(--paper);}
+  .mt-rep + .mt-rep{margin-top:8px;}
+  .mt-rep-top{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-soft);}
+  .mt-rep-top b{color:var(--ink); font-size:13px;}
+  .mt-rep-top .mt-date{margin-left:auto;}
+  .mt-rep p{margin:5px 0 0; font-size:13px; line-height:1.45; white-space:pre-wrap; word-break:break-word;}
+  .mt-rep small{display:block; margin-top:4px; font-size:11.5px; color:var(--ink-soft);}
+  .mt-list{max-height:200px; overflow-y:auto; padding-right:4px;}
+  .mt-next{font-size:13px; font-weight:600; margin:2px 0 8px; color:var(--ink);}
+  .req-top-actions{align-items:center; flex-wrap:wrap;}
+  .refresh-stamp{font-size:12px; color:var(--ink-soft); white-space:nowrap;}
+  body:not([data-role="admin"]) #view-maintenance .req-top-actions #btn-report-issue{order:1;}
+  body:not([data-role="admin"]) #view-maintenance .req-top-actions #btn-refresh-maintenance{order:2;}
+  body:not([data-role="admin"]) #view-maintenance .req-top-actions .refresh-stamp{order:3;}
+  .refresh-stamp.bad{color:var(--rust);}
+  .refresh-stamp.flash{animation:stampFlash .9s ease-out;}
+  @keyframes stampFlash{from{opacity:0; transform:translateY(2px);} to{opacity:1; transform:none;}}
+  .btn.is-loading{opacity:.75; cursor:progress;}
+  .btn.is-loading::before{content:''; display:inline-block; width:10px; height:10px; margin-right:6px; vertical-align:-1px;
+    border:2px solid currentColor; border-right-color:transparent; border-radius:50%; animation:btnSpin .7s linear infinite;}
+  @keyframes btnSpin{to{transform:rotate(360deg);}}
+  @media (prefers-reduced-motion: reduce){ .btn.is-loading::before{animation-duration:2s;} .refresh-stamp.flash{animation:none;} }
+  #mt-list .req.asking .req-confirm{background:#E3F4EA; color:#1F4D37; border-top:1px solid #BFE3CE;}
+  #mt-list .req.asking .req-confirm .req-btn.back{background:transparent; color:#2F6F4F; border-color:rgba(47,111,79,0.45);}
+  #mt-list .req.asking .req-confirm .req-btn.back:hover{background:rgba(47,111,79,0.10);}
+  #mt-list .req.asking .req-confirm .req-btn.go{background:#2F6F4F; color:#fff; border-color:#2F6F4F;}
+  #mt-list .req.asking .req-confirm .req-btn.go:hover{background:#265A40;}
+  #mt-list .req.asking.is-decline .req-confirm{background:#FBE4E0; color:#7A2A1E; border-top-color:#F0C2BA;}
+  #mt-list .req.asking.is-decline .req-confirm .req-btn.back{color:#A03B2A; border-color:rgba(160,59,42,0.45);}
+  #mt-list .req.asking.is-decline .req-confirm .req-btn.back:hover{background:rgba(160,59,42,0.08);}
+  #mt-list .req.asking.is-decline .req-confirm .req-btn.go{background:#A03B2A; color:#fff; border-color:#A03B2A;}
+  #mt-list .req.asking.is-decline .req-confirm .req-btn.go:hover{background:#8A3223;}
+  #mt-list .req-reason{display:none;}
+  #mt-list .req.is-decline .req-confirm.with-reason .req-confirm-text{flex:1 1 100%; max-width:none;}
+  #mt-list .req.is-decline .req-reason{display:block; flex:1 1 260px; min-width:0; background:#fff; color:#3A1A15; border:1px solid #E3A99F; border-radius:8px; padding:9px 12px; font:inherit; font-size:14px;}
+  #mt-list .req.is-decline .req-reason::placeholder{color:#A8776E;}
+  #mt-list .req.is-decline .req-reason:focus{outline:none; border-color:#A03B2A; box-shadow:0 0 0 3px rgba(160,59,42,0.15);}
+  #mt-list .req.is-decline .req-reason.invalid{border-color:#A03B2A; box-shadow:0 0 0 3px rgba(160,59,42,0.28);}
+
 </style>
 </head>
 <body data-role="admin">
