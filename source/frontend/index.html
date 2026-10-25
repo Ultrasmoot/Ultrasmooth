@@ -1735,25 +1735,11 @@
 
   // An expired/invalid token on an authenticated call: drop the session and
   // reload, which lands on the login page instead of leaving a dead screen.
-  const SESSION_EXPIRED_FLAG = 'vase_session_expired';
-  function handleExpiredSession(sentToken){
-    if(!sentToken || localStorage.getItem('vase_token') !== sentToken) return;
+  function handleExpiredSession(){
+    if(!localStorage.getItem('vase_token')) return;
     localStorage.removeItem('vase_token');
-    sessionStorage.setItem(SESSION_EXPIRED_FLAG, '1'); // tells the login page to say why
     localStorage.removeItem('vase_user');
     window.location.reload();
-  }
-
-  // Logged out (or session ended) in another tab: this tab's token is gone too, so reload to the login page.
-  window.addEventListener('storage', e => {
-    if(e.key === 'vase_token' && !e.newValue) window.location.reload();
-  });
-
-  // Show a message after returning to the login page.
-  if(sessionStorage.getItem(SESSION_EXPIRED_FLAG)){
-    sessionStorage.removeItem(SESSION_EXPIRED_FLAG);
-    loginErrorText.textContent = 'Your session has expired. Please log in again.';
-    loginError.classList.add('show');
   }
 
   async function apiPost(path, body){
