@@ -167,8 +167,7 @@ class ResourceModel:
             conn.close()
 
     @staticmethod
-    def get(resource_id: int):
-        # get resource
+    def get(resource_id: int): # get resource
         conn = get_connection()
         try:
             cur = conn.cursor(dictionary=True)
@@ -190,7 +189,8 @@ class ResourceModel:
     def list(search: str = None, category: str = None, location: str = None,
               status: str = None, include_archived: bool = False,
               sort_by: str = DEFAULT_SORT, sort_dir: str = "asc"):
-        #SRS-1: search by keyword, filter/sort by category, location, availability and status        conn = get_connection()
+        # search by keyword, filter/sort by category, location, availability and status
+        conn = get_connection()
         try:
             cur = conn.cursor(dictionary=True)
             clauses = []
