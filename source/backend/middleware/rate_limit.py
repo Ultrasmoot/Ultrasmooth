@@ -11,7 +11,7 @@ _last_sweep = 0.0
 
 
 def _sweep(now: float, max_window: float):
-    """Drop stale keys occasionally so memory can't grow without bound."""
+    # Drop stale keys occasionally so memory can't grow without bound
     global _last_sweep
     if now - _last_sweep < 60:
         return
@@ -21,7 +21,6 @@ def _sweep(now: float, max_window: float):
 
 
 def check_rate_limit(key: str, limit: int, window_seconds: int):
-    """Record one attempt for `key`. Returns (allowed, retry_after_seconds)."""
     now = time.monotonic()
     with _lock:
         _sweep(now, max(window_seconds, 3600))
@@ -35,7 +34,7 @@ def check_rate_limit(key: str, limit: int, window_seconds: int):
 
 
 def reset_rate_limits():
-    """Clear all counters (used by tests)."""
+    # Clear all counters (used by tests)
     with _lock:
         _hits.clear()
 
@@ -46,7 +45,9 @@ def rate_limit(name: str, limit: int, window_seconds: int, by_email: bool = Fals
         def wrapper(*args, **kwargs):
             keys = [f"{name}:ip:{request.remote_addr}"]
             if by_email:
-                data = request.get_json(silent=True) or {}
+                data = request.get_json(silent=True)
+                if not isinstance(data, dict):
+                    data = {}
                 email = str(data.get("email") or "").strip().lower()[:254]
                 if email:
                     keys.append(f"{name}:email:{email}")
@@ -58,7 +59,5 @@ def rate_limit(name: str, limit: int, window_seconds: int, by_email: bool = Fals
                     resp.headers["Retry-After"] = str(retry_after)
                     return resp
             return fn(*args, **kwargs)
-
         return wrapper
-
     return decorator
