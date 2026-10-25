@@ -1,6 +1,8 @@
 from database.db import get_connection
 
 POSTER_ROLES = {"professor", "admin"}
+MAX_TITLE_LENGTH = 150  # matches announcements.title VARCHAR(150)
+MAX_BODY_LENGTH = 10000  
 
 
 class ValidationError(Exception):
@@ -8,14 +10,22 @@ class ValidationError(Exception):
 
 
 class AnnouncementModel:
+
     @staticmethod
     def _validate(data: dict):
-        title = str(data.get("title") or "").strip()
-        body = str(data.get("body") or "").strip()
+        for field in ("title", "body"):
+            if data.get(field) is not None and not isinstance(data.get(field), str):
+                raise ValidationError(f"{field} must be text.")
+        title = (data.get("title") or "").strip()
+        body = (data.get("body") or "").strip()
         if not title:
             raise ValidationError("title is required.")
         if not body:
             raise ValidationError("body is required.")
+        if len(title) > MAX_TITLE_LENGTH:
+            raise ValidationError(f"title must be at most {MAX_TITLE_LENGTH} characters.")
+        if len(body) > MAX_BODY_LENGTH:
+            raise ValidationError(f"body must be at most {MAX_BODY_LENGTH} characters.")
         return title, body
 
     @staticmethod

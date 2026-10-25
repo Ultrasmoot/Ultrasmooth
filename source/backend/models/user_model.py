@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 import re
 import secrets
 
@@ -18,14 +19,18 @@ ALL_ROLES = {"phd_student", "undergrad_student", "professor", "admin"}
 MAX_PASSWORD_BYTES = 72
 MIN_PASSWORD_LENGTH = 8
 MAX_TEXT_LENGTH = 150  # matches VARCHAR(150) columns
+MIN_YEAR, MAX_YEAR = 1, 6  # class year range
 
 
 class ValidationError(Exception):
     pass
 
+def _hash_reset_token(token: str) -> str:
+    #Hash the reset token before storing it
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
 
 def _clean_text(value, field: str, required: bool = False):
-#return a stripped string, rejecting non-string, too long input
     if value is None or value == "":
         if required:
             raise ValidationError(f"{field} is required.")
@@ -38,6 +43,21 @@ def _clean_text(value, field: str, required: bool = False):
     if len(value) > MAX_TEXT_LENGTH:
         raise ValidationError(f"{field} must be at most {MAX_TEXT_LENGTH} characters.")
     return value or None
+
+
+def _clean_year(role, value):
+    if role != "undergrad_student":
+        return None
+    if isinstance(value, bool) or value is None or value == "":
+        raise ValidationError("Year is required for undergraduate students.")
+    if isinstance(value, str):
+        value = value.strip()
+        if not re.fullmatch(r"\d{1,2}", value):
+            raise ValidationError(f"Year must be a number from {MIN_YEAR} to {MAX_YEAR}.")
+        value = int(value)
+    if not isinstance(value, int) or not MIN_YEAR <= value <= MAX_YEAR:
+        raise ValidationError(f"Year must be a number from {MIN_YEAR} to {MAX_YEAR}.")
+    return value
 
 
 def _check_password_rules(password):
@@ -54,12 +74,18 @@ class UserModel:
     def _hash_password(password: str) -> str:
         return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-    # Napakhet - check password
+    # check password
     @staticmethod
     def _check_password(password: str, password_hash: str) -> bool:
-        if not password_hash:
+        if not password_hash or not isinstance(password, str):
             return False
-        return bcrypt.checkpw(password.encode("utf-8"), password_hash.encode("utf-8"))
+        raw = password.encode("utf-8")
+        if len(raw) > MAX_PASSWORD_BYTES:
+            return False
+        try:
+            return bcrypt.checkpw(raw, password_hash.encode("utf-8"))
+        except ValueError:
+            return False  # invalid hash
 
     # lookups
     @staticmethod
@@ -97,10 +123,14 @@ class UserModel:
     @classmethod
     def create_student_account(cls, data: dict):
         if not isinstance(data.get("role"), str):
-            raise ValidationError("Self sign-up is only available for Ph.D. and Undergraduate students.")
+            raise ValidationError(
+                "Self sign-up is only available for Ph.D. and Undergraduate students."
+            )
         role = data["role"].strip()
         if role not in STUDENT_ROLES:
-            raise ValidationError("Self sign-up is only available for Ph.D. and Undergraduate students.")
+            raise ValidationError(
+                "Self sign-up is only available for Ph.D. and Undergraduate students."
+            )
 
         student_id = data.get("student_id")
         student_id = student_id.strip() if isinstance(student_id, str) else ""
@@ -110,6 +140,7 @@ class UserModel:
         full_name = _clean_text(data.get("full_name"), "Full name", required=True)
         faculty = _clean_text(data.get("faculty"), "Faculty")
         major = _clean_text(data.get("major"), "Major")
+        year = _clean_year(role, data.get("year"))
 
         email = data.get("email")
         email = email.strip().lower() if isinstance(email, str) else ""
@@ -131,8 +162,8 @@ class UserModel:
             cur = conn.cursor()
             cur.execute(
                 """INSERT INTO users
-                   (student_id, full_name, email, password_hash, role, faculty, major)
-                   VALUES (%s, %s, %s, %s, %s, %s, %s)""",
+                   (student_id, full_name, email, password_hash, role, faculty, major, year, email_verified)
+                   VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 0)""",
                 (
                     student_id,
                     full_name,
@@ -141,6 +172,7 @@ class UserModel:
                     role,
                     faculty,
                     major,
+                    year,
                 ),
             )
             conn.commit()
@@ -154,7 +186,9 @@ class UserModel:
     # email login (US-11)
     @classmethod
     def authenticate(cls, email: str, password: str):
-        user = cls.find_by_email((email or "").strip().lower())
+        if not isinstance(email, str) or not isinstance(password, str):
+            return None
+        user = cls.find_by_email(email.strip().lower())
         if not user or not user["is_active"]:
             return None
         if not cls._check_password(password, user["password_hash"]):
@@ -164,38 +198,58 @@ class UserModel:
     # Google login (US-11)
     @classmethod
     def find_or_create_google_user(cls, google_sub: str, email: str, full_name: str):
-        # find existing Google user or return a new user.
+        # Find an existing Google account or link an account by email.
         user = cls.find_by_google_sub(google_sub)
         if user:
             return user, False
 
         user = cls.find_by_email(email)
         if user:
+            # Do not link inactive accounts.
+            if not user["is_active"]:
+                return user, False
+            # Do not link an account to a different Google identity.
+            if user.get("google_sub") and user["google_sub"] != google_sub:
+                raise ValidationError(
+                    "This email is already linked to a different Google account."
+                )
             conn = get_connection()
             try:
                 cur = conn.cursor()
+                # Link the account and clear the old password.
                 cur.execute(
-                    "UPDATE users SET google_sub = %s WHERE id = %s",
-                    (google_sub, user["id"]),
+                    "UPDATE users SET google_sub = %s, password_hash = NULL, email_verified = 1 "
+                    "WHERE id = %s AND is_active = 1 AND (google_sub IS NULL OR google_sub = %s)",
+                    (google_sub, user["id"], google_sub),
                 )
+                linked = cur.rowcount
                 conn.commit()
             finally:
                 conn.close()
-            return cls.find_by_id(user["id"]), False
+            fresh = cls.find_by_id(user["id"])
+            if not linked:
+                if fresh and not fresh["is_active"]:
+                    return fresh, False
+                if not (fresh and fresh.get("google_sub") == google_sub):
+                    raise ValidationError(
+                        "This email is already linked to a different Google account."
+                    )
+            return fresh, False
 
         return None, True
 
     @classmethod
-    def complete_google_signup(cls, google_sub: str, email: str, full_name: str, role: str):
-        if role not in STUDENT_ROLES:
+    def complete_google_signup(cls, google_sub: str, email: str, full_name: str, role: str, year=None):
+        if not isinstance(role, str) or role not in STUDENT_ROLES:
             raise ValidationError("New Google sign-ups can only register with a student role.")
+        year = _clean_year(role, year)  # undergrad must pick a class year
         conn = get_connection()
         try:
             cur = conn.cursor()
             cur.execute(
-                """INSERT INTO users (full_name, email, google_sub, role)
-                   VALUES (%s, %s, %s, %s)""",
-                ((full_name or "")[:MAX_TEXT_LENGTH], (email or "").strip().lower(), google_sub, role),
+                """INSERT INTO users (full_name, email, google_sub, role, year)
+                   VALUES (%s, %s, %s, %s, %s)""",
+                ((full_name or "")[:MAX_TEXT_LENGTH], (email or "").strip().lower(), google_sub, role, year),
             )
             conn.commit()
             return cls.find_by_id(cur.lastrowid)
@@ -205,14 +259,76 @@ class UserModel:
         finally:
             conn.close()
 
+    # E-mail verification (us-11)
+    @classmethod
+    def create_verification_token(cls, email: str):
+        # Return a token for an active, unverified account
+        if not isinstance(email, str):
+            return None
+        user = cls.find_by_email(email.strip().lower())
+        if not user or not user["is_active"] or user.get("email_verified", 1):
+            return None
+
+        token = secrets.token_urlsafe(32)
+        expires_at = datetime.datetime.utcnow() + datetime.timedelta(
+            minutes=Config.VERIFY_TOKEN_EXPIRES_MINUTES
+        )
+        conn = get_connection()
+        try:
+            cur = conn.cursor()
+            # Retire older links so only the newest one works
+            cur.execute(
+                "UPDATE email_verifications SET used = 1 WHERE user_id = %s AND used = 0",
+                (user["id"],),
+            )
+            cur.execute(
+                "INSERT INTO email_verifications (user_id, token, expires_at) VALUES (%s, %s, %s)",
+                (user["id"], _hash_reset_token(token), expires_at),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+        return token 
+
+    @classmethod
+    def verify_email(cls, token: str):
+        # Verify the token and mark the account as verified.
+        if not isinstance(token, str) or not token or len(token) > 128:
+            raise ValidationError("This verification link is invalid or has expired.")
+        token_hash = _hash_reset_token(token)
+
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            cur.execute(
+                "UPDATE email_verifications SET used = 1 "
+                "WHERE token = %s AND used = 0 AND expires_at > %s",
+                (token_hash, datetime.datetime.utcnow()),
+            )
+            if cur.rowcount != 1:
+                conn.rollback()
+                raise ValidationError("This verification link is invalid or has expired.")
+            cur.execute("SELECT user_id FROM email_verifications WHERE token = %s", (token_hash,))
+            row = cur.fetchone()
+            cur.execute("UPDATE users SET email_verified = 1 WHERE id = %s", (row["user_id"],))
+            cur.execute(
+                "UPDATE email_verifications SET used = 1 WHERE user_id = %s AND used = 0",
+                (row["user_id"],),
+            )
+            conn.commit()
+        except Exception:
+            conn.rollback()
+            raise
+        finally:
+            conn.close()       
+    
     # forgot password
     @classmethod
     def create_reset_token(cls, email: str):
-        """Returns a reset token if the email matches an active account,
-        else None. Callers must not reveal which case occurred — always
-        respond the same way either way, to avoid confirming which emails
-        have accounts."""
-        user = cls.find_by_email((email or "").strip().lower())
+        # Return a reset token for an active account or None
+        if not isinstance(email, str):
+            return None
+        user = cls.find_by_email(email.strip().lower())
         if not user or not user["is_active"]:
             return None
 
@@ -224,8 +340,12 @@ class UserModel:
         try:
             cur = conn.cursor()
             cur.execute(
+                "UPDATE password_resets SET used = 1 WHERE user_id = %s AND used = 0",
+                (user["id"],),
+            )
+            cur.execute(
                 "INSERT INTO password_resets (user_id, token, expires_at) VALUES (%s, %s, %s)",
-                (user["id"], token, expires_at),
+                (user["id"], _hash_reset_token(token), expires_at),
             )
             conn.commit()
         finally:
@@ -239,7 +359,7 @@ class UserModel:
             cur = conn.cursor(dictionary=True)
             cur.execute(
                 "SELECT * FROM password_resets WHERE token = %s AND used = 0 AND expires_at > %s",
-                (token, datetime.datetime.utcnow()),
+                (_hash_reset_token(token), datetime.datetime.utcnow()),
             )
             return cur.fetchone()
         finally:
@@ -253,6 +373,7 @@ class UserModel:
             raise ValidationError("This reset link is invalid or has expired.")
         # validate the password first
         _check_password_rules(new_password)
+        token_hash = _hash_reset_token(token)
 
         conn = get_connection()
         try:
@@ -260,16 +381,21 @@ class UserModel:
             cur.execute(
                 "UPDATE password_resets SET used = 1 "
                 "WHERE token = %s AND used = 0 AND expires_at > %s",
-                (token, datetime.datetime.utcnow()),
+                (token_hash, datetime.datetime.utcnow()),
             )
             if cur.rowcount != 1:
                 conn.rollback()
                 raise ValidationError("This reset link is invalid or has expired.")
-            cur.execute("SELECT user_id FROM password_resets WHERE token = %s", (token,))
+            cur.execute("SELECT user_id FROM password_resets WHERE token = %s", (token_hash,))
             row = cur.fetchone()
             cur.execute(
                 "UPDATE users SET password_hash = %s WHERE id = %s",
                 (cls._hash_password(new_password), row["user_id"]),
+            )
+            # Invalidate other reset links for this user
+            cur.execute(
+                "UPDATE password_resets SET used = 1 WHERE user_id = %s AND used = 0",
+                (row["user_id"],),
             )
             conn.commit()
         except Exception:
