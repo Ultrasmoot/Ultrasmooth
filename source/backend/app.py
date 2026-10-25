@@ -18,6 +18,7 @@ def create_app():
     app.register_blueprint(booking_bp)
     app.register_blueprint(announcement_bp)
     app.register_blueprint(maintenance_bp)
+    app.register_blueprint(checkin_bp)
     @app.before_request
     def require_json_object():
         if request.path.startswith("/api/") and request.method in {"POST", "PUT", "PATCH"}:
