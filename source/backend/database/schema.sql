@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
     major VARCHAR(150),
     year TINYINT UNSIGNED NULL,
     is_active TINYINT(1) NOT NULL DEFAULT 1,
-	email_verified TINYINT(1) NOT NULL DEFAULT 1,
+    email_verified TINYINT(1) NOT NULL DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT chk_users_year CHECK (year IS NULL OR year BETWEEN 1 AND 6)
 );
@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     status ENUM('Pending','Approved','Rejected') NOT NULL DEFAULT 'Pending',
     decided_by INT NULL,
     decided_at TIMESTAMP NULL,
+    decision_reason VARCHAR(255) NULL,
     checked_in_at DATETIME NULL,
     checked_out_at DATETIME NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -83,22 +84,7 @@ CREATE TABLE IF NOT EXISTS email_verifications (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- one-time check-in codes e-mailed to the student.
--- Only an HMAC of the code is stored, never the code itself.
-CREATE TABLE IF NOT EXISTS checkin_codes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    booking_id INT NOT NULL,
-    user_id INT NOT NULL,
-    code_hash CHAR(64) NOT NULL,
-    expires_at DATETIME NOT NULL,
-    attempts INT NOT NULL DEFAULT 0,
-    consumed_at DATETIME NULL,
-    created_at DATETIME NOT NULL,
-    FOREIGN KEY (booking_id) REFERENCES bookings(id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    INDEX idx_checkin_booking (booking_id, id)
-);
-
+-- maintenance records
 CREATE TABLE IF NOT EXISTS maintenance_records (
     id INT AUTO_INCREMENT PRIMARY KEY,
     resource_id INT NOT NULL,
@@ -118,4 +104,20 @@ CREATE TABLE IF NOT EXISTS maintenance_records (
     FOREIGN KEY (confirmed_by) REFERENCES users(id),
     FOREIGN KEY (closed_by) REFERENCES users(id),
     INDEX idx_maint_resource_status (resource_id, status)
+);
+
+-- US-10 one-time check-in codes e-mailed to the student.
+-- Only an HMAC of the code is stored, never the code itself.
+CREATE TABLE IF NOT EXISTS checkin_codes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    booking_id INT NOT NULL,
+    user_id INT NOT NULL,
+    code_hash CHAR(64) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    attempts INT NOT NULL DEFAULT 0,
+    consumed_at DATETIME NULL,
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY (booking_id) REFERENCES bookings(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    INDEX idx_checkin_booking (booking_id, id)
 );
