@@ -15,6 +15,13 @@ def _load_secret_key(app_env: str) -> str:
         "(or set APP_ENV=development for local testing only)."
     )
 
+def _bounded_int_env(name: str, default: int, low: int, high: int) -> int:
+    try:
+        value = int(os.getenv(name, str(default)))
+    except ValueError:
+        value = default
+    return max(low, min(value, high))
+
 class Config:
     # Defaults to "production" (the safe choice) when APP_ENV is not set.
     APP_ENV = os.getenv("APP_ENV", "production").strip().lower()
@@ -30,17 +37,21 @@ class Config:
     DB_NAME = os.getenv("DB_NAME", "vase_lab")
 
     GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
-    # restrict account creation to the email
-    ALLOWED_EMAIL_DOMAIN = os.getenv("ALLOWED_EMAIL_DOMAIN", "ku.th")
+    GOOGLE_CLOCK_SKEW_SECONDS = _bounded_int_env("GOOGLE_CLOCK_SKEW_SECONDS", 10, 0, 60)
     
-    # forgot password settings
+    # restrict account creation (signup + google sign-in) to this email
+    ALLOWED_EMAIL_DOMAIN = os.getenv("ALLOWED_EMAIL_DOMAIN", "ku.th")
+
+    # forgot Password (reset links = single-use, time-limited)
     APP_BASE_URL = os.getenv("APP_BASE_URL", "http://localhost:5000")
     RESET_TOKEN_EXPIRES_MINUTES = int(os.getenv("RESET_TOKEN_EXPIRES_MINUTES", "30"))
-
-    # email settings
-    # SMTP_HOST is empty, print the reset link in the console instead of sending an email
+    
+    # e-mail verification (SRS-11)
+    VERIFY_TOKEN_EXPIRES_MINUTES = int(os.getenv("VERIFY_TOKEN_EXPIRES_MINUTES", "1440"))
+    
     SMTP_HOST = os.getenv("SMTP_HOST", "")
     SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
     SMTP_USER = os.getenv("SMTP_USER", "")
     SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
     SMTP_FROM = os.getenv("SMTP_FROM", "no-reply@vase-lab.local")
+    SMTP_TIMEOUT_SECONDS = _bounded_int_env("SMTP_TIMEOUT_SECONDS", 10, 1, 60)
