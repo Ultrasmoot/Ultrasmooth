@@ -1,10 +1,9 @@
 import hashlib
 import hmac
 import re
-import jwt
-
-from flask import g, jsonify, request
 from functools import wraps
+import jwt
+from flask import g, jsonify, request
 from config import Config
 from models.user_model import UserModel
 
@@ -22,13 +21,13 @@ def _decode_token():
     token = auth_header.split(" ", 1)[1]
     try:
         return jwt.decode(
-            token, Config.SECRET_KEY, algorithms=["HS256"]
+            token, Config.SECRET_KEY, algorithms=["HS256"], options={"verify_sub": False}
         )
     except jwt.PyJWTError:
         return None
 
 def get_current_user():
-    """Cached per-request lookup of the authenticated user (or None)."""
+    # Cached per-request lookup of the authenticated user (or None)
     if hasattr(g, "current_user"):
         return g.current_user
     claims = _decode_token()
@@ -47,17 +46,9 @@ def get_current_user():
         token_pwf = claims.get("pwf")
         current_pwf = password_fingerprint(user.get("password_hash"))
         if not isinstance(token_pwf, str) or not hmac.compare_digest(token_pwf, current_pwf):
-            user = None
+            user = None  # password changed since this token was issued
     g.current_user = user if user and user["is_active"] else None
     return g.current_user
-
-def login_required(fn):
-    @wraps(fn)
-    def wrapper(*args, **kwargs):
-        if not get_current_user():
-            return jsonify({"error": "Authentication required."}), 401
-        return fn(*args, **kwargs)
-    return wrapper
 
 def role_required(*allowed_roles):
     def decorator(fn):
