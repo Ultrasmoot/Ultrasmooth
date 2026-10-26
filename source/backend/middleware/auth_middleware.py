@@ -50,6 +50,15 @@ def get_current_user():
     g.current_user = user if user and user["is_active"] else None
     return g.current_user
 
+def login_required(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        if not get_current_user():
+            return jsonify({"error": "Authentication required."}), 401
+        return fn(*args, **kwargs)
+
+    return wrapper
+
 def role_required(*allowed_roles):
     def decorator(fn):
         @wraps(fn)
