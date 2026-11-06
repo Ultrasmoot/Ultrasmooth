@@ -299,3 +299,48 @@ class BookingModel:
         finally:
             conn.close()
         return cls.get(booking_id)
+
+    @classmethod
+    def cancel(cls, booking_id: int, requester_id: int):
+        """The requester withdraws a Pending request or an Approved booking that has not been
+        used. Someone else's booking looks exactly like a missing one. Once checked in, the
+        way out is check-out, so cancelling is refused. Cancelled bookings free the slot
+        (conflict checks only look at Pending/Approved)."""
+        booking = cls.get(booking_id)
+        if not booking or booking["requester_id"] != requester_id:
+            raise ValidationError("Booking not found.")
+
+        conn = get_connection()
+        try:
+            cur = conn.cursor(dictionary=True)
+            # Same lock order as create()/decide(): the resource row first, then the booking.
+            cur.execute("SELECT id FROM resources WHERE id = %s FOR UPDATE", (booking["resource_id"],))
+            cur.execute("SELECT * FROM bookings WHERE id = %s FOR UPDATE", (booking_id,))
+            current = cur.fetchone()
+            if not current or current["requester_id"] != requester_id:
+                raise ValidationError("Booking not found.")
+            if current["status"] not in ("Pending", "Approved"):
+                raise ValidationError(
+                    f"Only a pending or approved booking can be cancelled (this one is {current['status'].lower()})."
+                )
+            if current["checked_in_at"]:
+                raise ValidationError("You have already checked in, so please check out instead of cancelling.")
+            now = datetime.datetime.now()
+            if current["end_time"] <= now:
+                raise ValidationError("This booking has already ended, so it cannot be cancelled.")
+
+            cur.execute(
+                "UPDATE bookings SET status = 'Cancelled', cancelled_at = %s "
+                "WHERE id = %s AND status = %s AND checked_in_at IS NULL",
+                (now, booking_id, current["status"]),
+            )
+            if cur.rowcount == 0:
+                raise ValidationError("This booking was changed just now. Please refresh and try again.")
+            events.booking_cancelled(conn, booking_id, current["status"])
+            conn.commit()
+        except ValidationError:
+            conn.rollback()
+            raise
+        finally:
+            conn.close()
+        return cls.get(booking_id)
