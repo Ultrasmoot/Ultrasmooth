@@ -1,6 +1,7 @@
 import datetime
 import mysql.connector
 from database.db import get_connection
+from services import events 
 from models.checkin_model import EARLY_CHECKIN_MINUTES
 
 VALID_DECISIONS = {"approve": "Approved", "reject": "Rejected"}
@@ -208,6 +209,7 @@ class BookingModel:
                 (resource_id, requester_id, start, end, purpose),
             )
             new_id = cur.lastrowid
+            events.booking_submitted(conn, new_id)  
             conn.commit()
         except ValidationError:
             conn.rollback()
@@ -289,6 +291,7 @@ class BookingModel:
             )
             if cur.rowcount == 0:
                 raise ValidationError("This booking was already decided.")
+            events.booking_decided(conn, booking_id, admin_id)              
             conn.commit()
         except ValidationError:
             conn.rollback()
