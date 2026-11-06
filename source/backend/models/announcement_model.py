@@ -1,5 +1,5 @@
 from database.db import get_connection
-
+from services import events
 POSTER_ROLES = {"professor", "admin"}
 MAX_TITLE_LENGTH = 150  # matches announcements.title VARCHAR(150)
 MAX_BODY_LENGTH = 10000  
@@ -61,14 +61,16 @@ class AnnouncementModel:
                 "INSERT INTO announcements (author_id, title, body) VALUES (%s, %s, %s)",
                 (author_id, title, body),
             )
+            new_id = cur.lastrowid
+            events.announcement_posted(conn, new_id, author_id)   # Iteration 5
             conn.commit()
-            return cls.get(cur.lastrowid)
+            return cls.get(new_id)
         finally:
             conn.close()
 
     @classmethod
     def delete(cls, announcement_id: int, user_id: int):
-    # Only the author may delete their own announcement
+        # Only the author may delete their own announcement
         announcement = cls.get(announcement_id)
         if not announcement:
             raise ValidationError("Announcement not found.")
@@ -78,6 +80,7 @@ class AnnouncementModel:
         try:
             cur = conn.cursor()
             cur.execute("DELETE FROM announcements WHERE id = %s", (announcement_id,))
+            events.announcement_deleted(conn, announcement_id, announcement["title"], user_id)   # Iteration 5
             conn.commit()
         finally:
             conn.close()
