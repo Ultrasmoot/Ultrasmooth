@@ -90,8 +90,7 @@ def dismiss_record(record_id):
 @role_required("admin")
 def update_record(record_id):
     data = request.get_json(silent=True) or {}
-    return _admin_action(MaintenanceModel.update, record_id, data)
-
+    return _admin_action(MaintenanceModel.update, record_id, data, get_current_user()["id"])
 
 @maintenance_bp.post("/<int:record_id>/resolve")
 @role_required("admin")

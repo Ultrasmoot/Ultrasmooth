@@ -22,6 +22,8 @@ def _serialize(b: dict) -> dict:
         "decided_by": b["decided_by"],
         "decided_at": b["decided_at"].isoformat() if b["decided_at"] else None,
         "decision_reason": b.get("decision_reason"),
+        "cancelled_at": b["cancelled_at"].isoformat() if b.get("cancelled_at") else None,
+
     }
 
 
