@@ -8,6 +8,12 @@ from controllers.booking_controller import booking_bp
 from controllers.announcement_controller import announcement_bp
 from controllers.maintenance_controller import maintenance_bp
 from controllers.checkin_controller import checkin_bp
+
+from controllers.activity_controller import activity_bp 
+from controllers.appointment_controller import appointment_bp 
+from controllers.dashboard_controller import dashboard_bp 
+from controllers.notification_controller import notification_bp 
+from controllers.user_admin_controller import user_admin_bp 
 from middleware.auth_middleware import login_required, role_required
 
 
@@ -19,6 +25,13 @@ def create_app():
     app.register_blueprint(announcement_bp)
     app.register_blueprint(maintenance_bp)
     app.register_blueprint(checkin_bp)
+    # Panisara
+    app.register_blueprint(activity_bp) 
+    app.register_blueprint(appointment_bp) 
+    app.register_blueprint(dashboard_bp) 
+    app.register_blueprint(notification_bp) 
+    app.register_blueprint(user_admin_bp) 
+
     @app.before_request
     def require_json_object():
         if request.path.startswith("/api/") and request.method in {"POST", "PUT", "PATCH"}:
@@ -50,18 +63,8 @@ def create_app():
     @login_required
     def ping():
         return {"status": "authenticated"}
-
-    # Demonstrates the shared role_required guard (R-02) that every future
-    # controller (Resource, Booking, Maintenance, History & Dashboard,
-    # User & Access) will reuse instead of duplicating permission checks.
-    @app.get("/api/admin/users")
-    @role_required("admin")
-    def list_users():
-        return {"note": "Full User & Access management (US-13) ships in Iteration 6."}
-
-    # Real server-side gate for the "User & Access" nav item (SRS-12).
-    # The frontend calls this before switching into that view, so access is
-    # enforced by the backend guard, not just by hiding the nav button.
+    
+    # user access , frontend calls this (server-side)
     @app.get("/api/admin/access-check")
     @role_required("admin")
     def access_check():
@@ -73,4 +76,10 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
+    # Background jobs (auto check-out, old-row cleanup)
+    import os
+    from services.housekeeping import start_background_worker
+
+    if not Config.DEBUG or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        start_background_worker()
     app.run(host="0.0.0.0", port=5000, debug=Config.DEBUG)
