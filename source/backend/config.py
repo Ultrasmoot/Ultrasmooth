@@ -55,3 +55,8 @@ class Config:
     SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
     SMTP_FROM = os.getenv("SMTP_FROM", "no-reply@vase-lab.local")
     SMTP_TIMEOUT_SECONDS = _bounded_int_env("SMTP_TIMEOUT_SECONDS", 10, 1, 60)
+
+    AUTO_CHECKOUT_GRACE_MINUTES = _bounded_int_env("AUTO_CHECKOUT_GRACE_MINUTES", 20, 0, 240)
+    JOB_INTERVAL_SECONDS = _bounded_int_env("JOB_INTERVAL_SECONDS", 60, 10, 3600)
+    NOTIFICATION_RETENTION_DAYS = _bounded_int_env("NOTIFICATION_RETENTION_DAYS", 45, 0, 3650)
+    ACTIVITY_RETENTION_DAYS = _bounded_int_env("ACTIVITY_RETENTION_DAYS", 45, 0, 3650)
