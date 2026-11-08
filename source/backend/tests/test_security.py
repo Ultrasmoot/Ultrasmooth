@@ -1,18 +1,18 @@
 import os
 import sys
-import config
 import unittest
 from unittest import mock
 
 os.environ.setdefault("APP_ENV", "development")
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app import create_app  # noqa: E402
-from middleware.rate_limit import reset_rate_limits  # noqa: E402
+from app import create_app
+from middleware.rate_limit import reset_rate_limits
 
 VERIFY = "controllers.auth_controller.id_token.verify_oauth2_token"
 GOOD = {"sub": "g-123", "email": "alice@ku.th", "email_verified": True, "name": "Alice"}
 FAKE_USER = {"id": 7, "email": "alice@ku.th", "full_name": "Alice", "role": "undergrad_student"}
+
 
 class GoogleAuthTests(unittest.TestCase):
     def setUp(self):
@@ -57,6 +57,7 @@ class GoogleAuthTests(unittest.TestCase):
             um.complete_google_signup.assert_called_once_with(
                 "g-123", "alice@ku.th", "Alice", "undergrad_student", year=None
             )
+
     def test_complete_profile_passes_year_to_model(self):
         with mock.patch(VERIFY, return_value=GOOD), mock.patch(
             "controllers.auth_controller.UserModel"
@@ -73,7 +74,7 @@ class GoogleAuthTests(unittest.TestCase):
             self.assertEqual(r.get_json()["user"]["year"], 3)
 
     def test_complete_profile_undergrad_without_year_is_400_and_creates_nothing(self):
-        # Check invalid years are rejected before creating a database record.
+        # Check invalid years are rejected before creating a database record
         for body in ({}, {"year": None}, {"year": ""}, {"year": 0}, {"year": 7}, {"year": "abc"},
                      {"year": True}, {"year": 2.5}, {"year": [3]}):
             with mock.patch(VERIFY, return_value=GOOD), mock.patch(
@@ -94,7 +95,7 @@ class GoogleAuthTests(unittest.TestCase):
              mock.patch.object(UserModel, "find_by_id", return_value=FAKE_USER):
             UserModel.complete_google_signup("g-1", "p@ku.th", "P", "phd_student", year=4)
         params = conn.cursor.return_value.execute.call_args[0][1]
-        self.assertIsNone(params[-1])  # Ignore the year for Ph.D. students.
+        self.assertIsNone(params[-1])  # Ignore the year for Ph.D. students
 
     def test_complete_profile_undergrad_year_is_stored_as_int(self):
         from models.user_model import UserModel
@@ -129,6 +130,7 @@ class GoogleAuthTests(unittest.TestCase):
             r = self.client.post("/api/auth/google", json={"credential": "tok"})
             self.assertEqual(r.status_code, 200)
             self.assertNotIn("google_sub", r.get_json())
+
 
 class RateLimitTests(unittest.TestCase):
     def setUp(self):
@@ -211,7 +213,7 @@ class ValidationTests(unittest.TestCase):
         from models.user_model import UserModel, ValidationError
         conn = mock.MagicMock()
         cur = conn.cursor.return_value
-        cur.rowcount = 0
+        cur.rowcount = 0  # token already used / expired (e.g. lost the race)
         with mock.patch("models.user_model.get_connection", return_value=conn):
             with self.assertRaises(ValidationError):
                 UserModel.reset_password("tok", "password123")
@@ -227,7 +229,8 @@ class ValidationTests(unittest.TestCase):
             UserModel.reset_password("tok", "password123")
         conn.commit.assert_called_once()
 
-# Check that invalid JSON types, inactive accounts and Google outages are handled safely.
+
+# Check that invalid JSON types, inactive accounts and Google outages are handled safely
 class WrongTypeTests(unittest.TestCase):
     def setUp(self):
         reset_rate_limits()
@@ -264,11 +267,12 @@ class WrongTypeTests(unittest.TestCase):
         from models.user_model import UserModel
         good = UserModel._hash_password("password123")
         self.assertTrue(UserModel._check_password("password123", good))
-        self.assertFalse(UserModel._check_password("x" * 100, good))          # Reject passwords over 72 bytes.
-        self.assertFalse(UserModel._check_password(12345678, good))           # Reject non-text passwords.
+        self.assertFalse(UserModel._check_password("x" * 100, good)) # Reject passwords over 72 bytes.
+        self.assertFalse(UserModel._check_password(12345678, good)) # Reject non-text passwords.
         self.assertFalse(UserModel._check_password("password123", "garbage"))  # Handle invalid stored hashes.
         self.assertIsNone(UserModel.authenticate(123, "x"))
         self.assertIsNone(UserModel.authenticate("a@ku.th", ["x"]))
+
 
 class GoogleDeactivatedAndOutageTests(unittest.TestCase):
     def setUp(self):
@@ -284,7 +288,7 @@ class GoogleDeactivatedAndOutageTests(unittest.TestCase):
              mock.patch("models.user_model.get_connection") as gc:
             user, is_new = UserModel.find_or_create_google_user("g-1", "off@ku.th", "Off")
         self.assertEqual((user, is_new), (inactive, False))
-        gc.assert_not_called()  # Do not link Google or change the password.
+        gc.assert_not_called()  # Do not link Google or change the password
 
     def test_google_login_of_a_deactivated_account_is_403(self):
         inactive = {"id": 9, "email": "alice@ku.th", "is_active": 0, "role": "phd_student"}
@@ -304,7 +308,8 @@ class GoogleDeactivatedAndOutageTests(unittest.TestCase):
 
 class ConfigTests(unittest.TestCase):
     def test_production_refuses_missing_or_placeholder_secret(self):
-     
+        import config
+
         for value in (None, "", "change-me", "dev-secret-change-me"):
             env = {"SECRET_KEY": value} if value is not None else {}
             with mock.patch.dict(os.environ, env, clear=True):
@@ -314,13 +319,15 @@ class ConfigTests(unittest.TestCase):
                     config._load_secret_key("production")
 
     def test_production_accepts_real_secret_and_dev_allows_placeholder(self):
-        
+        import config
+
         with mock.patch.dict(os.environ, {"SECRET_KEY": "x" * 48}):
             self.assertEqual(config._load_secret_key("production"), "x" * 48)
         with mock.patch.dict(os.environ, {}, clear=True):
             self.assertEqual(config._load_secret_key("development"), "dev-secret-change-me")
 
-# Test that users must verify their email before logging in.
+
+# Test that users must verify their email before logging in
 class EmailVerificationTests(unittest.TestCase):
     def setUp(self):
         reset_rate_limits()
@@ -349,7 +356,7 @@ class EmailVerificationTests(unittest.TestCase):
         self.assertEqual(known.status_code, 200)
         self.assertEqual(unknown.status_code, 200)
         self.assertEqual(known.get_json(), unknown.get_json())
-        send.assert_called_once()  # Send mail only for an eligible account.
+        send.assert_called_once()  # Send mail only for an eligible account
 
     def test_resend_rejects_missing_or_non_text_email(self):
         for body in ({}, {"email": ""}, {"email": 5}):
@@ -385,6 +392,7 @@ class EmailVerificationTests(unittest.TestCase):
         self.assertNotIn("token", body)
         self.assertEqual(body["email"], "alice@ku.th")
         self.assertIn("verify_token=tok", send.call_args[0][2])
+
 
 if __name__ == "__main__":
     unittest.main()
