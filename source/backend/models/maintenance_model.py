@@ -352,7 +352,9 @@ class MaintenanceModel:
                 (admin_id, resource_id),
             )
             closed = cur.rowcount
-            cur.execute("UPDATE resources SET status = 'Available' WHERE id = %s", (resource_id,))
+            cur.execute("UPDATE resources SET status = %s WHERE id = %s",
+                        (cls._status_after_maintenance(cur, resource_id), resource_id))
+            events.maintenance_released(conn, resource_id, admin_id, closed)
             conn.commit()
             return closed
         except ValidationError:
