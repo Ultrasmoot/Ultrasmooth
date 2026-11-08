@@ -3631,6 +3631,17 @@
     });
   }
 
+  document.getElementById('usr-add').addEventListener('click', () => openUserModal());
+  document.getElementById('usr-q').addEventListener('input', () => { clearTimeout(usrTimer); usrTimer = setTimeout(loadUsers, 250); });
+  ['usr-role', 'usr-status'].forEach(id => document.getElementById(id).addEventListener('change', loadUsers));
+  document.getElementById('usr-content').addEventListener('click', (e) => {
+    const t = e.target.closest('button');
+    if(!t || t.disabled) return;
+    if(t.dataset.usrEdit) openUserModal(Number(t.dataset.usrEdit));
+    else if(t.dataset.usrOff) openUserToggleModal(Number(t.dataset.usrOff), false);
+    else if(t.dataset.usrOn) openUserToggleModal(Number(t.dataset.usrOn), true);
+  });
+
   /* Announcements */
     async function loadAnnouncements(){
     const {ok, data} = await apiAuthGet('/api/announcements');
