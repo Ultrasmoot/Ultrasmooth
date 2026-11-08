@@ -410,7 +410,7 @@
     display:none; align-items:center; gap:6px; background:var(--green-bg); color:var(--green);
     font-size:11.5px; padding:8px 10px; border-radius:4px; margin-bottom:14px; font-family:'IBM Plex Mono', monospace;
   }
-  .login-notice.show{display:flex;}  
+  .login-notice.show{display:flex;}
 
   /* Google account chooser */
   .g-backdrop{position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; align-items:center; justify-content:center; z-index:200; font-family:Roboto, Arial, sans-serif;}
@@ -933,7 +933,7 @@
   .auth-screen{background:var(--paper) !important; background-image:none !important;}
 
   /* Account switch links */
-  .switch-form{font-size:16px; line-height:1.5;} 
+  .switch-form{font-size:16px; line-height:1.5;}
   .switch-form a{font-size:16px; font-weight:700;}
 
   /* Larger cards and form controls on desktop */
@@ -1062,8 +1062,19 @@
   .bell-item-row span{display:block; color:var(--ink-soft); font-size:12.5px; margin-top:2px; overflow-wrap:anywhere;}
   .bell-item-row small{color:var(--ink-faint); font-size:11.5px;}
   .bell-empty{padding:18px 14px; color:var(--ink-faint); font-size:13px;}
-
   /* Activity log */
+  .rcard[data-rid], .hcard[data-rid]{cursor:pointer;}
+
+  .s5-panel{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px;}
+  .s5-filters{display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; margin-bottom:14px;}
+  .s5-filters label{display:block; font-size:12px; color:var(--ink-soft); margin-bottom:4px;}
+  .s5-filters input, .s5-filters select{padding:8px 10px; border:1px solid var(--line); border-radius:8px; background:#fff; font:inherit; color:var(--ink);}
+  .s5-table{width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+  .s5-table th, .s5-table td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); font-size:13.5px; vertical-align:top;}
+  .s5-table th{font-size:11.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--ink-faint);}
+  .s5-scroll{overflow-x:auto;}
+  .s5-pager{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; font-size:13px; color:var(--ink-soft);}
+
   .act-filters{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px;}
   .act-field{flex:1 1 150px; min-width:0; display:flex; align-items:center; gap:8px; height:40px; padding:0 14px; background:var(--panel); border:1px solid var(--line); border-radius:999px; color:var(--ink-soft); font-size:13px;}
   .act-field label{white-space:nowrap;}
@@ -1137,6 +1148,30 @@
   .mgrid .span2{grid-column:1 / -1;}
   .mgrid .field{margin-bottom:12px; min-width:0;}
   .modal-box .field input:disabled{background:var(--cream-deep); color:var(--ink-soft); cursor:default;}
+
+  @media (max-width: 640px){ .mgrid{grid-template-columns:1fr;} }
+  .s5-sec{font-size:12px; letter-spacing:.6px; text-transform:uppercase; color:var(--ink-faint); margin:22px 0 10px;}
+  .s5-sec:first-child{margin-top:0;}
+  .rd-line{display:flex; flex-wrap:wrap; gap:6px 18px; color:var(--ink-soft); font-size:13.5px; margin:8px 0;}
+  .rd-slot{display:flex; justify-content:space-between; gap:10px; padding:7px 0; border-bottom:1px solid var(--line); font-size:13.5px;}
+  .rd-slot span:last-child{color:var(--ink-soft); text-align:right;}
+  .s5-pill{display:inline-block; font-size:12px; padding:3px 10px; border-radius:20px; background:var(--paper); border:1px solid var(--line); color:var(--ink-soft); margin:2px 4px 2px 0; line-height:1.4;}
+  .prof-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px;}
+  .prof-card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:10px;}
+  .prof-head{display:flex; gap:12px; align-items:center;}
+  .prof-head h3{margin:0 0 4px; font-size:15px; line-height:1.25;}
+  .prof-av{width:56px; height:56px; border-radius:50%; overflow:hidden; flex-shrink:0;}
+  .prof-av.sm{width:40px; height:40px;}
+  .prof-av svg{display:block; width:100%; height:100%;}
+  .prof-bio{margin:0; color:var(--ink-soft); font-size:13.5px; flex:1;}
+  .appt-item{background:#fff; border:1px solid var(--line); border-left:4px solid var(--blue); border-radius:12px; padding:14px 16px; margin-bottom:10px;}
+  .appt-item[data-st="Accepted"]{border-left-color:var(--green);}
+  .appt-item[data-st="Declined"]{border-left-color:var(--rust);}
+  .appt-item[data-st="Pending"]{border-left-color:var(--amber);}
+  .appt-item[data-st="Cancelled"], .appt-item[data-st="Expired"]{border-left-color:var(--ink-faint);}
+  .appt-item p{margin:6px 0 0; color:var(--ink-soft); font-size:13.5px; overflow-wrap:anywhere;}
+  .appt-row{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;}
+  .appt-acts{display:flex; gap:8px; justify-content:flex-end; margin-top:10px;}
 
 </style>
 </head>
@@ -1363,6 +1398,10 @@
           <button class="nav-item" data-view="maintenance" aria-label="Maintenance"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5a4 4 0 0 0-4.6 5.2L4.5 16.1a1.8 1.8 0 0 0 2.5 2.5l5.4-5.4a4 4 0 0 0 5.2-4.6l-2.4 2.4-2.3-.7-.7-2.3z"/></svg><span class="nl">Maintenance</span></button>
           <!-- Check in / Check out (US-10) (students only) -->
           <button class="nav-item req-booker-nav" data-view="checkin" aria-label="Check in/out"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M15 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/></svg><span class="nl">Check in/out</span></button>
+          <!-- Appointments: students ask, professors answer -->
+          <button class="nav-item req-appt-nav" data-view="appointments" aria-label="Appointments"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M8 3.5v4M16 3.5v4M4 10h16"/></svg><span class="nl">Appointments</span></button>
+          <!-- Activity log (US-8): admin + professor -->
+          <button class="nav-item req-staff-nav" data-view="activity" aria-label="Activity log"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h3.5l2.2-6 4.3 12 2.2-6H20"/></svg><span class="nl">Activity log</span></button>
           <button class="nav-item req-admin-nav" data-view="access" aria-label="User and Access"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19c.6-3.2 2.9-5 5.5-5s4.9 1.8 5.5 5"/><path d="M16 5.6a3.1 3.1 0 010 5.8"/><path d="M17.5 14.3c1.7.6 2.7 2.2 3 4.7"/></svg><span class="nl">User &amp; Access</span></button>
         </nav>
 
@@ -1429,7 +1468,6 @@
       <h1 id="page-title">Home</h1>
       <div class="desc" id="page-desc">You're signed in — more features arrive in later iterations</div>
     </div>
-
 
     <!-- HOME -->
     <section class="view active" id="view-home">
@@ -1512,10 +1550,10 @@
         </select>
         <label class="fld fld-check"><input type="checkbox" id="res-filter-availability"> Available now</label>
         <label class="fld fld-check fld-archived req-admin"><input type="checkbox" id="res-show-archived"> Show archived</label>
+        <button class="btn ok req-admin" id="btn-add-resource" type="button">+ Add Resource</button>
       </div>
       <div class="sec-head" style="margin-top:0;">
         <span class="note" id="res-count" style="font-style:normal;"></span>
-        <button class="btn ok req-admin" id="btn-add-resource" type="button">+ Add Resource</button>
       </div>
       <div class="grid" id="res-grid"></div>
       <p class="note" id="res-empty" style="display:none; margin-top:10px;">No resources found.</p>
@@ -1562,7 +1600,7 @@
       <div class="req-list" id="mt-list"></div>
       <p class="note" id="mt-empty" style="display:none; margin-top:10px;">No issues to show.</p>
     </section>
-    
+
     <!-- check-in/check-out a student confirms an approved booking with a code e-mailed to them -->
     <section class="view" id="view-checkin">
       <div class="req-top">
@@ -1661,7 +1699,7 @@
   document.addEventListener('click', ()=> document.getElementById('role-menu').classList.remove('open'));
 
   /* access-check tied to backend) */
-  const titles = {
+    const titles = {
     home: ["Home", "You're signed in — more features arrive in later iterations"],
     resources: ["Resources", "Browse, search, and manage lab equipment and tools"],
     bookings: ["Requests", "Review and track lab resource bookings"],
@@ -1672,7 +1710,6 @@
   document.querySelectorAll('.nav-item').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
       const key = btn.dataset.view;
-      /* Panisara */
       if(!key) return;   // the bell is styled like a nav item but is not a page
       // SRS-12: deny out-of-role access attempts for all roles.
       if(key === 'access'){
@@ -1692,7 +1729,7 @@
       document.body.dataset.view = key;
       window.scrollTo({top: 0});
 
-      if(key === 'home'){ loadHome(); loadAnnouncements(); }      
+      if(key === 'home'){ loadHome(); loadAnnouncements(); }
       if(key === 'resources') loadResources();
       if(key === 'bookings') loadBookings();
       if(key === 'maintenance') loadMaintenance();
@@ -1767,7 +1804,6 @@
   const loginNoticeText = document.getElementById('login-notice-text');
   const loginResendRow = document.getElementById('login-resend-row');
   let verifyEmailAddress = '';   // Address where the verification link was or should be sent.
-
   function showLoginNotice(msg){
     loginNoticeText.textContent = msg;
     loginNotice.classList.add('show');
@@ -1799,6 +1835,7 @@
   }
 
   let currentUser = null;
+
   // Detailed status shown in the account dropdown (the side menu itself only shows the short role label).
   const BACKEND_ROLE_LABEL = {
     phd_student: 'Ph.D. Student',
@@ -1840,7 +1877,7 @@
     applyRealUser(user);
     loadAnnouncements();
     loadHome();
-    startNotifications();  // the bell
+    startNotifications();  // the bell  
   }
 
   function signOut(){
@@ -2233,14 +2270,19 @@
     const statusLocked = resource?.status === 'Maintenance';
 
     document.getElementById('modal-box').innerHTML = `
+      <div class="modal-wide">
       <h3>${resource ? 'Edit Resource' : 'Add Resource'}</h3>
       <div id="resource-form-error" class="login-error"><span>⚠</span><span id="resource-form-error-text"></span></div>
-      <form id="resource-form">
+      <form id="resource-form" class="mgrid">
         <div class="field"><label>Name</label><input id="res-name" required value="${escapeHtml(resource?.name)}"></div>
         <div class="field"><label>Type</label><input id="res-type" required value="${escapeHtml(resource?.type)}"></div>
         <div class="field"><label>Category</label><input id="res-category" required value="${escapeHtml(resource?.category)}"></div>
         <div class="field"><label>Location</label><input id="res-location" required value="${escapeHtml(resource?.location)}"></div>
+        <div class="field"><label>Building <small>(optional)</small></label><input id="res-building" maxlength="100" value="${escapeHtml(resource?.building)}"></div>
+        <div class="field"><label>Floor <small>(optional)</small></label><input id="res-floor" maxlength="50" value="${escapeHtml(resource?.floor)}"></div>
         <div class="field"><label>Owner</label><input id="res-owner" required value="${escapeHtml(resource?.owner)}"></div>
+        <div class="field"><label>Capacity — people <small>(optional, for rooms)</small></label><input id="res-capacity" type="number" min="1" max="100000" step="1" value="${escapeHtml(resource?.capacity ?? '')}"></div>
+        <div class="field"><label>Facilities <small>(optional, separate with commas)</small></label><input id="res-features" maxlength="500" placeholder="Projector, Whiteboard, Wi-Fi" value="${escapeHtml((resource?.features || []).join(', '))}"></div>
         <div class="field">
           <label>Status</label>
           ${statusLocked ? `
@@ -2252,11 +2294,13 @@
             <option ${resource?.status === 'In Use' ? 'selected' : ''}>In Use</option>
           </select>`}
         </div>
-        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
+        <div class="field span2"><label>What it can be used for <small>(optional)</small></label><textarea id="res-notes" rows="3" maxlength="1000" style="width:100%; font-family:inherit; font-size:13px; padding:8px; border:1px solid var(--line); border-radius:6px;">${escapeHtml(resource?.usage_notes)}</textarea></div>
+        <div class="span2" style="display:flex; gap:8px; justify-content:flex-end; margin-top:2px;">
           <button class="btn no" type="button" id="resource-form-cancel">Cancel</button>
           <button class="btn ok" type="submit">Save</button>
         </div>
       </form>
+      </div>
     `;
     document.getElementById('modal-backdrop').classList.add('open');
     document.getElementById('resource-form-cancel').addEventListener('click', closeModal);
@@ -2278,7 +2322,13 @@
       category: document.getElementById('res-category').value.trim(),
       location: document.getElementById('res-location').value.trim(),
       owner: document.getElementById('res-owner').value.trim(),
-      status: document.getElementById('res-status').value
+      status: document.getElementById('res-status').value,
+      // optional details (blank clears them)
+      building: document.getElementById('res-building').value.trim() || null,
+      floor: document.getElementById('res-floor').value.trim() || null,
+      capacity: document.getElementById('res-capacity').value.trim() || null,
+      features: document.getElementById('res-features').value,
+      usage_notes: document.getElementById('res-notes').value.trim() || null
     };
 
     const method = editingResourceId ? 'PUT' : 'POST';
@@ -3307,7 +3357,7 @@
     return {tone:'b', icon: ACT_ICON.dot};
   }
   const ACT_DETAIL_LABEL = {'Bookings': 'Booking', 'Check-in / out': 'Resource', 'Maintenance': 'Issue', 'Resources': 'Resource', 'Other': 'Details'};
- 
+
   let actCat = 'All';
   let actActions = [];          // [{value,label}] from /api/activity/meta
   let actItems = [];            // records currently shown, newest first
@@ -3315,7 +3365,7 @@
   let actPage = 1, actPages = 1;   // server paging ("All" tab)
   let actAll = [], actShown = 0;   // client paging (category tabs)
   let actToken = 0, actLoading = false;
- 
+
   async function loadActivityMeta(){
     const {ok, data} = await apiAuthGet('/api/activity/meta');
     if(!ok) return;
@@ -3462,6 +3512,228 @@
   setupRefreshButton('act-refresh', () => openActivity());
   document.addEventListener('scroll', maybeMoreActivity, true);   // capture: works whichever element scrolls
   window.addEventListener('resize', maybeMoreActivity);
+
+  /* Resource detail (click a card) */
+  async function openResourceDetail(id){
+    const {ok, data} = await apiAuthGet(`/api/resources/${id}/detail`);
+    if(!ok){ toast(data.error || 'Could not load the resource'); return; }
+    const r = data.resource, staff = isStaffRole();
+    const place = [r.building, r.floor, r.location].filter(Boolean).map(escapeHtml).join(' · ');
+    const slots = data.schedule.length ? data.schedule.map(s => `
+      <div class="rd-slot"><span>${s5When(s.start_time)} – ${s5Time(s.end_time)}</span>
+        <span>${staff ? `${escapeHtml(s.requester_name)}${s.purpose ? ' · ' + escapeHtml(s.purpose) : ''}` : 'Booked'}</span></div>`).join('')
+      : '<p class="note" style="margin:0;">No upcoming bookings — free to book.</p>';
+    let staffHtml = '';
+    if(staff){
+      const using = data.in_use_by;
+      staffHtml = `
+        <h4 class="s5-sec">In use right now</h4>
+        ${using ? `<div class="rd-slot"><span><b>${escapeHtml(using.name)}</b> since ${s5When(using.since)}</span>
+            <span>until ${s5Time(using.booked_until)} ${using.overdue ? s5Badge('Overdue', 'b-rust') : ''}</span></div>`
+          : '<p class="note" style="margin:0;">Nobody.</p>'}
+        <h4 class="s5-sec">Repair history</h4>
+        ${data.maintenance.length ? data.maintenance.map(m => `
+          <div class="rd-slot"><span>${escapeHtml(m.description)}</span><span>${escapeHtml(m.status)} · ${escapeHtml(m.reporter_name)}</span></div>`).join('')
+          : '<p class="note" style="margin:0;">No issues recorded.</p>'}
+        <h4 class="s5-sec">Recent activity</h4>
+        ${data.activity.length ? data.activity.map(a => `
+          <div class="rd-slot"><span>${escapeHtml(a.action_label)} — ${escapeHtml(a.summary)}</span><span>${s5When(a.created_at)} · ${escapeHtml(a.actor_name)}</span></div>`).join('')
+          : '<p class="note" style="margin:0;">Nothing yet.</p>'}`;
+    }
+    const canRequest = currentRole === 'user' && !r.is_archived && (r.status === 'Available' || r.status === 'In Use');
+    document.getElementById('modal-box').innerHTML = `
+      <div class="rcard-code">${escapeHtml(r.resource_code)}${r.is_archived ? ' · Archived' : ''}</div>
+      <h3 style="margin:2px 0 8px;">${escapeHtml(r.name)}</h3>
+      <div>${s5Badge(r.status, {Available:'b-green', 'In Use':'b-amber', Maintenance:'b-rust'}[r.status])}
+        <span class="tag">#${escapeHtml(r.category)}</span><span class="tag plain">${escapeHtml(r.type)}</span></div>
+      <div class="rd-line">
+        ${place ? `<span>📍 ${place}</span>` : ''}
+        ${r.capacity ? `<span>👥 Up to ${r.capacity} people</span>` : ''}
+        <span>Owner: ${escapeHtml(r.owner)}</span>
+      </div>
+      ${r.features.length ? `<div style="margin:6px 0;">${r.features.map(f => `<span class="s5-pill">${escapeHtml(f)}</span>`).join(' ')}</div>` : ''}
+      ${r.usage_notes ? `<p style="margin:10px 0; font-size:13.5px; color:var(--ink-soft); white-space:pre-line;">${escapeHtml(r.usage_notes)}</p>` : ''}
+      <h4 class="s5-sec">Upcoming bookings</h4>${slots}
+      ${staffHtml}
+      <div class="ci-foot">
+        <button class="btn no" type="button" id="rd-close">Close</button>
+        <span>${r.is_archived ? '' : '<button class="btn" type="button" id="rd-report">Report issue</button>'}
+          ${canRequest ? ' <button class="btn ok" type="button" id="rd-book">Request</button>' : ''}</span>
+      </div>`;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('rd-close').addEventListener('click', closeModal);
+    const rep = document.getElementById('rd-report');
+    if(rep) rep.addEventListener('click', () => { closeModal(); openMaintenanceModal(id); });
+    const book = document.getElementById('rd-book');
+    if(book) book.addEventListener('click', () => { closeModal(); openBookingModal(id); });
+  }
+  const isStaffRole = () => currentRole === 'admin' || currentRole === 'professor';
+
+  /* Appointments */
+  let apptProfessors = [], apptMine = [], apptQuery = '', apptTag = 'All';
+
+  const APPT_BADGE = {Pending:'b-amber', Accepted:'b-green', Declined:'b-rust', Cancelled:'b-faint', Expired:'b-faint'};
+  const apptStatus = (a) => a.expired ? 'Expired' : a.status;
+
+  async function loadAppointments(){
+    const box = document.getElementById('appt-content');
+    if(currentRole === 'professor'){
+      const {ok, data} = await apiAuthGet('/api/appointments/inbox');
+      if(!ok){ box.innerHTML = `<p class="note">${escapeHtml(data.error || 'Could not load requests')}</p>`; return; }
+      renderProfessorInbox(data.appointments);
+      return;
+    }
+    const [p, m] = await Promise.all([apiAuthGet('/api/appointments/professors'), apiAuthGet('/api/appointments/mine')]);
+    if(!p.ok || !m.ok){ box.innerHTML = `<p class="note">${escapeHtml((p.data && p.data.error) || (m.data && m.data.error) || 'Could not load appointments')}</p>`; return; }
+    apptProfessors = p.data.professors;
+    apptMine = m.data.appointments;
+    renderStudentAppointments();
+  }
+
+  function renderStudentAppointments(){
+    const box = document.getElementById('appt-content');
+    const tags = ['All'];
+    apptProfessors.forEach(pr => pr.expertise.forEach(t => { if(!tags.includes(t)) tags.push(t); }));
+    const q = apptQuery.trim().toLowerCase();
+    const list = apptProfessors.filter(pr =>
+      (apptTag === 'All' || pr.expertise.includes(apptTag)) &&
+      (!q || `${pr.name} ${pr.expertise.join(' ')} ${pr.bio}`.toLowerCase().includes(q)));
+    const mineHtml = apptMine.length ? apptMine.map(a => {
+      const st = apptStatus(a);
+      return `
+      <div class="appt-item" data-st="${st}">
+        <div class="appt-row"><b>${escapeHtml(a.topic)}</b>${s5Badge(st, APPT_BADGE[st])}</div>
+        <p>with <b>${escapeHtml(a.professor_name)}</b> · ${s5When(a.start_time)} – ${s5Time(a.end_time)}</p>
+        ${a.details ? `<p>${escapeHtml(a.details)}</p>` : ''}
+        ${a.decision_reason ? `<p><b>Reason:</b> ${escapeHtml(a.decision_reason)}</p>` : ''}
+        ${(a.status === 'Pending' && !a.expired) || (a.status === 'Accepted' && new Date(a.start_time) > new Date()) ? `<div class="appt-acts"><button class="btn" type="button" data-appt-cancel="${a.id}">${a.status === 'Accepted' ? 'Cancel appointment' : 'Cancel request'}</button></div>` : ''}
+      </div>`;
+    }).join('') : '<p class="note">You have not asked anyone yet.</p>';
+    box.innerHTML = `
+      <p class="note" style="margin:0 0 12px;">Not sure who to ask? Search by the topic you need help with — each professor lists what they are good at.</p>
+      <div class="s5-filters"><div style="flex:1; min-width:220px;"><label for="appt-search">Search</label>
+        <input id="appt-search" style="width:100%;" placeholder="A name or a topic, e.g. testing, database, security" value="${escapeHtml(apptQuery)}"></div></div>
+      <div class="seg" style="margin-bottom:14px; flex-wrap:wrap;">${tags.map(t => `<button class="filter-chip ${t === apptTag ? 'active' : ''}" type="button" data-appt-tag="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join('')}</div>
+      <div class="prof-grid">${list.length ? list.map(pr => `
+        <div class="prof-card">
+          <div class="prof-head">${profAvatar(pr.id)}<div><h3>${escapeHtml(pr.name)}</h3>
+            <div>${pr.expertise.map(t => `<span class="s5-pill">${escapeHtml(t)}</span>`).join(' ')}</div></div></div>
+          <p class="prof-bio">${escapeHtml(pr.bio)}</p>
+          <button class="btn ok" type="button" data-appt-ask="${pr.id}">Request appointment</button>
+        </div>`).join('') : '<p class="note">No professor matches — try another topic.</p>'}</div>
+      <h3 class="s5-sec">My appointments</h3>${mineHtml}`;
+    const search = document.getElementById('appt-search');
+    search.addEventListener('input', () => {
+      apptQuery = search.value;
+      const pos = search.selectionStart;
+      renderStudentAppointments();
+      const again = document.getElementById('appt-search');
+      again.focus(); again.setSelectionRange(pos, pos);
+    });
+  }
+
+  function renderProfessorInbox(items){
+    const box = document.getElementById('appt-content');
+    const waiting = items.filter(a => a.status === 'Pending' && !a.expired);
+    const rest = items.filter(a => !(a.status === 'Pending' && !a.expired)).reverse();
+    const card = (a, actions) => {
+      const st = apptStatus(a);
+      return `
+      <div class="appt-item" data-st="${st}">
+        <div class="appt-row"><b>${escapeHtml(a.topic)}</b>${s5Badge(st, APPT_BADGE[st])}</div>
+        <p><b>${escapeHtml(a.student_name)}</b> · ${s5When(a.start_time)} – ${s5Time(a.end_time)}</p>
+        ${a.details ? `<p>${escapeHtml(a.details)}</p>` : ''}
+        ${a.decision_reason ? `<p><b>Reason:</b> ${escapeHtml(a.decision_reason)}</p>` : ''}
+        ${actions ? `<div class="appt-acts"><button class="btn no" type="button" data-appt-decline="${a.id}">Decline</button>
+          <button class="btn ok" type="button" data-appt-accept="${a.id}">Accept</button></div>` : ''}
+      </div>`;
+    };
+    box.innerHTML = `
+      <h3 class="s5-sec">Waiting for your answer (${waiting.length})</h3>
+      ${waiting.map(a => card(a, true)).join('') || '<p class="note">All caught up.</p>'}
+      <h3 class="s5-sec">Answered and closed</h3>
+      ${rest.map(a => card(a, false)).join('') || '<p class="note">Nothing yet.</p>'}`;
+  }
+
+  function defaultAppointmentTime(){
+    const d = new Date(Date.now() + 24 * 3600 * 1000);
+    d.setHours(10, 0, 0, 0);
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function openAppointmentModal(professorId){
+    const pr = apptProfessors.find(x => x.id === professorId);
+    if(!pr) return;
+    document.getElementById('modal-box').innerHTML = `
+      <h3>Request an appointment</h3>
+      <div class="prof-head" style="margin-bottom:10px;">${profAvatar(pr.id)}<div><b>${escapeHtml(pr.name)}</b>
+        <div>${pr.expertise.map(t => `<span class="s5-pill">${escapeHtml(t)}</span>`).join(' ')}</div></div></div>
+      <div id="appt-form-error" class="login-error"><span>⚠</span><span id="appt-form-error-text"></span></div>
+      <form id="appt-form">
+        <div class="field"><label>Topic</label><input id="appt-topic" required minlength="3" maxlength="100" placeholder="What do you want to talk about?"></div>
+        <div class="field"><label>More details <small>(optional)</small></label><textarea id="appt-details" rows="3" maxlength="500" placeholder="Describe the problem so the professor can decide" style="width:100%; font-family:inherit; font-size:13px; padding:8px; border:1px solid var(--line); border-radius:6px;"></textarea></div>
+        <div class="field"><label>Preferred date and time <small>(30 minutes)</small></label><input id="appt-when" type="datetime-local" required value="${defaultAppointmentTime()}"></div>
+        <div class="ci-foot"><button class="btn no" type="button" id="appt-cancel">Cancel</button><button class="btn ok" type="submit">Send request</button></div>
+      </form>`;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('appt-cancel').addEventListener('click', closeModal);
+    document.getElementById('appt-topic').focus();
+    document.getElementById('appt-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      document.getElementById('appt-form-error').classList.remove('show');
+      const {ok, data} = await apiAuthSend('POST', '/api/appointments', {
+        professor_id: professorId,
+        topic: document.getElementById('appt-topic').value.trim(),
+        details: document.getElementById('appt-details').value.trim() || null,
+        start_time: toInstant(document.getElementById('appt-when').value)
+      });
+      if(!ok){
+        document.getElementById('appt-form-error-text').textContent = data.error || 'Could not send the request.';
+        document.getElementById('appt-form-error').classList.add('show');
+        return;
+      }
+      closeModal();
+      toast(`Request sent to ${pr.name}`);
+      loadAppointments();
+    });
+  }
+
+  function openDeclineModal(id){
+    document.getElementById('modal-box').innerHTML = `
+      <h3>Decline this request?</h3>
+      <div class="field"><label>Reason <small>(optional — the student will see it)</small></label><input id="appt-reason" maxlength="255" placeholder="e.g. I am travelling that week"></div>
+      <div class="ci-foot"><button class="btn no" type="button" id="appt-back">Go back</button><button class="btn ok" type="button" id="appt-go">Yes, decline</button></div>`;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('appt-reason').focus();
+    document.getElementById('appt-back').addEventListener('click', closeModal);
+    document.getElementById('appt-go').addEventListener('click', async () => {
+      const reason = document.getElementById('appt-reason').value.trim();
+      const {ok, data} = await apiAuthSend('POST', `/api/appointments/${id}/decide`, reason ? {decision: 'decline', reason} : {decision: 'decline'});
+      closeModal();
+      toast(ok ? 'Request declined' : (data.error || 'Could not decline'));
+      loadAppointments();
+    });
+  }
+
+  document.getElementById('appt-content').addEventListener('click', async (e) => {
+    const t = e.target.closest('button');
+    if(!t) return;
+    if(t.dataset.apptTag !== undefined){ apptTag = t.dataset.apptTag; renderStudentAppointments(); }
+    else if(t.dataset.apptAsk) openAppointmentModal(Number(t.dataset.apptAsk));
+    else if(t.dataset.apptAccept){
+      t.disabled = true;
+      const {ok, data} = await apiAuthSend('POST', `/api/appointments/${t.dataset.apptAccept}/decide`, {decision: 'accept'});
+      toast(ok ? 'Appointment accepted' : (data.error || 'Could not accept'));
+      loadAppointments();
+    }
+    else if(t.dataset.apptDecline) openDeclineModal(Number(t.dataset.apptDecline));
+    else if(t.dataset.apptCancel){
+      t.disabled = true;
+      const {ok, data} = await apiAuthSend('POST', `/api/appointments/${t.dataset.apptCancel}/cancel`);
+      toast(ok ? 'Cancelled' : (data.error || 'Could not cancel'));
+      loadAppointments();
+    }
+  });
 
   /* User & Access (administrators manage accounts and roles) */
   let usrList = [], usrTimer = null;
@@ -3643,7 +3915,7 @@
   });
 
   /* Announcements */
-    async function loadAnnouncements(){
+  async function loadAnnouncements(){
     const {ok, data} = await apiAuthGet('/api/announcements');
     if(!ok){
       toast(data.error || 'Could not load announcements');
@@ -3670,8 +3942,8 @@
             <b>${escapeHtml(a.title)}</b>
           </div>
           <div class="ann-actions">
-            <button class="btn req-announcer" type="button" data-act="pin" data-id="${a.id}">${a.is_pinned ? 'Unpin' : 'Pin'}</button>
-            ${me && me.id === a.author_id ? `<button class="btn no" type="button" data-act="delete" data-id="${a.id}">Delete</button>` : ''}
+            ${mine(a) ? `<button class="btn req-announcer" type="button" data-act="pin" data-id="${a.id}">${a.is_pinned ? 'Unpin' : 'Pin'}</button>` : ''}
+            ${mine(a) ? `<button class="btn no" type="button" data-act="delete" data-id="${a.id}">Delete</button>` : ''}
           </div>
         </div>
         <p class="ann-body">${escapeHtml(a.body)}</p>
@@ -3848,7 +4120,7 @@
       actions.push(`<button class="btn" type="button" data-action="report" data-id="${r.id}">Report issue</button>`);
     }
     return `
-      <article class="rcard" data-tone="${toneOf(r.category)}">
+      <article class="rcard" data-rid="${r.id}" data-tone="${toneOf(r.category)}">
         <div class="rcard-art">${resIcon(r.category)}<span class="rcard-status ${STATUS_CLASS[r.status] || ''}">${escapeHtml(r.status)}</span></div>
         <div class="rcard-code">${escapeHtml(r.resource_code)}${r.is_archived ? ' · Archived' : ''}</div>
         <h3 title="${escapeHtml(r.name)}">${escapeHtml(r.name)}</h3>
@@ -3860,7 +4132,7 @@
 
   function resourceHCard(r){
     return `
-      <div class="hcard" data-tone="${toneOf(r.category)}">
+      <div class="hcard" data-rid="${r.id}" data-tone="${toneOf(r.category)}">
         <div class="rcard-art">${resIcon(r.category)}<span class="rcard-status ${STATUS_CLASS[r.status] || ''}">${escapeHtml(r.status)}</span></div>
         <div class="hcard-body">
           <div class="rcard-code">${escapeHtml(r.resource_code)}</div>
@@ -3886,7 +4158,11 @@
   /* shared click handling for resource cards (Edit / Archive / Request) */
   function cardActionHandler(e){
     const btn = e.target.closest('button[data-action]');
-    if(!btn) return;
+    if(!btn){
+      const card = e.target.closest('[data-rid]');
+      if(card && !e.target.closest('button, a')) openResourceDetail(Number(card.dataset.rid));
+      return;
+    }
     const id = Number(btn.dataset.id);
     if(btn.dataset.action === 'edit') openResourceModal(id);
     if(btn.dataset.action === 'archive') archiveResource(id);
@@ -4058,6 +4334,7 @@
   document.getElementById('home-clear-inline').addEventListener('click', clearHomeSearch);
   document.addEventListener('click', () => homeFilterCard.classList.remove('open'));
 
+
   /* floating side menu: tap/click support for touch screens */
   (function(){
     const nb = document.getElementById('navbar');
@@ -4065,15 +4342,13 @@
     nb.addEventListener('click', (e) => { if(e.target.closest('.nav-item')) nb.classList.remove('open'); });
     document.addEventListener('click', (e) => { if(!e.target.closest('.navbar-in')) nb.classList.remove('open'); });
   })();
-
   /* init calls */
-  applyRole('admin'); // default demo state (overridden below if a real session restores)
+  applyRole  applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
-  // open the reset password page when a reset token is in the URL
-  if (new URLSearchParams(window.location.search).get('reset_token')) {
+  if(new URLSearchParams(window.location.search).get('reset_token')){
     showAuthView('reset-password');
   }
-  
+
   // backend, drop the token from the address bar (single-use), and tell the user on the login screen.
   (async function handleVerifyLink(){
     const token = new URLSearchParams(window.location.search).get('verify_token');
