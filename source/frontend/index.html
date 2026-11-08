@@ -3523,6 +3523,85 @@
     box.innerHTML = usrList.map(u => userCard(u, myId)).join('');
   }
 
+  function openUserModal(id){
+    const u = id ? usrList.find(x => x.id === id) : null;
+    if(id && !u) return;
+    const self = !!(u && currentUser && u.id === currentUser.id);
+    const v = (k) => escapeHtml(u && u[k] != null ? String(u[k]) : '');
+    const role0 = u ? u.role : 'undergrad_student';
+    const area = 'width:100%; font-family:inherit; font-size:13px; padding:8px; border:1px solid var(--line); border-radius:6px;';
+    const created = u && u.created_at ? new Date(u.created_at).toLocaleString([], {dateStyle:'long', timeStyle:'short'}) : '';
+    document.getElementById('modal-box').innerHTML = `
+      <div class="modal-wide">
+      <h3>${u ? 'Edit user' : 'Add user'}</h3>
+      <div id="usr-form-error" class="login-error"><span>⚠</span><span id="usr-form-error-text"></span></div>
+      <form id="usr-form" class="mgrid" autocomplete="off">
+        <div class="field"><label>Full name</label><input id="usr-name" required maxlength="150" value="${v('full_name')}"></div>
+        <div class="field"><label>Email</label><input id="usr-email" type="email" required maxlength="150" value="${v('email')}"></div>
+        <div class="field"><label>Role</label>
+          <select id="usr-role-sel" ${self ? 'disabled' : ''}>${USR_ROLE_OPTIONS.map(([val, label]) =>
+            `<option value="${val}" ${val === role0 ? 'selected' : ''}>${label}</option>`).join('')}</select>
+          ${self ? '<small>You cannot change your own role.</small>' : (u ? '<small>A role change takes effect immediately.</small>' : '')}</div>
+        <div class="field" data-for="student"><label>Student ID <small>(10 digits, optional)</small></label>
+          <input id="usr-sid" maxlength="10" inputmode="numeric" value="${v('student_id')}"></div>
+        <div class="field" data-for="undergrad"><label>Class year</label>
+          <select id="usr-year">${[1, 2, 3, 4, 5, 6].map(n => `<option value="${n}" ${(u && u.year === n) ? 'selected' : ''}>Year ${n}</option>`).join('')}</select></div>
+        <div class="field"><label>Faculty <small>(optional)</small></label><input id="usr-faculty" maxlength="150" value="${v('faculty')}"></div>
+        <div class="field"><label>Major <small>(optional)</small></label><input id="usr-major" maxlength="150" value="${v('major')}"></div>
+        ${u ? `<div class="field"><label>Created at</label><input id="usr-created" value="${escapeHtml(created || '—')}" disabled></div>` : ''}
+        <div class="field span2" data-for="professor"><label>Expertise <small>(topics separated by commas; students search by these)</small></label>
+          <input id="usr-exp" maxlength="500" placeholder="e.g. Databases, Security" value="${v('expertise')}"></div>
+        <div class="field span2" data-for="professor"><label>Short bio <small>(optional)</small></label>
+          <textarea id="usr-bio" rows="3" maxlength="500" style="${area}">${v('bio')}</textarea></div>
+        ${u ? '' : `<div class="field span2"><label>Temporary password <small>(at least 8 characters)</small></label>
+          <input id="usr-pw" type="text" required minlength="8" maxlength="72" autocomplete="new-password">
+          <small>Give it to the user; they can change it later with “Forgot password”.</small></div>`}
+        <div class="ci-foot span2" style="margin-top:4px;"><button class="btn no" type="button" id="usr-cancel">Cancel</button>
+          <button class="btn ok" type="submit" id="usr-save">${u ? 'Save changes' : 'Create account'}</button></div>
+      </form>
+      </div>`;
+    const form = document.getElementById('usr-form');
+    const roleSel = document.getElementById('usr-role-sel');
+    const currentRoleValue = () => self ? u.role : roleSel.value;
+    const sync = () => {
+      const r = currentRoleValue();
+      form.querySelector('[data-for="student"]').style.display = (r === 'undergrad_student' || r === 'phd_student') ? '' : 'none';
+      form.querySelector('[data-for="undergrad"]').style.display = r === 'undergrad_student' ? '' : 'none';
+      form.querySelectorAll('[data-for="professor"]').forEach(el => { el.style.display = r === 'professor' ? '' : 'none'; });
+    };
+    roleSel.addEventListener('change', sync);
+    sync();
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('usr-cancel').addEventListener('click', closeModal);
+    document.getElementById('usr-name').focus();
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errBox = document.getElementById('usr-form-error');
+      errBox.classList.remove('show');
+      const role = currentRoleValue();
+      const val = (id) => document.getElementById(id).value.trim();
+      const body = {full_name: val('usr-name'), email: val('usr-email'), role,
+                    faculty: val('usr-faculty') || null, major: val('usr-major') || null};
+      if(role === 'undergrad_student' || role === 'phd_student') body.student_id = val('usr-sid') || null;
+      if(role === 'undergrad_student') body.year = Number(document.getElementById('usr-year').value);
+      if(role === 'professor'){ body.expertise = val('usr-exp'); body.bio = val('usr-bio'); }
+      if(!u) body.password = document.getElementById('usr-pw').value;
+      const save = document.getElementById('usr-save');
+      save.disabled = true;
+      const {ok, data} = u ? await apiAuthSend('PUT', `/api/admin/users/${u.id}`, body)
+                           : await apiAuthSend('POST', '/api/admin/users', body);
+      save.disabled = false;
+      if(!ok){
+        document.getElementById('usr-form-error-text').textContent = data.error || 'Could not save the account.';
+        errBox.classList.add('show');
+        return;
+      }
+      closeModal();
+      toast(u ? 'Changes saved' : 'Account created');
+      loadUsers();
+    });
+  }
+
   /* Announcements */
     async function loadAnnouncements(){
     const {ok, data} = await apiAuthGet('/api/announcements');
