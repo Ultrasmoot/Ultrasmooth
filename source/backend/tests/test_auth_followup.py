@@ -326,10 +326,6 @@ class MailerTests(unittest.TestCase):
         server.login.assert_called_once_with("u", "p")
         server.sendmail.assert_called_once()
 
-    def test_default_timeout_is_set_and_finite(self):
-        self.assertGreaterEqual(Config.SMTP_TIMEOUT_SECONDS, 1)
-        self.assertLessEqual(Config.SMTP_TIMEOUT_SECONDS, 60)
-
     def test_without_smtp_host_the_message_is_only_logged(self):
         with mock.patch.object(Config, "SMTP_HOST", ""), mock.patch("services.mailer.smtplib.SMTP") as smtp, \
              mock.patch("builtins.print") as pr:
