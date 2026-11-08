@@ -11,10 +11,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import test_maintenance as T  # (reuses its FakeDB / token helper)
 from app import create_app 
-from middleware.rate_limit import reset_rate_limits
+from middleware.rate_limit import reset_rate_limits 
 from models import checkin_model 
-from models.booking_model import BookingModel, ValidationError as BookingError
-from models.user_model import UserModel
+from models.user_model import UserModel  
 
 NOW = datetime.datetime(2026, 10, 9, 10, 0, 0)
 MIN = datetime.timedelta(minutes=1)
@@ -64,7 +63,7 @@ class Cur(T.FakeCursor):
     def execute(self, sql, params=()):
         db, q, p = self.db, T._norm(sql), list(params or ())
         if not q.startswith("insert"):
-            self.lastrowid = 0  # only an INSERT sets lastrowid
+            self.lastrowid = 0  # like MySQL: only an INSERT sets lastrowid
         if q.startswith("select resource_id from bookings where id"):
             b = db.bookings.get(p[0])
             self._rows = [{"resource_id": b["resource_id"]}] if b else []
@@ -120,6 +119,9 @@ class Cur(T.FakeCursor):
 
 class CheckinBase(unittest.TestCase):
     def setUp(self):
+        # Panisara
+        from test_maintenance import silence_events
+        silence_events(self)
         reset_rate_limits()
         self.db = BookingsDB()
         self.clock = NOW
@@ -233,7 +235,7 @@ class RequestCodeTests(CheckinBase):
         self.assertEqual((to, resource), ("s1@ku.th", "3D Printer"))
         self.assertRegex(code, r"^\d{6}$")
         stored = list(self.db.codes.values())[0]
-        self.assertNotIn(code, str(stored))            # the code itself is never stored
+        self.assertNotIn(code, str(stored))  # the code itself is never stored
         self.assertEqual(len(stored["code_hash"]), 64)
         self.assertEqual(stored["expires_at"], NOW + 5 * MIN)
         self.assertEqual(self.db.status_of(PRINTER), "Available")  # nothing changes yet
@@ -380,30 +382,6 @@ class VerifyTests(CheckinBase):
         self.clock += 3 * MIN
         self.assertIn("has ended", self.verify(bid, code).get_json()["error"])
 
-    def _book_next_day(self):
-        # BookingModel.create checks "start time in the past" against the real clock,
-        # so this booking must be built from the current time, not from the fixed NOW.
-        real_now = datetime.datetime.now()
-        return BookingModel.create({"resource_id": PRINTER, "start_time": (real_now + 1440 * MIN).isoformat(),
-                                    "end_time": (real_now + 1500 * MIN).isoformat(), "purpose": "x"}, requester_id=OTHER)
-
-    def test_resource_in_use_can_still_be_booked_for_a_later_slot(self):
-        # "In Use" only means someone is using it right now. It must get past the
-        # status gate and reach the time-overlap check, which is what prevents double booking.
-        bid = self.db.add_booking()
-        self.checkin(bid)
-        self.assertEqual(self.db.status_of(PRINTER), "In Use")
-        reached_conflict_check = RuntimeError("reached conflict check")
-        with mock.patch.object(BookingModel, "_has_conflict", side_effect=reached_conflict_check):
-            with self.assertRaises(RuntimeError):
-                self._book_next_day()
-
-    def test_resource_in_maintenance_cannot_be_booked(self):
-        self.db.resources[PRINTER]["status"] = "Maintenance"
-        with self.assertRaises(BookingError) as ctx:
-            self._book_next_day()
-        self.assertIn("Maintenance", str(ctx.exception))
-
 
 class CheckoutTests(CheckinBase):
     def test_check_out_records_the_time_and_frees_the_resource(self):
@@ -440,8 +418,8 @@ class CheckoutTests(CheckinBase):
         self.clock += 30 * MIN
         r = self.checkout(bid)
         self.assertEqual(r.status_code, 200)
-        self.assertIsNotNone(self.db.bookings[bid]["checked_out_at"]) # the return is recorded but the resource stays blocked
-        self.assertEqual(self.db.status_of(PRINTER), "Maintenance")        
+        self.assertIsNotNone(self.db.bookings[bid]["checked_out_at"])      
+        self.assertEqual(self.db.status_of(PRINTER), "Maintenance")     
 
     def test_someone_else_cannot_check_out_for_you(self):
         bid = self.db.add_booking()

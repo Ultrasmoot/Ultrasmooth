@@ -81,6 +81,8 @@ class DB(C.BookingsDB):
 
 class RejectReasonTests(unittest.TestCase):
     def setUp(self):
+        from test_maintenance import silence_events
+        silence_events(self)
         reset_rate_limits()
         self.db = DB()
         for target in ("models.booking_model.get_connection",):

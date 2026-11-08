@@ -48,6 +48,8 @@ class DB(B.DB):
 
 class InUseBase(unittest.TestCase):
     def setUp(self):
+        from test_maintenance import silence_events
+        silence_events(self)
         reset_rate_limits()
         self.db = DB()
         self.base = datetime.datetime.now().replace(microsecond=0)

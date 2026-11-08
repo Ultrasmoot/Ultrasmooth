@@ -3,15 +3,16 @@ import datetime
 import os
 import sys
 import unittest
-import jwt 
 from unittest import mock
 
 os.environ.setdefault("APP_ENV", "development")
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app import create_app  
-from config import Config  
-from middleware.rate_limit import reset_rate_limits  
+import jwt 
+
+from app import create_app 
+from config import Config 
+from middleware.rate_limit import reset_rate_limits 
 from models.booking_model import BookingModel, ValidationError as BookingError 
 from models.user_model import UserModel 
 
@@ -24,8 +25,7 @@ def _norm(sql):
 
 
 class FakeDB:
-    """In-memory stand-in for the MySQL tables these tests touch."""
-
+    # In-memory stand-in for the MySQL tables these tests touch
     def __init__(self):
         self.users = {
             ADMIN: {"id": ADMIN, "full_name": "Demo Admin", "email": "admin@ku.th", "role": "admin", "is_active": 1},
@@ -149,6 +149,12 @@ class FakeCursor:
                                "confirmed_at": confirmed_at, "closed_by": None, "closed_at": None,
                                "created_at": db._clock}
             self.lastrowid = rid
+
+        elif q.startswith("select count(*) as n from bookings where resource_id"):
+            # someone still checked in on the resource (none unless a test sets db.active_sessions)
+            self._rows = [{"n": getattr(db, "active_sessions", {}).get(p[0], 0)}]
+        elif q.startswith("update resources set status = %s where id = %s"):
+            db.resources[p[1]]["status"] = p[0]
         elif q.startswith("update resources set status = 'maintenance'"):
             db.resources[p[0]]["status"] = "Maintenance"
         elif q.startswith("update resources set status = 'available'"):
@@ -183,6 +189,17 @@ class FakeCursor:
             raise AssertionError(f"FakeDB does not understand SQL: {q}")
 
 
+def silence_events(testcase):
+    """The fake-database tests check each model's own logic. The activity log and the notifications
+    that the models now also write (services/events.py) need real SQL, so they are tested
+    separately in test_activity_notifications_dashboard.py and test_resource_details_appointments.py; here they are switched off."""
+    from models import announcement_model, booking_model, checkin_model, maintenance_model, resource_model
+    for module in (announcement_model, booking_model, checkin_model, maintenance_model, resource_model):
+        patcher = mock.patch.object(module, "events")
+        patcher.start()
+        testcase.addCleanup(patcher.stop)
+
+
 def _token(user_id):
     # Same claim _issue_token adds; the fake users have no password_hash.
     from middleware.auth_middleware import password_fingerprint
@@ -196,6 +213,8 @@ def _token(user_id):
 
 class MaintenanceTestBase(unittest.TestCase):
     def setUp(self):
+        from test_maintenance import silence_events
+        silence_events(self)
         reset_rate_limits()
         self.db = FakeDB()
         for target in ("models.maintenance_model.get_connection",
@@ -210,7 +229,7 @@ class MaintenanceTestBase(unittest.TestCase):
         self.addCleanup(finder.stop)
         self.client = create_app().test_client()
 
-    # --- helpers ---
+    # helper
     def call(self, method, path, user=None, json=None):
         headers = {"Authorization": f"Bearer {_token(user)}"} if user else {}
         return getattr(self.client, method)(path, json=json, headers=headers)
@@ -432,7 +451,7 @@ class EditTests(MaintenanceTestBase):
 
 
 class ResourceApiGuardTests(MaintenanceTestBase):
-    """The Resource API must not be a back door to the Maintenance status."""
+    # The Resource API must not be a back door to the Maintenance status
 
     def resource_body(self, **extra):
         return {"name": "3D Printer", "type": "Equipment", "category": "Fabrication",
@@ -483,6 +502,8 @@ class ResourceApiGuardTests(MaintenanceTestBase):
 class LastRowIdRegressionTests(MaintenanceTestBase):
     def test_admin_report_returns_the_record_it_saved(self):
         # Regression: the admin path runs an UPDATE on the resource after the INSERT.
+        # MySQL resets lastrowid to 0 on that UPDATE, so reading it afterwards made the
+        # saved record "not found" and the request failed with a 500.
         r = self.report(ADMIN)
         self.assertEqual(r.status_code, 201)
         self.assertEqual(r.get_json()["record"]["id"], max(self.db.records))

@@ -51,6 +51,8 @@ class DB(B.DB):
 
 class ArchiveTests(unittest.TestCase):
     def setUp(self):
+        from test_maintenance import silence_events
+        silence_events(self)
         reset_rate_limits()
         Cur.statements = []
         self.db = DB()
@@ -164,10 +166,13 @@ class ArchiveTests(unittest.TestCase):
 
     def test_archived_resource_is_hidden_from_non_admins_and_cannot_be_booked(self):
         self.archive()
-        hdr = lambda u: {"Authorization": f"Bearer {T._token(u)}"}  # noqa: E731
+        hdr = lambda u: {"Authorization": f"Bearer {T._token(u)}"} 
         self.assertEqual(self.client.get(f"/api/resources/{PRINTER}", headers=hdr(STUDENT)).status_code, 404)
         self.assertEqual(self.client.get(f"/api/resources/{PRINTER}", headers=hdr(ADMIN)).status_code, 200)
         start = self.now + 600 * MIN
         with self.assertRaises(BookingError):
             BookingModel.create({"resource_id": PRINTER, "start_time": start.isoformat(),
                                  "end_time": (start + 60 * MIN).isoformat(), "purpose": "x"}, requester_id=STUDENT)
+
+if __name__ == "__main__":
+    unittest.main()
