@@ -300,6 +300,7 @@ class BookingModel:
             conn.close()
         return cls.get(booking_id)
 
+    # cancel (requester withdraws)
     @classmethod
     def cancel(cls, booking_id: int, requester_id: int):
         """The requester withdraws a Pending request or an Approved booking that has not been
@@ -315,7 +316,6 @@ class BookingModel:
             cur = conn.cursor(dictionary=True)
             # Same lock order as create()/decide(): the resource row first, then the booking.
             cur.execute("SELECT id FROM resources WHERE id = %s FOR UPDATE", (booking["resource_id"],))
-            cur.fetchone()
             cur.execute("SELECT * FROM bookings WHERE id = %s FOR UPDATE", (booking_id,))
             current = cur.fetchone()
             if not current or current["requester_id"] != requester_id:
