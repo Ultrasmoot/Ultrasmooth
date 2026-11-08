@@ -3514,7 +3514,15 @@
         </div>
       </article>`;
   }
-  
+
+  function renderUsers(){
+    const box = document.getElementById('usr-content');
+    document.getElementById('usr-count').textContent = `${usrList.length} account${usrList.length === 1 ? '' : 's'}`;
+    if(!usrList.length){ box.innerHTML = '<p class="note" style="grid-column:1/-1;">No account matches.</p>'; return; }
+    const myId = currentUser ? currentUser.id : null;
+    box.innerHTML = usrList.map(u => userCard(u, myId)).join('');
+  }
+
   /* Announcements */
     async function loadAnnouncements(){
     const {ok, data} = await apiAuthGet('/api/announcements');
