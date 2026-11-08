@@ -2,8 +2,8 @@ from flask import Blueprint, jsonify, request
 
 from middleware.auth_middleware import get_current_user, login_required, role_required
 from models.maintenance_model import MaintenanceModel, ValidationError as MaintenanceValidationError
-from models.resource_model import ResourceModel, ValidationError
 from models.resource_detail_model import ResourceDetailModel
+from models.resource_model import ResourceModel, ValidationError
 
 resource_bp = Blueprint("resources", __name__, url_prefix="/api/resources")
 
