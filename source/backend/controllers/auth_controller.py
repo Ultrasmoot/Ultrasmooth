@@ -50,7 +50,9 @@ def _verify_google_credential(credential):
 
     try:
         payload = id_token.verify_oauth2_token(
-            credential, google_requests.Request(), Config.GOOGLE_CLIENT_ID,
+            credential,
+            google_requests.Request(),
+            Config.GOOGLE_CLIENT_ID,
             clock_skew_in_seconds=Config.GOOGLE_CLOCK_SKEW_SECONDS,  # small clock drift is tolerated
         )
     except ValueError as e:
