@@ -1040,7 +1040,9 @@
   .req.is-decline .req-reason::placeholder{color:rgba(255,255,255,0.72);}
   .req.is-decline .req-reason:focus{outline:none; border-color:#fff;}
   .ci-ok{background:var(--green-bg); color:var(--green); padding:10px 12px; border-radius:8px; margin:12px 0;}
-
+  .nav-item.req-staff-nav, .nav-item.req-appt-nav{display:none !important;}
+  body[data-role="admin"] .nav-item.req-staff-nav, body[data-role="professor"] .nav-item.req-staff-nav{display:flex !important;}
+  body[data-role="user"] .nav-item.req-appt-nav, body[data-role="professor"] .nav-item.req-appt-nav{display:flex !important;}
   .top-bell{position:fixed; top:18px; right:28px; z-index:65; width:44px; height:44px; padding:0; display:flex; align-items:center; justify-content:center;
     border-radius:50%; border:1px solid rgba(138,90,50,0.20); background:var(--panel); color:var(--ink); cursor:pointer;
     box-shadow:0 4px 14px rgba(74,50,25,0.12); transition:background .2s, box-shadow .2s;}
@@ -1065,6 +1067,18 @@
   /* Activity log */
   .rcard[data-rid], .hcard[data-rid]{cursor:pointer;}
 
+  .dash-cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; margin:16px 0 8px;}
+  .dash-card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px; text-align:left; font:inherit; color:var(--ink);}
+  button.dash-card{cursor:pointer;}
+  button.dash-card:hover{border-color:var(--ink);}
+  .dash-num{font-size:30px; font-weight:700; line-height:1.1;}
+  .dash-label{margin-top:4px; font-size:13.5px;}
+  .dash-sub{margin-top:2px; font-size:12px; color:var(--ink-faint);}
+  .util-row{margin-bottom:14px;}
+  .util-top{display:flex; justify-content:space-between; gap:10px; font-size:13.5px;}
+  .util-bar{height:10px; background:var(--paper); border-radius:6px; overflow:hidden; margin-top:6px; border:1px solid var(--line);}
+  .util-bar i{display:block; height:100%; background:var(--green);}
+  
   .s5-panel{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px;}
   .s5-filters{display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; margin-bottom:14px;}
   .s5-filters label{display:block; font-size:12px; color:var(--ink-soft); margin-bottom:4px;}
@@ -1172,7 +1186,121 @@
   .appt-item p{margin:6px 0 0; color:var(--ink-soft); font-size:13.5px; overflow-wrap:anywhere;}
   .appt-row{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;}
   .appt-acts{display:flex; gap:8px; justify-content:flex-end; margin-top:10px;}
+  
+  #view-dashboard .req-top{margin-bottom:14px;}
+  #view-dashboard .s5-filters{padding:12px 16px; margin-bottom:14px; background:var(--panel); border:1px solid rgba(138,90,50,0.14); border-radius:16px; box-shadow:var(--shadow-sm);}
+  #view-dashboard .s5-filters input{border-radius:10px;}
+  #view-dashboard #dash-content[aria-busy="true"] .dx-kpis,
+  #view-dashboard #dash-content[aria-busy="true"] .dx-grid{opacity:.55; transition:opacity .2s;}
 
+  .dx-t-green{--tone:var(--green); --tbg:var(--green-bg);}
+  .dx-t-blue{--tone:var(--blue); --tbg:var(--blue-bg);}
+  .dx-t-amber{--tone:var(--brown); --tbg:var(--amber-bg);}
+  .dx-t-rust{--tone:var(--rust); --tbg:var(--rust-bg);}
+
+  .dx-meta{display:flex; align-items:center; justify-content:space-between; gap:6px 16px; flex-wrap:wrap; margin-bottom:14px; font-size:13.5px; color:var(--ink-soft);}
+  .dx-meta b{color:var(--ink); font-weight:600;}
+  .dx-stamp{font-size:12.5px; color:var(--ink-faint); font-variant-numeric:tabular-nums;}
+
+  /* KPI cards */
+  .dx-kpis{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px;}
+  .dx-kpi{position:relative; display:flex; flex-direction:column; min-width:0; padding:18px 20px 16px; text-align:left; font:inherit; color:var(--ink);
+    background:var(--panel); border:1px solid rgba(138,90,50,0.14); border-radius:20px; box-shadow:var(--shadow-sm);}
+  button.dx-kpi{cursor:pointer; transition:border-color .2s, box-shadow .2s;}
+  button.dx-kpi:hover{border-color:color-mix(in srgb, var(--tone, var(--ink)) 45%, transparent); box-shadow:var(--shadow-md);}
+  .dx-kpi.dx-hot{border-color:color-mix(in srgb, var(--tone) 38%, transparent);}
+  .dx-kpi.dx-hot .dx-num{color:var(--tone);}
+  .dx-kpi-top{display:flex; align-items:center; gap:10px; margin-bottom:12px; font-size:13.5px; font-weight:500; color:var(--ink-soft);}
+  .dx-ico{width:34px; height:34px; flex:none; display:grid; place-items:center; border-radius:11px; background:var(--tbg); color:var(--tone);}
+  .dx-ico svg{width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round;}
+  .dx-go{margin-left:auto; width:16px; height:16px; flex:none; fill:none; stroke:var(--ink-faint); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:transform .2s, stroke .2s;}
+  button.dx-kpi:hover .dx-go{transform:translateX(3px); stroke:var(--tone);}
+  .dx-num{font:700 36px/1.05 var(--font-head); font-variant-numeric:tabular-nums;}
+  .dx-sub{margin-top:7px; font-size:12.5px; color:var(--ink-faint);}
+  .dx-kpi-ring{flex-direction:row; align-items:center; justify-content:space-between; gap:12px;}
+  .dx-kpi-ring .dx-kpi-top{margin-bottom:10px;}
+  .dx-ring{width:68px; height:68px; flex:none;}
+  .dx-ring-bg{fill:none; stroke:var(--cream-deep); stroke-width:7;}
+  .dx-ring-fg{fill:none; stroke:var(--tone); stroke-width:7; stroke-linecap:round;}
+
+  /* panels */
+  .dx-grid{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:14px; margin-top:14px;}
+  .dx-panel{display:flex; flex-direction:column; min-width:0; padding:20px 22px 18px; background:var(--panel); border:1px solid rgba(138,90,50,0.14); border-radius:20px; box-shadow:var(--shadow-sm);}
+  .dx-panel-head{margin-bottom:14px;}
+  .dx-panel-head h3{margin:0; font:600 18px/1.3 var(--font-head);}
+  .dx-panel-head p{margin:3px 0 0; font-size:12.5px; color:var(--ink-faint);}
+
+  /* donut: resource status */
+  .dx-donut-wrap{flex:1; display:flex; align-items:center; justify-content:center; gap:16px 18px; flex-wrap:wrap; padding-bottom:6px;}
+  .dx-donut{width:146px; height:146px; flex:none;}
+  .dx-donut-bg{fill:none; stroke:var(--cream-deep); stroke-width:16;}
+  .dx-arc{fill:none; stroke-width:16; transition:opacity .15s;}
+  .dx-donut-num{font:700 30px var(--font-head); fill:var(--ink);}
+  .dx-donut-cap{font:500 11.5px var(--font-body); fill:var(--ink-faint);}
+  .dx-legend{flex:1 1 200px; display:flex; flex-direction:column; gap:2px; min-width:0;}
+  .dx-leg{display:grid; grid-template-columns:12px minmax(0,1fr) auto 36px; align-items:center; gap:8px; width:100%; padding:9px 10px; background:none; border:0; border-radius:12px; font:inherit; color:var(--ink); text-align:left; cursor:pointer; transition:background .15s;}
+  .dx-leg:hover{background:rgba(237,226,200,0.6);}
+  .dx-dot{width:12px; height:12px; border-radius:4px;}
+  .dx-leg-name{font-size:14px; font-weight:600; line-height:1.25;}
+  .dx-leg-name small{display:block; font-size:11.5px; font-weight:400; color:var(--ink-faint);}
+  .dx-leg b{font:700 18px var(--font-head); font-variant-numeric:tabular-nums;}
+  .dx-leg-pct{text-align:right; font-size:12.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+
+  /* bars: utilization */
+  .dx-bars{display:flex; flex-direction:column; gap:2px;}
+  .dx-bar{display:block; width:100%; padding:9px 10px 8px; background:none; border:0; border-radius:12px; font:inherit; color:var(--ink); text-align:left; cursor:pointer; transition:background .15s;}
+  .dx-bar:hover{background:rgba(237,226,200,0.6);}
+  .dx-bar-top{display:flex; align-items:baseline; justify-content:space-between; gap:10px;}
+  .dx-bar-name{font-size:14.5px; font-weight:600; min-width:0; overflow-wrap:break-word;}
+  .dx-bar-val{display:flex; align-items:center; gap:8px; flex:none; font:700 16px var(--font-head); font-variant-numeric:tabular-nums;}
+    .dx-track{position:relative; height:12px; margin:8px 0 6px; border-radius:999px; background:var(--cream-deep); overflow:hidden;}
+  .dx-track::after{content:""; position:absolute; top:0; bottom:0; left:50%; width:1px; background:rgba(27,42,73,0.16);}
+  .dx-track i{display:block; height:100%; width:var(--w); border-radius:999px; transform-origin:left center; background:linear-gradient(90deg, #5A8A6B, var(--green)); animation:dx-grow .8s cubic-bezier(.22,.8,.3,1) both;}
+  .dx-bar[data-lvl="busy"] .dx-track i{background:linear-gradient(90deg, var(--brown-soft), var(--brown));}
+  .dx-bar-sub{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:4px 10px; font-size:12px; color:var(--ink-faint);}
+  .dx-bar-sub .badge{font-family:var(--font-body); font-size:11px; padding:2px 8px;}
+  .dx-axis{display:grid; grid-template-columns:1fr 1fr 1fr; padding:2px 10px 0; font-size:11px; color:var(--ink-faint);}
+  .dx-axis span:nth-child(2){text-align:center;}
+  .dx-axis span:nth-child(3){text-align:right;}
+  .dx-insight{display:flex; align-items:flex-start; gap:10px; margin-top:auto; padding:12px 14px; border-radius:14px; background:var(--blue-bg); font-size:13px; line-height:1.5;}
+  .dx-bars + .dx-axis + .dx-insight, .dx-panel > .dx-insight{margin-top:16px;}
+  .dx-insight svg{width:18px; height:18px; flex:none; margin-top:1px; fill:none; stroke:var(--blue); stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round;}
+
+  /* loading + empty */
+  .dx-skel{border-radius:20px; background:linear-gradient(90deg, var(--cream-deep) 0, rgba(237,226,200,0.45) 50%, var(--cream-deep) 100%); background-size:200% 100%; opacity:.6; animation:dx-shimmer 1.4s linear infinite;}
+  .dx-empty{padding:28px 20px; text-align:center; color:var(--ink-soft); background:var(--panel); border:1px dashed rgba(138,90,50,0.3); border-radius:20px; font-size:14px;}
+  .dx-empty b{display:block; margin-bottom:4px; color:var(--ink); font:600 16px var(--font-head);}
+  .dx-empty .btn{margin:12px 0 0;}
+  .dx-panel .dx-empty{border:0; padding:24px 8px;}
+
+  @keyframes dx-grow{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+  @keyframes dx-shimmer{from{background-position:200% 0;}to{background-position:-200% 0;}}
+
+  @media (max-width: 980px){
+    .dx-kpis{grid-template-columns:repeat(2, minmax(0,1fr));}
+    .dx-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width: 480px){
+    #view-dashboard .seg{display:flex; width:100%;}
+    #view-dashboard .seg .filter-chip{flex:1; white-space:nowrap; padding:8px 4px; font-size:13px; text-align:center;}
+    .dx-kpis{gap:10px;}
+    .dx-kpi{padding:14px 14px 12px; border-radius:16px;}
+    .dx-kpi-ring, .dx-kpis > .dx-kpi:last-child{grid-column:1 / -1;}
+    .dx-kpi-top{gap:8px; margin-bottom:8px; font-size:13px;}
+    .dx-ico{width:30px; height:30px; border-radius:10px;}
+    .dx-go{display:none;}
+    .dx-num{font-size:30px;}
+    .dx-sub{font-size:12px;}
+    .dx-panel{padding:18px 16px 14px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .dx-track i, .dx-skel{animation:none;}
+    .dx-go, .dx-arc{transition:none;}
+  }
+
+  /* Resources bar: "Show archived" and "+ Add Resource" sit together at the right end */
+  #view-resources .bar .fld-archived{margin-left:auto;}
+  #view-resources .bar #btn-add-resource{margin:0; padding:10px 22px; border-radius:999px;}
 </style>
 </head>
 <body data-role="admin" data-view="home">
@@ -1390,6 +1518,8 @@
       <div class="navbar-right">
         <nav class="nav" id="main-nav">
           <button class="nav-item active" data-view="home" aria-label="Home"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.8L12 3.5l8.5 7.3"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/></svg><span class="nl">Home</span></button>
+          <!-- Dashboard (US-9): admin + professor -->
+          <button class="nav-item req-staff-nav" data-view="dashboard" aria-label="Dashboard"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="4.5" rx="1.5"/><rect x="13" y="11.5" width="7" height="8.5" rx="1.5"/><rect x="4" y="14" width="7" height="6" rx="1.5"/></svg><span class="nl">Dashboard</span></button>
           <!-- Resources (US-1: all roles can view/search, US-2: admin-only manage actions) -->
           <button class="nav-item" data-view="resources" aria-label="Resources"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.2v9.6L12 21l-8-4.2V7.2L12 3z"/><path d="M4 7.2l8 4.3 8-4.3"/><path d="M12 11.5V21"/></svg><span class="nl">Resources</span></button>
           <!-- Requests (US-3: students submit, US-4: students track own status; US-5: admin approves/rejects) -->
@@ -1571,6 +1701,7 @@
           <button class="filter-chip" type="button" data-filter="Pending">Pending</button>
           <button class="filter-chip" type="button" data-filter="Approved">Approved</button>
           <button class="filter-chip" type="button" data-filter="Rejected">Rejected</button>
+          <button class="filter-chip" type="button" data-filter="Cancelled">Cancelled</button>        
         </div>
         <div class="req-top-actions">
           <button class="btn" id="btn-refresh-bookings" type="button">Refresh</button>
@@ -1609,6 +1740,44 @@
       </div>
       <p class="req-note">You can check in from 15 minutes before an approved booking starts. We e-mail you a code to confirm it is you.</p>
       <div id="ci-content"></div>
+    </section>
+    <!-- DASHBOARD: admin + professor, read-only -->
+    <section class="view" id="view-dashboard">
+      <div class="req-top">
+        <div class="seg" id="dash-period">
+          <button class="filter-chip" type="button" data-days="7">7 days</button>
+          <button class="filter-chip active" type="button" data-days="30">30 days</button>
+          <button class="filter-chip" type="button" data-days="90">90 days</button>
+          <button class="filter-chip" type="button" data-days="custom">Custom</button>
+        </div>
+        <div class="req-top-actions"><button class="btn" id="btn-refresh-dash" type="button">Refresh</button></div>
+      </div>
+      <div class="s5-filters" id="dash-custom" style="display:none;">
+        <div><label for="dash-from">From</label><input type="date" id="dash-from"></div>
+        <div><label for="dash-to">To</label><input type="date" id="dash-to"></div>
+        <button class="btn ok" type="button" id="dash-apply">Apply</button>
+      </div>
+      <div id="dash-content"></div>
+    </section>
+
+    <!-- ACTIVITY LOG: admin + professor, read-only -->
+    <section class="view" id="view-activity">
+      <div class="act-filters">
+        <div class="act-field"><label for="act-from">From</label><input type="date" id="act-from"></div>
+        <div class="act-field"><label for="act-to">To</label><input type="date" id="act-to"></div>
+        <div class="act-field"><select id="act-user" aria-label="User"><option value="">All users</option></select></div>
+        <div class="act-field"><select id="act-action" aria-label="Action"><option value="">All actions</option></select></div>
+        <button class="btn" type="button" id="act-clear">Clear filters</button>
+        <button class="btn" type="button" id="act-refresh">Refresh</button>
+      </div>
+      <div class="act-tabs" id="act-tabs" role="tablist" aria-label="Activity category"></div>
+      <div id="act-content" aria-live="polite"></div>
+      <div class="act-end" id="act-end"></div>
+    </section>
+
+    <!-- APPOINTMENTS: a student asks a professor; the professor answers -->
+    <section class="view" id="view-appointments">
+      <div id="appt-content"></div>
     </section>
 
     <!-- USER & ACCESS (Admin only): create, edit and deactivate accounts, assign roles (US-13) -->
@@ -1705,6 +1874,9 @@
     bookings: ["Requests", "Review and track lab resource bookings"],
     maintenance: ["Maintenance", "Report resource issues and track repairs"],
     checkin: ["Check in / Check out", "Check in to your approved bookings"],
+    dashboard: ["Dashboard", "Lab status and resource utilization at a glance"],
+    activity: ["Activity log", "Who did what, and when"],
+    appointments: ["Appointments", "Ask a professor for advice, or answer students' requests"],
     access: ["User & Access", "Manage accounts, roles, and permissions"]
   };
   document.querySelectorAll('.nav-item').forEach(btn=>{
@@ -1734,8 +1906,17 @@
       if(key === 'bookings') loadBookings();
       if(key === 'maintenance') loadMaintenance();
       if(key === 'checkin') loadCheckin();
+      if(key === 'dashboard') loadDashboard();
+      if(key === 'activity') openActivity();
+      if(key === 'appointments') loadAppointments();
+      if(key === 'access') loadUsers();
     });
   });
+
+  function toInstant(localValue){
+    const d = new Date(localValue);
+    return isNaN(d) ? localValue : d.toISOString().replace(/\.\d{3}Z$/, 'Z');
+  }
 
   /* Toast */
   function toast(msg){
@@ -2403,7 +2584,7 @@
   }
 
   function bookingBadge(status){
-    const map = {Pending:'b-amber', Approved:'b-green', Rejected:'b-rust'};
+    const map = {Pending:'b-amber', Approved:'b-green', Rejected:'b-rust', Cancelled:'b-faint'};
     return `<span class="badge ${map[status] || ''}">${status}</span>`;
   }
 
@@ -2482,8 +2663,11 @@
     const resName = b.resource_name || `#${b.resource_id}`;
     const who = b.requester_name || b.requester_email || `User #${b.requester_id}`;
     const showEmail = b.requester_email && b.requester_email !== who;
-    const decided = b.decided_at ? `Decided ${new Date(b.decided_at).toLocaleString([], {dateStyle:'medium', timeStyle:'short'})}` : '';
+    const decided = b.status === 'Cancelled' && b.cancelled_at
+      ? `Cancelled ${new Date(b.cancelled_at).toLocaleString([], {dateStyle:'medium', timeStyle:'short'})}`
+      : (b.decided_at ? `Decided ${new Date(b.decided_at).toLocaleString([], {dateStyle:'medium', timeStyle:'short'})}` : '');
     const canDecide = isAdmin && b.status === 'Pending';
+    const canCancel = !isAdmin && (b.status === 'Pending' || (b.status === 'Approved' && e > new Date()));    
     return `
       <article class="req" data-id="${b.id}" data-status="${escapeHtml(b.status)}" data-name="${escapeHtml(resName)}">
         <div class="req-row">
@@ -2502,6 +2686,7 @@
               ${decided ? `<span>${decided}</span>` : ''}
             </div>` : ''}
           </div>
+          ${canCancel ? `<div class="req-actions"><button class="req-btn decline" type="button" data-act="ask-cancel">Cancel request</button></div>` : ''}
           ${canDecide ? `<div class="req-actions">
             <button class="req-btn decline" type="button" data-act="ask-reject">Reject</button>
             <button class="req-btn approve" type="button" data-act="ask-approve">Approve</button>
@@ -2567,6 +2752,10 @@
       (decline && reasonBox ? reasonBox : go).focus();
       return;
     }
+    if(act === 'ask-cancel'){
+      openCancelBookingModal(card.dataset.id, card.dataset.name, card.dataset.status);
+      return;
+    }
     if(act === 'cancel'){
       card.classList.remove('asking', 'is-decline');
       return;
@@ -2586,6 +2775,22 @@
       loadBookings();
     }
   });
+
+  function openCancelBookingModal(id, name, status){
+    document.getElementById('modal-box').innerHTML = `
+      <h3>Cancel this ${status === 'Approved' ? 'booking' : 'request'}?</h3>
+      <p class="note" style="margin:0 0 10px;">${escapeHtml(name)} — the time slot becomes free for others.</p>
+      <div class="ci-foot"><button class="btn no" type="button" id="bk-cancel-back">Go back</button><button class="btn ok" type="button" id="bk-cancel-go">Yes, cancel it</button></div>`;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('bk-cancel-back').addEventListener('click', closeModal);
+    document.getElementById('bk-cancel-go').addEventListener('click', async (e) => {
+      e.target.disabled = true;
+      const {ok, data} = await apiAuthSend('POST', `/api/bookings/${id}/cancel`);
+      closeModal();
+      toast(ok ? 'Cancelled' : (data.error || 'Could not cancel'));
+      loadBookings();
+    });
+  }
 
   async function openBookingModal(preselectId){
     if(!resourceCache.length){
@@ -2611,6 +2816,7 @@
         <div class="field"><label>Start</label><input id="bk-start" type="datetime-local" required></div>
         <div class="field"><label>End</label><input id="bk-end" type="datetime-local" required></div>
         <div class="field"><label>Purpose</label><input id="bk-purpose" required maxlength="255" placeholder="e.g. Sprint planning meeting"></div>
+        <p class="note" style="margin:0 0 8px;">One booking can last up to 12 hours and be made up to 90 days ahead. You can have up to 5 requests waiting at a time.</p>        
         <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
           <button class="btn no" type="button" id="booking-form-cancel">Cancel</button>
           <button class="btn ok" type="submit">Submit</button>
@@ -2635,8 +2841,8 @@
 
     const payload = {
       resource_id: Number(document.getElementById('bk-resource').value),
-      start_time: document.getElementById('bk-start').value,
-      end_time: document.getElementById('bk-end').value,
+      start_time: toInstant(document.getElementById('bk-start').value),
+      end_time: toInstant(document.getElementById('bk-end').value),
       purpose: document.getElementById('bk-purpose').value.trim()
     };
 
@@ -3320,6 +3526,191 @@
     setBellBadge(0);
   });
   document.addEventListener('click', () => document.getElementById('bell-menu').classList.remove('open'));
+  /* ---------- Dashboard (US-9) ---------- */
+  let dashDays = '30';
+  let dashRange = null;  
+
+  /* Charts are plain SVG/CSS (no library): ring gauge, donut, horizontal bars. */
+  const DX_ICON = {
+    cal:   '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4M9.5 15l2 2 3.5-4"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    wrench:'<path d="M14.7 6.3a4 4 0 0 0-5 5L4 17l3 3 5.7-5.7a4 4 0 0 0 5-5l-2.5 2.5-2.2-.5-.5-2.2z"/>',
+    gauge: '<path d="M4 18a8 8 0 1 1 16 0"/><path d="m12 18 4-5"/>',
+    info:  '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/>'
+  };
+  const dxIcon = (k) => `<svg viewBox="0 0 24 24" aria-hidden="true">${DX_ICON[k]}</svg>`;
+  const DX_GO = '<svg class="dx-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+  const DX_BUSY = 85;  
+
+  function dxPct(v){
+    const n = Math.round((Number(v) || 0) * 10) / 10;
+    return (Number.isInteger(n) ? n : n.toFixed(1)) + '%';
+  }
+  function dxDate(iso){
+    return new Date(iso).toLocaleDateString([], {day:'numeric', month:'short', year:'numeric'});
+  }
+  function dxRing(pct){
+    const R = 26, C = 2 * Math.PI * R, len = Math.max(0, Math.min(100, pct)) / 100 * C;
+    const fg = len > 0.5 ? `<circle class="dx-ring-fg" cx="32" cy="32" r="${R}" stroke-dasharray="${len.toFixed(1)} ${(C - len).toFixed(1)}" transform="rotate(-90 32 32)"/>` : '';
+    return `<svg class="dx-ring" viewBox="0 0 64 64" aria-hidden="true"><circle class="dx-ring-bg" cx="32" cy="32" r="${R}"/>${fg}</svg>`;
+  }
+  function dxDonut(segs, total){
+    const R = 54, C = 2 * Math.PI * R;
+    const live = segs.filter(s => s.v > 0);
+    const gap = live.length > 1 ? 3 : 0;
+    let off = 0;
+    const arcs = total ? live.map(s => {
+      const len = s.v / total * C, dash = Math.max(len - gap, 0.5);
+      const el = `<circle class="dx-arc" data-k="${s.key}" cx="70" cy="70" r="${R}" style="stroke:${s.color}" stroke-dasharray="${dash.toFixed(2)} ${(C - dash).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"><title>${escapeHtml(s.label)}: ${s.v}</title></circle>`;
+      off += len;
+      return el;
+    }).join('') : '';
+    return `<svg class="dx-donut" viewBox="0 0 140 140" role="img" aria-label="Resources by status, ${total} in total">
+      <circle class="dx-donut-bg" cx="70" cy="70" r="${R}"/>
+      <g transform="rotate(-90 70 70)">${arcs}</g>
+      <text class="dx-donut-num" x="70" y="70" text-anchor="middle">${total}</text>
+      <text class="dx-donut-cap" x="70" y="88" text-anchor="middle">resources</text>
+    </svg>`;
+  }
+  function dxKpi({tone, icon, label, num, sub, hot, goto}){
+    const head = `<div class="dx-kpi-top"><span class="dx-ico">${dxIcon(icon)}</span><span>${escapeHtml(label)}</span>${goto ? DX_GO : ''}</div>
+      <div class="dx-num">${num}</div><div class="dx-sub">${escapeHtml(sub)}</div>`;
+    const cls = `dx-kpi dx-t-${tone}${hot ? ' dx-hot' : ''}`;
+    return goto
+      ? `<button type="button" class="${cls}" data-goto="${goto}">${head}</button>`
+      : `<div class="${cls}">${head}</div>`;
+  }
+
+  let dashReq = 0;   
+  async function loadDashboard(){
+    const box = document.getElementById('dash-content');
+    const myReq = ++dashReq;
+    if(!box.firstElementChild){
+      box.innerHTML = `<div class="dx-kpis">${'<div class="dx-skel" style="height:128px"></div>'.repeat(4)}</div>
+        <div class="dx-grid"><div class="dx-skel" style="height:300px"></div><div class="dx-skel" style="height:300px"></div></div>`;
+    }
+    box.setAttribute('aria-busy', 'true');
+    const query = dashRange ? `from=${dashRange.from}&to=${dashRange.to}` : `days=${dashDays}`;
+    let res;
+    try{ res = await apiAuthGet('/api/dashboard?' + query); }
+    catch(err){ res = {ok:false, data:{error:'Could not reach the server.'}}; }
+    if(myReq !== dashReq) return;
+    box.removeAttribute('aria-busy');
+    const {ok, data} = res;
+    if(!ok){
+      box.innerHTML = `<div class="dx-empty"><b>Couldn’t load the dashboard</b>${escapeHtml((data && data.error) || 'Something went wrong. Please try again.')}<br><button class="btn ok" type="button" data-dx-retry>Try again</button></div>`;
+      return false;
+    }
+
+    const r = data.resources, b = data.bookings, i = data.issues;
+    const cats = [...data.utilization].sort((a, c) => c.utilization_pct - a.utilization_pct);
+    const totRes = cats.reduce((s, u) => s + u.resources, 0);
+    const overall = totRes ? cats.reduce((s, u) => s + u.utilization_pct * u.resources, 0) / totRes : 0;
+    const overallBusy = overall >= DX_BUSY;
+
+    /* KPI row */
+    const kpis = `<div class="dx-kpis">
+      <div class="dx-kpi dx-kpi-ring dx-t-${overallBusy ? 'amber' : 'green'}">
+        <div>
+          <div class="dx-kpi-top"><span>Overall utilization</span></div>
+          <div class="dx-num">${dxPct(overall)}</div>
+          <div class="dx-sub">${totRes ? 'of available hours were booked' : 'no resources yet'}</div>
+        </div>${dxRing(overall)}
+      </div>
+      ${dxKpi({tone:'blue', icon:'cal', label:'Active bookings', num:b.active, sub: b.active ? 'approved and happening now' : 'nothing booked right now'})}
+      ${dxKpi({tone:'amber', icon:'clock', label:'Requests waiting', num:b.pending, sub: b.pending ? 'need an administrator’s decision' : 'all caught up', hot: b.pending > 0, goto:'bookings'})}
+      ${dxKpi({tone:'rust', icon:'wrench', label:'Open issues', num:i.open, sub: i.pending_review ? `+ ${i.pending_review} waiting for review` : (i.open ? 'confirmed, not yet resolved' : 'no open issues'), hot: i.open > 0 || i.pending_review > 0, goto:'maintenance'})}
+    </div>`;
+
+    /* Resource status donut */
+    const segs = [
+      {key:'Available',   label:'Available',      sub:'ready to book', v:r.available,   color:'var(--green)'},
+      {key:'In Use',      label:'In use',         sub:'checked in now',    v:r.in_use,      color:'var(--blue)'},
+      {key:'Maintenance', label:'Maintenance',    sub:'not bookable',  v:r.maintenance, color:'var(--brown-soft)'}
+    ];
+    const legend = segs.map(s => `
+      <button type="button" class="dx-leg" data-k="${s.key}" data-goto="resources" data-status="${s.key}">
+        <i class="dx-dot" style="background:${s.color}"></i>
+        <span class="dx-leg-name">${s.label}<small>${s.sub}</small></span>
+        <b>${s.v}</b><span class="dx-leg-pct">${r.total ? Math.round(s.v / r.total * 100) : 0}%</span>
+      </button>`).join('');
+    const statusPanel = `<section class="dx-panel" aria-labelledby="dx-h-status">
+      <div class="dx-panel-head"><h3 id="dx-h-status">Resource status</h3><p>Right now · archived resources aren’t counted</p></div>
+      ${r.total
+        ? `<div class="dx-donut-wrap">${dxDonut(segs, r.total)}<div class="dx-legend">${legend}</div></div>`
+        : `<div class="dx-empty"><b>No resources yet</b>Add your first resource to see its status here.<br><button class="btn ok" type="button" data-goto="resources">Go to resources</button></div>`}
+    </section>`;
+
+    /* Utilization bars */
+    let insight = '';
+    if(cats.length && cats.every(u => !u.booked_hours)){
+      insight = 'No bookings were made in this period yet.';
+    } else if(cats.length > 1 && cats[0].utilization_pct !== cats[cats.length - 1].utilization_pct){
+      const hi = cats[0], lo = cats[cats.length - 1];
+      insight = `<b>${escapeHtml(hi.category)}</b> is the busiest at ${dxPct(hi.utilization_pct)}. <b>${escapeHtml(lo.category)}</b> has the most room at ${dxPct(lo.utilization_pct)}.`;
+    }
+    const bars = cats.map(u => {
+      const pct = Number(u.utilization_pct) || 0, busy = pct >= DX_BUSY;
+      const w = Math.min(100, pct), shown = pct > 0 ? Math.max(w, 1.5) : 0;
+      return `<button type="button" class="dx-bar" data-lvl="${busy ? 'busy' : 'ok'}" data-goto="resources" data-category="${escapeHtml(u.category)}"
+          aria-label="${escapeHtml(u.category)}: ${dxPct(pct)} utilization. Open resources.">
+        <div class="dx-bar-top"><span class="dx-bar-name">${escapeHtml(u.category)}</span>
+          <span class="dx-bar-val">${dxPct(pct)}</span></div>
+        <div class="dx-track" aria-hidden="true"><i style="--w:${shown}%"></i></div>
+        <div class="dx-bar-sub"><span>${u.resources} resource${u.resources === 1 ? '' : 's'} · ${u.booked_hours} h booked</span>${busy ? '<span class="badge b-amber">Near capacity</span>' : ''}</div>
+      </button>`;
+    }).join('');
+    const utilPanel = `<section class="dx-panel" aria-labelledby="dx-h-util">
+      <div class="dx-panel-head"><h3 id="dx-h-util">Utilization by category</h3><p>Booked hours ÷ (resources × hours in the period). Select a category to see its resources.</p></div>
+      ${cats.length
+        ? `<div class="dx-bars">${bars}</div><div class="dx-axis" aria-hidden="true"><span>0%</span><span>50%</span><span>100%</span></div>
+           ${insight ? `<div class="dx-insight">${dxIcon('info')}<span>${insight}</span></div>` : ''}`
+        : `<div class="dx-empty"><b>No categories yet</b>Utilization appears once resources are added.</div>`}
+    </section>`;
+
+    box.innerHTML = `
+      <div class="dx-meta"><span>Showing <b>${dxDate(data.period.from)} – ${dxDate(data.period.to)}</b></span></div>
+      ${kpis}
+      <div class="dx-grid">${statusPanel}${utilPanel}</div>`;
+    return true;
+  }
+
+  /* highlight the matching donut slice while hovering / focusing a legend row; retry after an error */
+  (function(){
+    const box = document.getElementById('dash-content');
+    const hl = (e, on) => {
+      const leg = e.target.closest('.dx-leg'); if(!leg) return;
+      box.querySelectorAll('.dx-arc').forEach(a => { a.style.opacity = (!on || a.dataset.k === leg.dataset.k) ? '' : '.25'; });
+    };
+    box.addEventListener('mouseover', e => hl(e, true));
+    box.addEventListener('mouseout',  e => hl(e, false));
+    box.addEventListener('focusin',   e => hl(e, true));
+    box.addEventListener('focusout',  e => hl(e, false));
+    box.addEventListener('click', e => { if(e.target.closest('[data-dx-retry]')) loadDashboard(); });
+    // "Custom" opens with the last 30 days pre-filled so the person only has to adjust it
+    document.getElementById('dash-period').addEventListener('click', e => {
+      if(!e.target.closest('button[data-days="custom"]')) return;
+      const from = document.getElementById('dash-from'), to = document.getElementById('dash-to');
+      if(!to.value) to.value = new Date().toLocaleDateString('en-CA');
+      if(!from.value) from.value = new Date(Date.now() - 29 * 864e5).toLocaleDateString('en-CA');
+    });
+  })();
+
+  document.getElementById('dash-period').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-days]');
+    if(!btn) return;
+    document.querySelectorAll('#dash-period .filter-chip').forEach(b => b.classList.toggle('active', b === btn));
+    const custom = btn.dataset.days === 'custom';
+    document.getElementById('dash-custom').style.display = custom ? 'flex' : 'none';
+    if(!custom){ dashDays = btn.dataset.days; dashRange = null; loadDashboard(); }
+  });
+  document.getElementById('dash-apply').addEventListener('click', () => {
+    const from = document.getElementById('dash-from').value, to = document.getElementById('dash-to').value;
+    if(!from || !to){ toast('Choose both dates'); return; }
+    dashRange = {from, to};
+    loadDashboard();
+  });
+  setupRefreshButton('btn-refresh-dash', () => loadDashboard());
 
   // Activity log (US-8)
   // Display events in a timeline with paginated loading and category filters.
@@ -4343,7 +4734,7 @@
     document.addEventListener('click', (e) => { if(!e.target.closest('.navbar-in')) nb.classList.remove('open'); });
   })();
   /* init calls */
-  applyRole  applyRole('admin'); // default demo state (overridden below if a real session restores)
+  applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
   if(new URLSearchParams(window.location.search).get('reset_token')){
     showAuthView('reset-password');
