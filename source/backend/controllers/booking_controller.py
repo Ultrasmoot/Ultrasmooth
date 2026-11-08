@@ -78,3 +78,13 @@ def decide_booking(booking_id):
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"booking": _serialize(booking)}), 200
+
+@booking_bp.post("/<int:booking_id>/cancel")
+@role_required(*STUDENT_ROLES)
+def cancel_booking(booking_id):
+    user = get_current_user()
+    try:
+        booking = BookingModel.cancel(booking_id, requester_id=user["id"])
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 400
+    return jsonify({"booking": _serialize(booking)}), 200
