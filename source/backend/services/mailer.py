@@ -21,6 +21,7 @@ def send_email(to_email: str, subject: str, body: str, dev_log_line: str = None)
     msg["From"] = Config.SMTP_FROM
     msg["To"] = to_email
 
+    # The timeout covers connect AND every later step on the socket (STARTTLS,
     # Verify the server certificate and set a timeout
     with smtplib.SMTP(Config.SMTP_HOST, Config.SMTP_PORT, timeout=Config.SMTP_TIMEOUT_SECONDS) as server:
         server.starttls(context=ssl.create_default_context())
