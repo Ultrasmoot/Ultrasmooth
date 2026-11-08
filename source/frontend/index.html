@@ -4331,6 +4331,8 @@
     }
     empty.style.display = 'none';
     const me = currentUser; // set in applyRealUser(); null if not yet restored
+    // The author or an administrator may pin / delete (the server enforces the same rule)
+    const mine = a => !!me && (me.id === a.author_id || me.role === 'admin');
     list.innerHTML = items.map(a => `
       <article class="ann ${a.is_pinned ? 'pinned' : ''}">
         <div class="ann-top">
