@@ -3172,6 +3172,34 @@
   const profAvatar = (id, cls = '') => `<div class="prof-av ${cls}">${S5_ICON_PERSON(S5_COLORS[id % S5_COLORS.length])}</div>`;
   const s5Badge = (text, cls) => `<span class="badge ${cls || 'b-faint'}">${escapeHtml(text)}</span>`;
 
+  /* Notifications (the bell) */
+  let notifTimer = null;
+
+  function setBellBadge(n){
+    const b = document.getElementById('bell-badge');
+    b.textContent = n > 99 ? '99+' : String(n);
+    b.classList.toggle('show', n > 0);
+  }
+  async function refreshUnread(){
+    const {ok, data} = await apiAuthGet('/api/notifications/unread-count');
+    if(ok) setBellBadge(data.unread);
+  }
+  function startNotifications(){
+    clearInterval(notifTimer);
+    refreshUnread();
+    notifTimer = setInterval(() => { if(!document.hidden) refreshUnread(); }, 45000);
+  }
+  let bellItems = [];
+  let bellHasMore = false;
+  function renderBell(){
+    const box = document.getElementById('bell-list');
+    box.innerHTML = (bellItems.length ? bellItems.map(n => `
+      <button type="button" class="bell-item-row ${n.is_read ? '' : 'unread'}" data-nid="${n.id}" data-view="${escapeHtml(n.view)}">
+        <b>${escapeHtml(n.title)}</b><span>${escapeHtml(n.body)}</span><small>${s5When(n.created_at)}</small>
+      </button>`).join('') : '<div class="bell-empty">No notifications yet.</div>')
+      + (bellHasMore ? '<button type="button" class="btn" id="bell-more" style="margin:10px 14px;">Load more</button>' : '');
+  }
+
   // Activity log (US-8)
   // Display events in a timeline with paginated loading and category filters.
   const ACT_PER_PAGE = 20;
