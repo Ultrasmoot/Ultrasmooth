@@ -2,7 +2,7 @@ import datetime
 import mysql.connector
 
 from database.db import get_connection
-
+from services import events
 BLOCKING_STATUSES = ("Open", "In Progress")  
 EDITABLE_STATUSES = {"Open", "In Progress"}  
 MAX_DESCRIPTION_LENGTH = 500 
@@ -141,6 +141,17 @@ class MaintenanceModel:
         sql += " FOR UPDATE"
         cur.execute(sql, tuple(params))
         return cur.fetchone()["n"] > 0
+    
+    @staticmethod
+    def _status_after_maintenance(cur, resource_id: int) -> str:
+        """Maintenance is over: 'In Use' if someone is still checked in"""
+        cur.execute(
+            """SELECT COUNT(*) AS n FROM bookings
+               WHERE resource_id = %s AND status = 'Approved'
+                 AND checked_in_at IS NOT NULL AND checked_out_at IS NULL""",
+            (resource_id,),
+        )
+        return "In Use" if cur.fetchone()["n"] > 0 else "Available"
 
     @classmethod
     def report(cls, data: dict, reporter: dict):
@@ -183,6 +194,8 @@ class MaintenanceModel:
                     (resource_id, reporter["id"], description, issue_date),
                 )
                 new_id = cur.lastrowid
+
+            events.maintenance_reported(conn, new_id)
             conn.commit()
         except ValidationError:
             conn.rollback()
@@ -212,6 +225,7 @@ class MaintenanceModel:
                    SET status = 'Open', confirmed_by = %s, confirmed_at = NOW() WHERE id = %s""",
                 (admin_id, record_id),
             )
+            events.maintenance_confirmed(conn, record_id, admin_id)  
             conn.commit()
         except ValidationError:
             conn.rollback()
@@ -235,6 +249,8 @@ class MaintenanceModel:
                    WHERE id = %s""",
                 (reason, admin_id, record_id),
             )
+
+            events.maintenance_dismissed(conn, record_id, admin_id)  
             conn.commit()
         except ValidationError:
             conn.rollback()
@@ -244,7 +260,7 @@ class MaintenanceModel:
         return cls.get(record_id)
 
     @classmethod
-    def update(cls, record_id: int, data: dict):
+    def update(cls, record_id: int, data: dict, actor_id: int = None):
         if "resource_id" in data and data["resource_id"] is not None:
             try:
                 new_resource = int(data["resource_id"])
@@ -276,6 +292,8 @@ class MaintenanceModel:
                 "UPDATE maintenance_records SET description=%s, status=%s, issue_date=%s WHERE id=%s",
                 (description, status, issue_date, record_id),
             )
+            if actor_id is not None:
+                events.maintenance_updated(conn, record_id, actor_id)  
             conn.commit()
         except ValidationError:
             conn.rollback()
@@ -304,7 +322,9 @@ class MaintenanceModel:
             if resource["status"] == "Maintenance" and not cls._has_blocking_issue(
                 cur, resource["id"], exclude_record_id=record_id
             ):
-                cur.execute("UPDATE resources SET status = 'Available' WHERE id = %s", (resource["id"],))
+                cur.execute("UPDATE resources SET status = %s WHERE id = %s",
+                            (cls._status_after_maintenance(cur, resource["id"]), resource["id"]))
+            events.maintenance_resolved(conn, record_id, admin_id)   # Iteration 5
             conn.commit()
         except ValidationError:
             conn.rollback()
@@ -332,7 +352,9 @@ class MaintenanceModel:
                 (admin_id, resource_id),
             )
             closed = cur.rowcount
-            cur.execute("UPDATE resources SET status = 'Available' WHERE id = %s", (resource_id,))
+            cur.execute("UPDATE resources SET status = %s WHERE id = %s",
+                        (cls._status_after_maintenance(cur, resource_id), resource_id))
+            events.maintenance_released(conn, resource_id, admin_id, closed)
             conn.commit()
             return closed
         except ValidationError:

@@ -8,6 +8,7 @@ import secrets
 
 from config import Config
 from database.db import get_connection
+from services import events
 from services import mailer
 
 EARLY_CHECKIN_MINUTES = 15 
@@ -61,7 +62,7 @@ def _fmt_open_time(opens_at: datetime.datetime, now: datetime.datetime) -> str:
 
 
 def block_reason(booking: dict, resource_status: str, now: datetime.datetime):
-    """Why this booking cannot be checked in to right now (None = it can)."""
+    # Why this booking cannot be checked in to right now (None = it can)
     if booking["status"] != "Approved":
         return "This booking is not approved."
     if booking["checked_in_at"]:
@@ -118,9 +119,9 @@ class CheckinModel:
     # internal
     @staticmethod
     def _lock(conn, booking_id: int, user_id: int):
-        """Lock the resource row, then the booking row (locking reads, so the
-        latest committed state is seen), and make sure the booking is the caller's.
-        Same lock order as everywhere else: resource first."""
+        # Lock the resource row, then the booking row (locking reads, so the
+        # latest committed state is seen), and make sure the booking is the caller's.
+        # Same lock order as everywhere else: resource first.
         cur = conn.cursor(dictionary=True)
         cur.execute("SELECT resource_id FROM bookings WHERE id = %s", (booking_id,))
         row = cur.fetchone()
@@ -238,8 +239,9 @@ class CheckinModel:
             if not hmac.compare_digest(row["code_hash"], _hash(booking_id, user["id"], code)):
                 attempts = row["attempts"] + 1
                 cur.execute("UPDATE checkin_codes SET attempts = %s WHERE id = %s", (attempts, row["id"]))
-                conn.commit()  # the failed guess must be counted even though the request fails
                 left = MAX_ATTEMPTS - attempts
+                events.checkin_code_failed(conn, booking_id, left)   # logged with the counter
+                conn.commit()  # the failed guess must be counted even though the request fails
                 if left > 0:
                     raise WrongCodeError(f"Incorrect code. {left} attempt{'s' if left != 1 else ''} left.", left)
                 raise WrongCodeError("Incorrect code. Too many attempts — please request a new code.", 0)
@@ -247,6 +249,7 @@ class CheckinModel:
             cur.execute("UPDATE checkin_codes SET consumed_at = %s WHERE id = %s", (now, row["id"]))
             cur.execute("UPDATE bookings SET checked_in_at = %s WHERE id = %s", (now, booking_id))
             cur.execute("UPDATE resources SET status = 'In Use' WHERE id = %s", (resource["id"],))
+            events.checkin_done(conn, booking_id)
             conn.commit()
         except ValidationError:
             conn.rollback()
@@ -267,10 +270,12 @@ class CheckinModel:
             if booking["checked_out_at"]:
                 raise ValidationError("You have already checked out.")
             cur.execute("UPDATE bookings SET checked_out_at = %s WHERE id = %s", (now, booking_id))
-            # Free the resource only if it is still "In Use". If an admin has moved it to Maintenance
-            # the time is recorded but the resource must stay blocked.
+            # Free the resource only if it is still "In Use". If an admin has
+            # moved it to Maintenance meanwhile, the time is recorded but the
+            # resource must stay blocked.
             if resource["status"] == "In Use":
                 cur.execute("UPDATE resources SET status = 'Available' WHERE id = %s", (resource["id"],))
+            events.checkout_done(conn, booking_id) 
             conn.commit()
         except ValidationError:
             conn.rollback()
