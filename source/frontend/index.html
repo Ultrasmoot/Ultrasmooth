@@ -1063,36 +1063,6 @@
   .bell-item-row small{color:var(--ink-faint); font-size:11.5px;}
   .bell-empty{padding:18px 14px; color:var(--ink-faint); font-size:13px;}
 
-  /* User & Access: same card grid as Resources, with a person avatar in place of the resource icon */
-  .ua-card[data-role="undergrad_student"]{--tone-bg:#DCEBF7; --tone-fg:#3C6EA5;}
-  .ua-card[data-role="phd_student"]{--tone-bg:#DEE9D8; --tone-fg:#3E6B4F;}
-  .ua-card[data-role="professor"]{--tone-bg:#EEDFC8; --tone-fg:#8A5A32;}
-  .ua-card[data-role="admin"]{--tone-bg:#E7E1F1; --tone-fg:#6B5B9A;}
-  .ua-card{cursor:default;}
-  .ua-search{flex:1 1 240px; min-width:200px;}
-  .bar .ua-add{margin-left:auto; margin-right:0; align-self:stretch; padding:0 20px; border-radius:999px;}
-  .ua-card .rcard-art{height:132px;}
-  .ua-card .rcard-code{font-family:var(--font-body); font-size:13.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
-  .ua-card .tag{background:var(--tone-bg); color:var(--tone-fg); font-weight:600;}
-  .ua-card .tag.exp{background:rgba(27,42,73,0.06); color:var(--ink-soft); font-weight:500;}
-  .ua-card .tag.plain{background:transparent; border:1px solid var(--line); color:var(--ink-soft); font-weight:500;}
-  .ua-card .pill{width:auto; max-width:100%; align-self:flex-start;}
-  .ua-av{width:78px; height:78px; border-radius:50%; background:var(--tone-fg); overflow:hidden; box-shadow:0 0 0 5px rgba(255,254,250,0.60), 0 6px 16px rgba(27,42,73,0.14);}
-  .rcard-art .ua-av svg{width:100%; height:100%; opacity:1; display:block;}
-  .ua-card.is-off .ua-av{filter:grayscale(.85); opacity:.65;}
-  .ua-card.is-off h3{color:var(--ink-soft);}
-  .st-off{background:var(--ink-faint);}
-  .ua-card .pill span{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-  .ua-you{display:inline-block; vertical-align:middle; margin-left:6px; padding:1px 9px; border-radius:99px; background:var(--green-bg); color:var(--green-deep); font:600 11px var(--font-body);}
-  .ua-card h3{min-height:0; margin-bottom:10px;}
-  .ua-card .rcard-actions .btn[disabled]{opacity:.4; cursor:not-allowed;}
-  /* Wider two-column edit forms (User & Access, Resources) so they fit without scrolling */
-  .modal-box:has(.modal-wide){width:780px;}
-  .mgrid{display:grid; grid-template-columns:1fr 1fr; gap:0 18px; align-items:start;}
-  .mgrid .span2{grid-column:1 / -1;}
-  .mgrid .field{margin-bottom:12px; min-width:0;}
-  .modal-box .field input:disabled{background:var(--cream-deep); color:var(--ink-soft); cursor:default;}
-
   /* Activity log */
   .act-filters{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px;}
   .act-field{flex:1 1 150px; min-width:0; display:flex; align-items:center; gap:8px; height:40px; padding:0 14px; background:var(--panel); border:1px solid var(--line); border-radius:999px; color:var(--ink-soft); font-size:13px;}
@@ -1137,6 +1107,36 @@
     .act-who{width:auto; padding:10px 0 0; border-left:0; border-top:1px solid var(--line);}
     .act-showing{width:100%; margin-left:0; padding:4px 10px 2px;}
   }
+
+  /* User & Access: same card grid as Resources, with a person avatar in place of the resource icon */
+  .ua-card[data-role="undergrad_student"]{--tone-bg:#DCEBF7; --tone-fg:#3C6EA5;}
+  .ua-card[data-role="phd_student"]{--tone-bg:#DEE9D8; --tone-fg:#3E6B4F;}
+  .ua-card[data-role="professor"]{--tone-bg:#EEDFC8; --tone-fg:#8A5A32;}
+  .ua-card[data-role="admin"]{--tone-bg:#E7E1F1; --tone-fg:#6B5B9A;}
+  .ua-card{cursor:default;}
+  .ua-search{flex:1 1 240px; min-width:200px;}
+  .bar .ua-add{margin-left:auto; margin-right:0; align-self:stretch; padding:0 20px; border-radius:999px;}
+  .ua-card .rcard-art{height:132px;}
+  .ua-card .rcard-code{font-family:var(--font-body); font-size:13.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+  .ua-card .tag{background:var(--tone-bg); color:var(--tone-fg); font-weight:600;}
+  .ua-card .tag.exp{background:rgba(27,42,73,0.06); color:var(--ink-soft); font-weight:500;}
+  .ua-card .tag.plain{background:transparent; border:1px solid var(--line); color:var(--ink-soft); font-weight:500;}
+  .ua-card .pill{width:auto; max-width:100%; align-self:flex-start;}
+  .ua-av{width:78px; height:78px; border-radius:50%; background:var(--tone-fg); overflow:hidden; box-shadow:0 0 0 5px rgba(255,254,250,0.60), 0 6px 16px rgba(27,42,73,0.14);}
+  .rcard-art .ua-av svg{width:100%; height:100%; opacity:1; display:block;}
+  .ua-card.is-off .ua-av{filter:grayscale(.85); opacity:.65;}
+  .ua-card.is-off h3{color:var(--ink-soft);}
+  .st-off{background:var(--ink-faint);}
+  .ua-card .pill span{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .ua-you{display:inline-block; vertical-align:middle; margin-left:6px; padding:1px 9px; border-radius:99px; background:var(--green-bg); color:var(--green-deep); font:600 11px var(--font-body);}
+  .ua-card h3{min-height:0; margin-bottom:10px;}
+  .ua-card .rcard-actions .btn[disabled]{opacity:.4; cursor:not-allowed;}
+  /* Wider two-column edit forms (User & Access, Resources) so they fit without scrolling */
+  .modal-box:has(.modal-wide){width:780px;}
+  .mgrid{display:grid; grid-template-columns:1fr 1fr; gap:0 18px; align-items:start;}
+  .mgrid .span2{grid-column:1 / -1;}
+  .mgrid .field{margin-bottom:12px; min-width:0;}
+  .modal-box .field input:disabled{background:var(--cream-deep); color:var(--ink-soft); cursor:default;}
 
 </style>
 </head>
