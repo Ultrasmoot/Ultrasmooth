@@ -1573,18 +1573,38 @@
       <div id="ci-content"></div>
     </section>
 
-    <!-- USER & ACCESS (Admin only) access control demo for US-12; account management (US-13) not built yet -->
+    <!-- USER & ACCESS (Admin only): create, edit and deactivate accounts, assign roles (US-13) -->
     <section class="view" id="view-access">
-      <div class="panel">
-        <div class="panel-head"><h2>User & Access</h2></div>
-        <p class="note" style="margin:0;"> Restricted area - Admin only. This section is currently limited to administrators. User account management, such as creating, editing, and deactivating accounts, will be added in a later iteration.</p>
+      <div class="bar">
+        <input class="fld ua-search" id="usr-q" placeholder="Search by name, email or student ID…" autocomplete="off">
+        <select class="fld" id="usr-role">
+          <option value="">All roles</option>
+          <option value="undergrad_student">Undergraduate Student</option>
+          <option value="phd_student">Ph.D. Student</option>
+          <option value="professor">Professor</option>
+          <option value="admin">Lab Administrator</option>
+        </select>
+        <select class="fld" id="usr-status">
+          <option value="">All statuses</option>
+          <option value="active">Active</option>
+          <option value="inactive">Deactivated</option>
+        </select>
+        <button class="btn ok ua-add" type="button" id="usr-add">+ Add user</button>
       </div>
+      <div class="sec-head" style="margin-top:0;">
+        <span class="note" id="usr-count" style="font-style:normal;"></span>
+      </div>
+      <div class="grid" id="usr-content"></div>
     </section>
 
   </main>
 </div>
 
 <!-- MODAL -->
+<div class="bell-menu" id="bell-menu" role="dialog" aria-label="Notifications">
+  <div class="bell-head"><b>Notifications</b><button class="btn" type="button" id="bell-readall" style="padding:4px 10px;">Mark all as read</button></div>
+  <div class="bell-list" id="bell-list"></div>
+</div>
 <div class="modal-backdrop" id="modal-backdrop"><div class="modal-box" id="modal-box"></div></div>
 <div class="toast" id="toast"></div>
 
@@ -1596,7 +1616,7 @@
     admin:     { label:'Administrator', name:'System Admin', initials:'SA', canManage:true,  canApprove:true  }
   };
   let currentRole = 'admin';
-  let roleLocked = false; // true once a real backend login happens — no more "view as" switching
+  let roleLocked = false; // true once a real backend login happens no more "view as" switching
 
   function applyRole(key){
     currentRole = key;
@@ -1606,7 +1626,7 @@
     setText('role-av', r.initials);
     setText('role-name', r.name);
     setText('role-label', r.label);
-    setText('profile-name', r.name);
+    setText('profile-name', r.name);     // side-menu account text (name is overridden by applyRealUser for real logins)
     setText('profile-status', r.label);
     document.querySelectorAll('#role-menu button').forEach(b=>b.classList.toggle('active', b.dataset.role===key));
     document.getElementById('role-menu').classList.remove('open');
