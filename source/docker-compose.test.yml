@@ -1,0 +1,35 @@
+services:
+  test-db:
+    image: mysql:8.0
+    # Keep the database time zone consistent with the app.
+    command: --default-time-zone=+07:00
+    environment:
+      TZ: Asia/Bangkok
+      MYSQL_ROOT_PASSWORD: rootpass
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  tests:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    working_dir: /app/backend
+    depends_on:
+      test-db:
+        condition: service_healthy
+    healthcheck:
+      disable: true  # The web server health check is not needed for tests.
+    environment:
+      TZ: Asia/Bangkok
+      APP_ENV: development
+      SECRET_KEY: test-only-secret-key-not-used-anywhere-else-0123456789
+      VASE_TEST_DB_HOST: test-db
+      VASE_TEST_DB_PORT: "3306"
+      VASE_TEST_DB_USER: root
+      VASE_TEST_DB_PASSWORD: rootpass
+      VASE_TEST_DB_NAME: vase_test  # The tests recreate this database; its name must end in _test.
+    command: python -m unittest discover -s tests -v

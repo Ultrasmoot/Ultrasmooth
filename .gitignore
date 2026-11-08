@@ -1,4 +1,4 @@
-# --- Python ---
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -16,7 +16,7 @@ pip-delete-this-directory.txt
 .pytest_cache/
 .ruff_cache/
 
-# --- Environment / Secrets ---
+# Environment / Secrets
 .env
 .env.*
 !.env.example
@@ -24,24 +24,24 @@ pip-delete-this-directory.txt
 *.key
 secrets.json
 
-# --- Docker ---
+# Docker
 docker-compose.override.yml
 *.log
 
-# --- MySQL / Database ---
+# MySQL / Database
 *.sql.bak
 mysql-data/
 db_data/
 *.dump
 
-# --- Node / Frontend tooling (if used) ---
+# Node / Frontend tooling
 node_modules/
 dist/
 build/
 .npm/
 .cache/
 
-# --- IDE / Editor ---
+# IDE / Editor
 .vscode/
 .idea/
 *.swp
@@ -49,19 +49,19 @@ build/
 .DS_Store
 Thumbs.db
 
-# --- OS ---
+# OS
 .DS_Store
 desktop.ini
 
-# --- Logs ---
+# Logs
 logs/
 *.log
 
-# --- Test / Coverage ---
+# Test / Coverage
 .coverage
 htmlcov/
 coverage.xml
 
-# --- Misc project files ---
+# Misc project files
 *.tmp
 *.bak
