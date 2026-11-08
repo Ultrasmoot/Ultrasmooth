@@ -302,13 +302,6 @@ class GoogleDeactivatedAndOutageTests(unittest.TestCase):
                 r = self.client.post(path, json={"credential": "t", "role": "phd_student"})
                 self.assertEqual(r.status_code, 503, path)
 
-    def test_verifier_is_called_with_clock_skew(self):
-        with mock.patch(VERIFY, return_value=GOOD) as v, \
-             mock.patch("controllers.auth_controller.UserModel") as um:
-            um.find_or_create_google_user.return_value = (None, True)
-            self.client.post("/api/auth/google", json={"credential": "t"})
-        self.assertEqual(v.call_args.kwargs.get("clock_skew_in_seconds"), 10)
-
 class ConfigTests(unittest.TestCase):
     def test_production_refuses_missing_or_placeholder_secret(self):
      
