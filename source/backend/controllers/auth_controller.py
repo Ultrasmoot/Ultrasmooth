@@ -10,6 +10,7 @@ from config import Config
 from middleware.auth_middleware import password_fingerprint
 from middleware.rate_limit import rate_limit
 from models.user_model import UserModel, ValidationError
+from services import events
 from services.mailer import send_email_in_background
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
@@ -49,7 +50,9 @@ def _verify_google_credential(credential):
 
     try:
         payload = id_token.verify_oauth2_token(
-            credential, google_requests.Request(), Config.GOOGLE_CLIENT_ID,
+            credential,
+            google_requests.Request(),
+            Config.GOOGLE_CLIENT_ID,
             clock_skew_in_seconds=Config.GOOGLE_CLOCK_SKEW_SECONDS,  # small clock drift is tolerated
         )
     except ValueError as e:
@@ -125,6 +128,7 @@ def login(): # Email/password login (SRS-11)
 
     user = UserModel.authenticate(email, password)
     if not user:
+        events.login_failed(email)   # shows up in the activity log
         return jsonify({"error": "Invalid email or password."}), 401
     if not user.get("email_verified", 1):
         # Right password, but the address was never confirmed

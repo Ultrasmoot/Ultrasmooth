@@ -22,6 +22,8 @@ def _serialize(b: dict) -> dict:
         "decided_by": b["decided_by"],
         "decided_at": b["decided_at"].isoformat() if b["decided_at"] else None,
         "decision_reason": b.get("decision_reason"),
+        "cancelled_at": b["cancelled_at"].isoformat() if b.get("cancelled_at") else None,
+
     }
 
 
@@ -73,6 +75,16 @@ def decide_booking(booking_id):
         booking = BookingModel.decide(
             booking_id, data.get("decision"), admin_id=user["id"], reason=data.get("reason")
         )
+    except ValidationError as e:
+        return jsonify({"error": str(e)}), 400
+    return jsonify({"booking": _serialize(booking)}), 200
+
+@booking_bp.post("/<int:booking_id>/cancel")
+@role_required(*STUDENT_ROLES)
+def cancel_booking(booking_id):
+    user = get_current_user()
+    try:
+        booking = BookingModel.cancel(booking_id, requester_id=user["id"])
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"booking": _serialize(booking)}), 200

@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from middleware.auth_middleware import get_current_user, login_required, role_required
 from models.maintenance_model import MaintenanceModel, ValidationError as MaintenanceValidationError
+from models.resource_detail_model import ResourceDetailModel
 from models.resource_model import ResourceModel, ValidationError
 
 resource_bp = Blueprint("resources", __name__, url_prefix="/api/resources")
@@ -18,6 +19,11 @@ def _serialize(r: dict) -> dict:
         "owner": r["owner"],
         "status": r["status"],
         "is_archived": bool(r["is_archived"]),
+        "building": r.get("building"),
+        "floor": r.get("floor_level"),
+        "capacity": r.get("capacity"),
+        "features": [f for f in (r.get("features") or "").split(",") if f],
+        "usage_notes": r.get("usage_notes"),
     }
 
 
@@ -56,6 +62,16 @@ def get_resource(resource_id):
         return jsonify({"error": "Resource not found."}), 404
     return jsonify({"resource": _serialize(resource)}), 200
 
+@resource_bp.get("/<int:resource_id>/detail")
+@login_required
+def resource_detail(resource_id):
+    user = get_current_user()
+    staff = user["role"] in ("admin", "professor")
+    result = ResourceDetailModel.get(resource_id, staff, include_archived=user["role"] == "admin")
+    if result is None:
+        return jsonify({"error": "Resource not found."}), 404
+    result["resource"] = _serialize(result["resource"])
+    return jsonify(result), 200
 
 @resource_bp.post("")
 @role_required("admin")
@@ -63,7 +79,7 @@ def create_resource():
 # SRS-2: only Lab Managers/Administrators may add resource records
     data = request.get_json(silent=True) or {}
     try:
-        resource = ResourceModel.create(data)
+        resource = ResourceModel.create(data, actor_id=get_current_user()["id"])
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"resource": _serialize(resource)}), 201
@@ -75,7 +91,7 @@ def update_resource(resource_id):
 # SRS-2: only Lab Managers/Administrators may edit resource records
     data = request.get_json(silent=True) or {}
     try:
-        resource = ResourceModel.update(resource_id, data)
+        resource = ResourceModel.update(resource_id, data, actor_id=get_current_user()["id"])
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"resource": _serialize(resource)}), 200
@@ -86,7 +102,7 @@ def update_resource(resource_id):
 def archive_resource(resource_id):
 # SRS-2 / AD-1: archiving hides a resource from the active list rather than deleting it
     try:
-        ResourceModel.archive(resource_id)
+        ResourceModel.archive(resource_id, actor_id=get_current_user()["id"])
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"status": "archived"}), 200
@@ -97,7 +113,7 @@ def archive_resource(resource_id):
 def unarchive_resource(resource_id):
     # reverse of archive: puts the resource back on the active list
     try:
-        ResourceModel.unarchive(resource_id)
+        ResourceModel.unarchive(resource_id, actor_id=get_current_user()["id"])
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
     return jsonify({"status": "unarchived"}), 200
