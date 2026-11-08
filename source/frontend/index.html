@@ -1672,7 +1672,8 @@
   document.querySelectorAll('.nav-item').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
       const key = btn.dataset.view;
-
+      /* Panisara */
+      if(!key) return;   // the bell is styled like a nav item but is not a page
       // SRS-12: deny out-of-role access attempts for all roles.
       if(key === 'access'){
         const {ok} = await apiAuthGet('/api/admin/access-check');
