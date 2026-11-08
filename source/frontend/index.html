@@ -410,7 +410,7 @@
     display:none; align-items:center; gap:6px; background:var(--green-bg); color:var(--green);
     font-size:11.5px; padding:8px 10px; border-radius:4px; margin-bottom:14px; font-family:'IBM Plex Mono', monospace;
   }
-  .login-notice.show{display:flex;}  
+  .login-notice.show{display:flex;}
 
   /* Google account chooser */
   .g-backdrop{position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; align-items:center; justify-content:center; z-index:200; font-family:Roboto, Arial, sans-serif;}
@@ -933,7 +933,7 @@
   .auth-screen{background:var(--paper) !important; background-image:none !important;}
 
   /* Account switch links */
-  .switch-form{font-size:16px; line-height:1.5;} 
+  .switch-form{font-size:16px; line-height:1.5;}
   .switch-form a{font-size:16px; font-weight:700;}
 
   /* Larger cards and form controls on desktop */
@@ -1040,8 +1040,267 @@
   .req.is-decline .req-reason::placeholder{color:rgba(255,255,255,0.72);}
   .req.is-decline .req-reason:focus{outline:none; border-color:#fff;}
   .ci-ok{background:var(--green-bg); color:var(--green); padding:10px 12px; border-radius:8px; margin:12px 0;}
+  .nav-item.req-staff-nav, .nav-item.req-appt-nav{display:none !important;}
+  body[data-role="admin"] .nav-item.req-staff-nav, body[data-role="professor"] .nav-item.req-staff-nav{display:flex !important;}
+  body[data-role="user"] .nav-item.req-appt-nav, body[data-role="professor"] .nav-item.req-appt-nav{display:flex !important;}
+  .top-bell{position:fixed; top:18px; right:28px; z-index:65; width:44px; height:44px; padding:0; display:flex; align-items:center; justify-content:center;
+    border-radius:50%; border:1px solid rgba(138,90,50,0.20); background:var(--panel); color:var(--ink); cursor:pointer;
+    box-shadow:0 4px 14px rgba(74,50,25,0.12); transition:background .2s, box-shadow .2s;}
+  .top-bell:hover{background:var(--cream-deep); box-shadow:0 6px 18px rgba(74,50,25,0.16);}
+  .top-bell:focus-visible{outline:2px solid var(--green); outline-offset:2px;}
+  .top-bell svg{width:22px; height:22px;}
+  .top-bell .nbadge{top:-4px; right:-4px; left:auto; border:2px solid var(--paper); box-sizing:content-box; min-width:15px; height:15px;}
+  @media (max-width: 860px){ .top-bell{top:12px; right:14px; width:40px; height:40px;} }
+  .nbadge{position:absolute; top:2px; left:26px; min-width:17px; height:17px; padding:0 4px; border-radius:9px; background:var(--rust); color:#fff; font-size:10.5px; font-weight:700; display:none; align-items:center; justify-content:center; line-height:1;}
+  .nbadge.show{display:inline-flex;}
+  .bell-menu{position:fixed; z-index:1300; width:360px; max-width:calc(100vw - 24px); background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:0 18px 44px rgba(22,35,63,0.22); display:none; overflow:hidden;}
+  .bell-menu.open{display:block;}
+  .bell-head{display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid var(--line);}
+  .bell-list{max-height:min(380px, 60vh); overflow:auto;}
+  .bell-item-row{display:block; width:100%; text-align:left; background:none; border:0; border-bottom:1px solid var(--line); padding:11px 14px; cursor:pointer; color:var(--ink);}
+  .bell-item-row:hover{background:var(--paper);}
+  .bell-item-row.unread{background:var(--blue-bg);}
+  .bell-item-row b{display:block; font-size:13.5px;}
+  .bell-item-row span{display:block; color:var(--ink-soft); font-size:12.5px; margin-top:2px; overflow-wrap:anywhere;}
+  .bell-item-row small{color:var(--ink-faint); font-size:11.5px;}
+  .bell-empty{padding:18px 14px; color:var(--ink-faint); font-size:13px;}
+  /* Activity log */
+  .rcard[data-rid], .hcard[data-rid]{cursor:pointer;}
 
+  .dash-cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; margin:16px 0 8px;}
+  .dash-card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px; text-align:left; font:inherit; color:var(--ink);}
+  button.dash-card{cursor:pointer;}
+  button.dash-card:hover{border-color:var(--ink);}
+  .dash-num{font-size:30px; font-weight:700; line-height:1.1;}
+  .dash-label{margin-top:4px; font-size:13.5px;}
+  .dash-sub{margin-top:2px; font-size:12px; color:var(--ink-faint);}
+  .util-row{margin-bottom:14px;}
+  .util-top{display:flex; justify-content:space-between; gap:10px; font-size:13.5px;}
+  .util-bar{height:10px; background:var(--paper); border-radius:6px; overflow:hidden; margin-top:6px; border:1px solid var(--line);}
+  .util-bar i{display:block; height:100%; background:var(--green);}
+  
+  .s5-panel{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px;}
+  .s5-filters{display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; margin-bottom:14px;}
+  .s5-filters label{display:block; font-size:12px; color:var(--ink-soft); margin-bottom:4px;}
+  .s5-filters input, .s5-filters select{padding:8px 10px; border:1px solid var(--line); border-radius:8px; background:#fff; font:inherit; color:var(--ink);}
+  .s5-table{width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+  .s5-table th, .s5-table td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); font-size:13.5px; vertical-align:top;}
+  .s5-table th{font-size:11.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--ink-faint);}
+  .s5-scroll{overflow-x:auto;}
+  .s5-pager{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; font-size:13px; color:var(--ink-soft);}
 
+  .act-filters{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px;}
+  .act-field{flex:1 1 150px; min-width:0; display:flex; align-items:center; gap:8px; height:40px; padding:0 14px; background:var(--panel); border:1px solid var(--line); border-radius:999px; color:var(--ink-soft); font-size:13px;}
+  .act-field label{white-space:nowrap;}
+  .act-field input, .act-field select{flex:1; min-width:0; height:100%; border:0; background:transparent; color:var(--ink); font:inherit; outline:none; cursor:pointer;}
+  .act-field:focus-within{outline:2px solid var(--blue); outline-offset:1px;}
+  .act-filters .btn{flex:none; height:40px; border-radius:10px; padding:0 18px; margin-right:0;}
+  .act-filters .refresh-stamp{align-self:center;}
+  .act-tabs{display:flex; flex-wrap:wrap; align-items:center; gap:4px; padding:6px; margin-bottom:22px; background:var(--cream-deep); border-radius:14px;}
+  .act-tab{border:0; background:transparent; color:var(--ink-soft); font:500 13.5px var(--font-body); padding:8px 16px; border-radius:10px; cursor:pointer;}
+  .act-tab[aria-selected="true"]{background:#fff; color:var(--ink); font-weight:600; box-shadow:var(--shadow-sm);}
+  .act-tab:focus-visible{outline:2px solid var(--blue); outline-offset:2px;}
+  .act-showing{margin-left:auto; padding:0 12px; font-size:12.5px; color:var(--ink-soft); white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .act-tl{position:relative;}
+  .act-tl::before{content:""; position:absolute; left:17px; top:10px; bottom:10px; width:2px; background:var(--line);}
+  .act-day{position:relative; display:flex; align-items:center; gap:10px; margin:18px 0 8px; font:600 15px var(--font-head); color:var(--ink);}
+  .act-day:first-child{margin-top:0;}
+  .act-day::before{content:""; width:12px; height:12px; margin:0 6px; box-sizing:content-box; border-radius:50%; background:var(--ink); border:3px solid var(--paper); z-index:1;}
+  .act-day i{flex:1; height:1px; background:var(--line);}
+  .act-ev{position:relative; display:flex; align-items:center; gap:14px; margin-bottom:8px;}
+  .act-node{width:36px; height:36px; flex:none; display:grid; place-items:center; border-radius:50%; border:3px solid var(--paper); z-index:1; background:var(--tbg); color:var(--tone);}
+  .act-node svg{width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round;}
+  .act-card{flex:1; min-width:0; display:flex; align-items:center; gap:16px; padding:10px 16px 10px 14px; background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--tone); border-radius:12px; box-shadow:var(--shadow-sm);}
+  .act-g{--tone:var(--green); --tbg:var(--green-bg);}
+  .act-a{--tone:var(--amber); --tbg:var(--amber-bg);}
+  .act-r{--tone:var(--rust); --tbg:var(--rust-bg);}
+  .act-b{--tone:var(--blue); --tbg:var(--blue-bg);}
+  .act-main{flex:1; min-width:0;}
+  .act-ttl{display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; font:600 16.5px var(--font-head);}
+  .act-badge{font:600 11px var(--font-body); padding:1px 9px; border-radius:99px; background:var(--tbg); color:var(--tone);}
+  .act-time{display:flex; align-items:center; gap:6px; margin-top:3px; font-size:12.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+  .act-time svg{width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round;}
+  .act-det{margin-top:2px; font-size:13px; color:var(--ink-soft); overflow-wrap:anywhere;}
+  .act-det b{margin-right:6px; font-weight:600; color:var(--ink);}
+  .act-who{display:flex; align-items:center; gap:10px; width:200px; flex:none; min-width:0; padding-left:16px; border-left:1px solid var(--line);}
+  .act-av{width:30px; height:30px; flex:none; display:grid; place-items:center; border-radius:50%; background:var(--cream-deep); color:var(--ink); font-size:10px; font-weight:700;}
+  .act-who span:last-child{min-width:0; font-size:13px; font-weight:600; overflow-wrap:anywhere;}
+  .act-empty{padding:40px 16px; text-align:center; color:var(--ink-soft); background:var(--panel); border:1px dashed var(--line); border-radius:12px;}
+  .act-end{margin:12px 0 0 50px; min-height:24px; font-size:12.5px; color:var(--ink-faint);}
+  @media (max-width: 640px){
+    .act-card{flex-direction:column; align-items:stretch; gap:10px;}
+    .act-who{width:auto; padding:10px 0 0; border-left:0; border-top:1px solid var(--line);}
+    .act-showing{width:100%; margin-left:0; padding:4px 10px 2px;}
+  }
+
+  /* User & Access: same card grid as Resources, with a person avatar in place of the resource icon */
+  .ua-card[data-role="undergrad_student"]{--tone-bg:#DCEBF7; --tone-fg:#3C6EA5;}
+  .ua-card[data-role="phd_student"]{--tone-bg:#DEE9D8; --tone-fg:#3E6B4F;}
+  .ua-card[data-role="professor"]{--tone-bg:#EEDFC8; --tone-fg:#8A5A32;}
+  .ua-card[data-role="admin"]{--tone-bg:#E7E1F1; --tone-fg:#6B5B9A;}
+  .ua-card{cursor:default;}
+  .ua-search{flex:1 1 240px; min-width:200px;}
+  .bar .ua-add{margin-left:auto; margin-right:0; align-self:stretch; padding:0 20px; border-radius:999px;}
+  .ua-card .rcard-art{height:132px;}
+  .ua-card .rcard-code{font-family:var(--font-body); font-size:13.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+  .ua-card .tag{background:var(--tone-bg); color:var(--tone-fg); font-weight:600;}
+  .ua-card .tag.exp{background:rgba(27,42,73,0.06); color:var(--ink-soft); font-weight:500;}
+  .ua-card .tag.plain{background:transparent; border:1px solid var(--line); color:var(--ink-soft); font-weight:500;}
+  .ua-card .pill{width:auto; max-width:100%; align-self:flex-start;}
+  .ua-av{width:78px; height:78px; border-radius:50%; background:var(--tone-fg); overflow:hidden; box-shadow:0 0 0 5px rgba(255,254,250,0.60), 0 6px 16px rgba(27,42,73,0.14);}
+  .rcard-art .ua-av svg{width:100%; height:100%; opacity:1; display:block;}
+  .ua-card.is-off .ua-av{filter:grayscale(.85); opacity:.65;}
+  .ua-card.is-off h3{color:var(--ink-soft);}
+  .st-off{background:var(--ink-faint);}
+  .ua-card .pill span{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .ua-you{display:inline-block; vertical-align:middle; margin-left:6px; padding:1px 9px; border-radius:99px; background:var(--green-bg); color:var(--green-deep); font:600 11px var(--font-body);}
+  .ua-card h3{min-height:0; margin-bottom:10px;}
+  .ua-card .rcard-actions .btn[disabled]{opacity:.4; cursor:not-allowed;}
+  /* Wider two-column edit forms (User & Access, Resources) so they fit without scrolling */
+  .modal-box:has(.modal-wide){width:780px;}
+  .mgrid{display:grid; grid-template-columns:1fr 1fr; gap:0 18px; align-items:start;}
+  .mgrid .span2{grid-column:1 / -1;}
+  .mgrid .field{margin-bottom:12px; min-width:0;}
+  .modal-box .field input:disabled{background:var(--cream-deep); color:var(--ink-soft); cursor:default;}
+
+  @media (max-width: 640px){ .mgrid{grid-template-columns:1fr;} }
+  .s5-sec{font-size:12px; letter-spacing:.6px; text-transform:uppercase; color:var(--ink-faint); margin:22px 0 10px;}
+  .s5-sec:first-child{margin-top:0;}
+  .rd-line{display:flex; flex-wrap:wrap; gap:6px 18px; color:var(--ink-soft); font-size:13.5px; margin:8px 0;}
+  .rd-slot{display:flex; justify-content:space-between; gap:10px; padding:7px 0; border-bottom:1px solid var(--line); font-size:13.5px;}
+  .rd-slot span:last-child{color:var(--ink-soft); text-align:right;}
+  .s5-pill{display:inline-block; font-size:12px; padding:3px 10px; border-radius:20px; background:var(--paper); border:1px solid var(--line); color:var(--ink-soft); margin:2px 4px 2px 0; line-height:1.4;}
+  .prof-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px;}
+  .prof-card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:10px;}
+  .prof-head{display:flex; gap:12px; align-items:center;}
+  .prof-head h3{margin:0 0 4px; font-size:15px; line-height:1.25;}
+  .prof-av{width:56px; height:56px; border-radius:50%; overflow:hidden; flex-shrink:0;}
+  .prof-av.sm{width:40px; height:40px;}
+  .prof-av svg{display:block; width:100%; height:100%;}
+  .prof-bio{margin:0; color:var(--ink-soft); font-size:13.5px; flex:1;}
+  .appt-item{background:#fff; border:1px solid var(--line); border-left:4px solid var(--blue); border-radius:12px; padding:14px 16px; margin-bottom:10px;}
+  .appt-item[data-st="Accepted"]{border-left-color:var(--green);}
+  .appt-item[data-st="Declined"]{border-left-color:var(--rust);}
+  .appt-item[data-st="Pending"]{border-left-color:var(--amber);}
+  .appt-item[data-st="Cancelled"], .appt-item[data-st="Expired"]{border-left-color:var(--ink-faint);}
+  .appt-item p{margin:6px 0 0; color:var(--ink-soft); font-size:13.5px; overflow-wrap:anywhere;}
+  .appt-row{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;}
+  .appt-acts{display:flex; gap:8px; justify-content:flex-end; margin-top:10px;}
+  
+  #view-dashboard .req-top{margin-bottom:14px;}
+  #view-dashboard .s5-filters{padding:12px 16px; margin-bottom:14px; background:var(--panel); border:1px solid rgba(138,90,50,0.14); border-radius:16px; box-shadow:var(--shadow-sm);}
+  #view-dashboard .s5-filters input{border-radius:10px;}
+  #view-dashboard #dash-content[aria-busy="true"] .dx-kpis,
+  #view-dashboard #dash-content[aria-busy="true"] .dx-grid{opacity:.55; transition:opacity .2s;}
+
+  .dx-t-green{--tone:var(--green); --tbg:var(--green-bg);}
+  .dx-t-blue{--tone:var(--blue); --tbg:var(--blue-bg);}
+  .dx-t-amber{--tone:var(--brown); --tbg:var(--amber-bg);}
+  .dx-t-rust{--tone:var(--rust); --tbg:var(--rust-bg);}
+
+  .dx-meta{display:flex; align-items:center; justify-content:space-between; gap:6px 16px; flex-wrap:wrap; margin-bottom:14px; font-size:13.5px; color:var(--ink-soft);}
+  .dx-meta b{color:var(--ink); font-weight:600;}
+  .dx-stamp{font-size:12.5px; color:var(--ink-faint); font-variant-numeric:tabular-nums;}
+
+  /* KPI cards */
+  .dx-kpis{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px;}
+  .dx-kpi{position:relative; display:flex; flex-direction:column; min-width:0; padding:18px 20px 16px; text-align:left; font:inherit; color:var(--ink);
+    background:var(--panel); border:1px solid rgba(138,90,50,0.14); border-radius:20px; box-shadow:var(--shadow-sm);}
+  button.dx-kpi{cursor:pointer; transition:border-color .2s, box-shadow .2s;}
+  button.dx-kpi:hover{border-color:color-mix(in srgb, var(--tone, var(--ink)) 45%, transparent); box-shadow:var(--shadow-md);}
+  .dx-kpi.dx-hot{border-color:color-mix(in srgb, var(--tone) 38%, transparent);}
+  .dx-kpi.dx-hot .dx-num{color:var(--tone);}
+  .dx-kpi-top{display:flex; align-items:center; gap:10px; margin-bottom:12px; font-size:13.5px; font-weight:500; color:var(--ink-soft);}
+  .dx-ico{width:34px; height:34px; flex:none; display:grid; place-items:center; border-radius:11px; background:var(--tbg); color:var(--tone);}
+  .dx-ico svg{width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round;}
+  .dx-go{margin-left:auto; width:16px; height:16px; flex:none; fill:none; stroke:var(--ink-faint); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:transform .2s, stroke .2s;}
+  button.dx-kpi:hover .dx-go{transform:translateX(3px); stroke:var(--tone);}
+  .dx-num{font:700 36px/1.05 var(--font-head); font-variant-numeric:tabular-nums;}
+  .dx-sub{margin-top:7px; font-size:12.5px; color:var(--ink-faint);}
+  .dx-kpi-ring{flex-direction:row; align-items:center; justify-content:space-between; gap:12px;}
+  .dx-kpi-ring .dx-kpi-top{margin-bottom:10px;}
+  .dx-ring{width:68px; height:68px; flex:none;}
+  .dx-ring-bg{fill:none; stroke:var(--cream-deep); stroke-width:7;}
+  .dx-ring-fg{fill:none; stroke:var(--tone); stroke-width:7; stroke-linecap:round;}
+
+  /* panels */
+  .dx-grid{display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:14px; margin-top:14px;}
+  .dx-panel{display:flex; flex-direction:column; min-width:0; padding:20px 22px 18px; background:var(--panel); border:1px solid rgba(138,90,50,0.14); border-radius:20px; box-shadow:var(--shadow-sm);}
+  .dx-panel-head{margin-bottom:14px;}
+  .dx-panel-head h3{margin:0; font:600 18px/1.3 var(--font-head);}
+  .dx-panel-head p{margin:3px 0 0; font-size:12.5px; color:var(--ink-faint);}
+
+  /* donut: resource status */
+  .dx-donut-wrap{flex:1; display:flex; align-items:center; justify-content:center; gap:16px 18px; flex-wrap:wrap; padding-bottom:6px;}
+  .dx-donut{width:146px; height:146px; flex:none;}
+  .dx-donut-bg{fill:none; stroke:var(--cream-deep); stroke-width:16;}
+  .dx-arc{fill:none; stroke-width:16; transition:opacity .15s;}
+  .dx-donut-num{font:700 30px var(--font-head); fill:var(--ink);}
+  .dx-donut-cap{font:500 11.5px var(--font-body); fill:var(--ink-faint);}
+  .dx-legend{flex:1 1 200px; display:flex; flex-direction:column; gap:2px; min-width:0;}
+  .dx-leg{display:grid; grid-template-columns:12px minmax(0,1fr) auto 36px; align-items:center; gap:8px; width:100%; padding:9px 10px; background:none; border:0; border-radius:12px; font:inherit; color:var(--ink); text-align:left; cursor:pointer; transition:background .15s;}
+  .dx-leg:hover{background:rgba(237,226,200,0.6);}
+  .dx-dot{width:12px; height:12px; border-radius:4px;}
+  .dx-leg-name{font-size:14px; font-weight:600; line-height:1.25;}
+  .dx-leg-name small{display:block; font-size:11.5px; font-weight:400; color:var(--ink-faint);}
+  .dx-leg b{font:700 18px var(--font-head); font-variant-numeric:tabular-nums;}
+  .dx-leg-pct{text-align:right; font-size:12.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+
+  /* bars: utilization */
+  .dx-bars{display:flex; flex-direction:column; gap:2px;}
+  .dx-bar{display:block; width:100%; padding:9px 10px 8px; background:none; border:0; border-radius:12px; font:inherit; color:var(--ink); text-align:left; cursor:pointer; transition:background .15s;}
+  .dx-bar:hover{background:rgba(237,226,200,0.6);}
+  .dx-bar-top{display:flex; align-items:baseline; justify-content:space-between; gap:10px;}
+  .dx-bar-name{font-size:14.5px; font-weight:600; min-width:0; overflow-wrap:break-word;}
+  .dx-bar-val{display:flex; align-items:center; gap:8px; flex:none; font:700 16px var(--font-head); font-variant-numeric:tabular-nums;}
+    .dx-track{position:relative; height:12px; margin:8px 0 6px; border-radius:999px; background:var(--cream-deep); overflow:hidden;}
+  .dx-track::after{content:""; position:absolute; top:0; bottom:0; left:50%; width:1px; background:rgba(27,42,73,0.16);}
+  .dx-track i{display:block; height:100%; width:var(--w); border-radius:999px; transform-origin:left center; background:linear-gradient(90deg, #5A8A6B, var(--green)); animation:dx-grow .8s cubic-bezier(.22,.8,.3,1) both;}
+  .dx-bar[data-lvl="busy"] .dx-track i{background:linear-gradient(90deg, var(--brown-soft), var(--brown));}
+  .dx-bar-sub{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:4px 10px; font-size:12px; color:var(--ink-faint);}
+  .dx-bar-sub .badge{font-family:var(--font-body); font-size:11px; padding:2px 8px;}
+  .dx-axis{display:grid; grid-template-columns:1fr 1fr 1fr; padding:2px 10px 0; font-size:11px; color:var(--ink-faint);}
+  .dx-axis span:nth-child(2){text-align:center;}
+  .dx-axis span:nth-child(3){text-align:right;}
+  .dx-insight{display:flex; align-items:flex-start; gap:10px; margin-top:auto; padding:12px 14px; border-radius:14px; background:var(--blue-bg); font-size:13px; line-height:1.5;}
+  .dx-bars + .dx-axis + .dx-insight, .dx-panel > .dx-insight{margin-top:16px;}
+  .dx-insight svg{width:18px; height:18px; flex:none; margin-top:1px; fill:none; stroke:var(--blue); stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round;}
+
+  /* loading + empty */
+  .dx-skel{border-radius:20px; background:linear-gradient(90deg, var(--cream-deep) 0, rgba(237,226,200,0.45) 50%, var(--cream-deep) 100%); background-size:200% 100%; opacity:.6; animation:dx-shimmer 1.4s linear infinite;}
+  .dx-empty{padding:28px 20px; text-align:center; color:var(--ink-soft); background:var(--panel); border:1px dashed rgba(138,90,50,0.3); border-radius:20px; font-size:14px;}
+  .dx-empty b{display:block; margin-bottom:4px; color:var(--ink); font:600 16px var(--font-head);}
+  .dx-empty .btn{margin:12px 0 0;}
+  .dx-panel .dx-empty{border:0; padding:24px 8px;}
+
+  @keyframes dx-grow{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+  @keyframes dx-shimmer{from{background-position:200% 0;}to{background-position:-200% 0;}}
+
+  @media (max-width: 980px){
+    .dx-kpis{grid-template-columns:repeat(2, minmax(0,1fr));}
+    .dx-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width: 480px){
+    #view-dashboard .seg{display:flex; width:100%;}
+    #view-dashboard .seg .filter-chip{flex:1; white-space:nowrap; padding:8px 4px; font-size:13px; text-align:center;}
+    .dx-kpis{gap:10px;}
+    .dx-kpi{padding:14px 14px 12px; border-radius:16px;}
+    .dx-kpi-ring, .dx-kpis > .dx-kpi:last-child{grid-column:1 / -1;}
+    .dx-kpi-top{gap:8px; margin-bottom:8px; font-size:13px;}
+    .dx-ico{width:30px; height:30px; border-radius:10px;}
+    .dx-go{display:none;}
+    .dx-num{font-size:30px;}
+    .dx-sub{font-size:12px;}
+    .dx-panel{padding:18px 16px 14px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .dx-track i, .dx-skel{animation:none;}
+    .dx-go, .dx-arc{transition:none;}
+  }
+
+  /* Resources bar: "Show archived" and "+ Add Resource" sit together at the right end */
+  #view-resources .bar .fld-archived{margin-left:auto;}
+  #view-resources .bar #btn-add-resource{margin:0; padding:10px 22px; border-radius:999px;}
 </style>
 </head>
 <body data-role="admin" data-view="home">
@@ -1259,6 +1518,8 @@
       <div class="navbar-right">
         <nav class="nav" id="main-nav">
           <button class="nav-item active" data-view="home" aria-label="Home"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.8L12 3.5l8.5 7.3"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/></svg><span class="nl">Home</span></button>
+          <!-- Dashboard (US-9): admin + professor -->
+          <button class="nav-item req-staff-nav" data-view="dashboard" aria-label="Dashboard"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="4.5" rx="1.5"/><rect x="13" y="11.5" width="7" height="8.5" rx="1.5"/><rect x="4" y="14" width="7" height="6" rx="1.5"/></svg><span class="nl">Dashboard</span></button>
           <!-- Resources (US-1: all roles can view/search, US-2: admin-only manage actions) -->
           <button class="nav-item" data-view="resources" aria-label="Resources"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.2v9.6L12 21l-8-4.2V7.2L12 3z"/><path d="M4 7.2l8 4.3 8-4.3"/><path d="M12 11.5V21"/></svg><span class="nl">Resources</span></button>
           <!-- Requests (US-3: students submit, US-4: students track own status; US-5: admin approves/rejects) -->
@@ -1267,6 +1528,10 @@
           <button class="nav-item" data-view="maintenance" aria-label="Maintenance"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5a4 4 0 0 0-4.6 5.2L4.5 16.1a1.8 1.8 0 0 0 2.5 2.5l5.4-5.4a4 4 0 0 0 5.2-4.6l-2.4 2.4-2.3-.7-.7-2.3z"/></svg><span class="nl">Maintenance</span></button>
           <!-- Check in / Check out (US-10) (students only) -->
           <button class="nav-item req-booker-nav" data-view="checkin" aria-label="Check in/out"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M15 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/></svg><span class="nl">Check in/out</span></button>
+          <!-- Appointments: students ask, professors answer -->
+          <button class="nav-item req-appt-nav" data-view="appointments" aria-label="Appointments"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M8 3.5v4M16 3.5v4M4 10h16"/></svg><span class="nl">Appointments</span></button>
+          <!-- Activity log (US-8): admin + professor -->
+          <button class="nav-item req-staff-nav" data-view="activity" aria-label="Activity log"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h3.5l2.2-6 4.3 12 2.2-6H20"/></svg><span class="nl">Activity log</span></button>
           <button class="nav-item req-admin-nav" data-view="access" aria-label="User and Access"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19c.6-3.2 2.9-5 5.5-5s4.9 1.8 5.5 5"/><path d="M16 5.6a3.1 3.1 0 010 5.8"/><path d="M17.5 14.3c1.7.6 2.7 2.2 3 4.7"/></svg><span class="nl">User &amp; Access</span></button>
         </nav>
 
@@ -1295,6 +1560,12 @@
       <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M7.5 4.5L13 10l-5.5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
   </header>
+
+  <!-- Notifications (the bell): top-right corner, every signed-in user -->
+  <button class="top-bell" id="bell-btn" type="button" aria-label="Notifications" title="Notifications">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 1112 0c0 6.5 2.5 8 2.5 8h-17S6 15.5 6 9"/><path d="M10.2 20.5a2 2 0 003.6 0"/></svg>
+    <span class="nbadge" id="bell-badge">0</span>
+  </button>
 
   <main class="page">
 
@@ -1333,7 +1604,6 @@
       <h1 id="page-title">Home</h1>
       <div class="desc" id="page-desc">You're signed in — more features arrive in later iterations</div>
     </div>
-
 
     <!-- HOME -->
     <section class="view active" id="view-home">
@@ -1416,10 +1686,10 @@
         </select>
         <label class="fld fld-check"><input type="checkbox" id="res-filter-availability"> Available now</label>
         <label class="fld fld-check fld-archived req-admin"><input type="checkbox" id="res-show-archived"> Show archived</label>
+        <button class="btn ok req-admin" id="btn-add-resource" type="button">+ Add Resource</button>
       </div>
       <div class="sec-head" style="margin-top:0;">
         <span class="note" id="res-count" style="font-style:normal;"></span>
-        <button class="btn ok req-admin" id="btn-add-resource" type="button">+ Add Resource</button>
       </div>
       <div class="grid" id="res-grid"></div>
       <p class="note" id="res-empty" style="display:none; margin-top:10px;">No resources found.</p>
@@ -1437,6 +1707,7 @@
           <button class="filter-chip" type="button" data-filter="Pending">Pending</button>
           <button class="filter-chip" type="button" data-filter="Approved">Approved</button>
           <button class="filter-chip" type="button" data-filter="Rejected">Rejected</button>
+          <button class="filter-chip" type="button" data-filter="Cancelled">Cancelled</button>        
         </div>
         <div class="req-top-actions">
           <button class="btn" id="btn-refresh-bookings" type="button">Refresh</button>
@@ -1466,7 +1737,7 @@
       <div class="req-list" id="mt-list"></div>
       <p class="note" id="mt-empty" style="display:none; margin-top:10px;">No issues to show.</p>
     </section>
-    
+
     <!-- check-in/check-out a student confirms an approved booking with a code e-mailed to them -->
     <section class="view" id="view-checkin">
       <div class="req-top">
@@ -1476,19 +1747,77 @@
       <p class="req-note">You can check in from 15 minutes before an approved booking starts. We e-mail you a code to confirm it is you.</p>
       <div id="ci-content"></div>
     </section>
-
-    <!-- USER & ACCESS (Admin only) access control demo for US-12; account management (US-13) not built yet -->
-    <section class="view" id="view-access">
-      <div class="panel">
-        <div class="panel-head"><h2>User & Access</h2></div>
-        <p class="note" style="margin:0;"> Restricted area - Admin only. This section is currently limited to administrators. User account management, such as creating, editing, and deactivating accounts, will be added in a later iteration.</p>
+    <!-- DASHBOARD: admin + professor, read-only -->
+    <section class="view" id="view-dashboard">
+      <div class="req-top">
+        <div class="seg" id="dash-period">
+          <button class="filter-chip" type="button" data-days="7">7 days</button>
+          <button class="filter-chip active" type="button" data-days="30">30 days</button>
+          <button class="filter-chip" type="button" data-days="90">90 days</button>
+          <button class="filter-chip" type="button" data-days="custom">Custom</button>
+        </div>
+        <div class="req-top-actions"><button class="btn" id="btn-refresh-dash" type="button">Refresh</button></div>
       </div>
+      <div class="s5-filters" id="dash-custom" style="display:none;">
+        <div><label for="dash-from">From</label><input type="date" id="dash-from"></div>
+        <div><label for="dash-to">To</label><input type="date" id="dash-to"></div>
+        <button class="btn ok" type="button" id="dash-apply">Apply</button>
+      </div>
+      <div id="dash-content"></div>
+    </section>
+
+    <!-- ACTIVITY LOG: admin + professor, read-only -->
+    <section class="view" id="view-activity">
+      <div class="act-filters">
+        <div class="act-field"><label for="act-from">From</label><input type="date" id="act-from"></div>
+        <div class="act-field"><label for="act-to">To</label><input type="date" id="act-to"></div>
+        <div class="act-field"><select id="act-user" aria-label="User"><option value="">All users</option></select></div>
+        <div class="act-field"><select id="act-action" aria-label="Action"><option value="">All actions</option></select></div>
+        <button class="btn" type="button" id="act-clear">Clear filters</button>
+        <button class="btn" type="button" id="act-refresh">Refresh</button>
+      </div>
+      <div class="act-tabs" id="act-tabs" role="tablist" aria-label="Activity category"></div>
+      <div id="act-content" aria-live="polite"></div>
+      <div class="act-end" id="act-end"></div>
+    </section>
+
+    <!-- APPOINTMENTS: a student asks a professor; the professor answers -->
+    <section class="view" id="view-appointments">
+      <div id="appt-content"></div>
+    </section>
+
+    <!-- USER & ACCESS (Admin only): create, edit and deactivate accounts, assign roles (US-13) -->
+    <section class="view" id="view-access">
+      <div class="bar">
+        <input class="fld ua-search" id="usr-q" placeholder="Search by name, email or student ID…" autocomplete="off">
+        <select class="fld" id="usr-role">
+          <option value="">All roles</option>
+          <option value="undergrad_student">Undergraduate Student</option>
+          <option value="phd_student">Ph.D. Student</option>
+          <option value="professor">Professor</option>
+          <option value="admin">Lab Administrator</option>
+        </select>
+        <select class="fld" id="usr-status">
+          <option value="">All statuses</option>
+          <option value="active">Active</option>
+          <option value="inactive">Deactivated</option>
+        </select>
+        <button class="btn ok ua-add" type="button" id="usr-add">+ Add user</button>
+      </div>
+      <div class="sec-head" style="margin-top:0;">
+        <span class="note" id="usr-count" style="font-style:normal;"></span>
+      </div>
+      <div class="grid" id="usr-content"></div>
     </section>
 
   </main>
 </div>
 
 <!-- MODAL -->
+<div class="bell-menu" id="bell-menu" role="dialog" aria-label="Notifications">
+  <div class="bell-head"><b>Notifications</b><button class="btn" type="button" id="bell-readall" style="padding:4px 10px;">Mark all as read</button></div>
+  <div class="bell-list" id="bell-list"></div>
+</div>
 <div class="modal-backdrop" id="modal-backdrop"><div class="modal-box" id="modal-box"></div></div>
 <div class="toast" id="toast"></div>
 
@@ -1500,7 +1829,7 @@
     admin:     { label:'Administrator', name:'System Admin', initials:'SA', canManage:true,  canApprove:true  }
   };
   let currentRole = 'admin';
-  let roleLocked = false; // true once a real backend login happens — no more "view as" switching
+  let roleLocked = false; // true once a real backend login happens no more "view as" switching
 
   function applyRole(key){
     currentRole = key;
@@ -1510,7 +1839,7 @@
     setText('role-av', r.initials);
     setText('role-name', r.name);
     setText('role-label', r.label);
-    setText('profile-name', r.name);
+    setText('profile-name', r.name);     // side-menu account text (name is overridden by applyRealUser for real logins)
     setText('profile-status', r.label);
     document.querySelectorAll('#role-menu button').forEach(b=>b.classList.toggle('active', b.dataset.role===key));
     document.getElementById('role-menu').classList.remove('open');
@@ -1545,18 +1874,21 @@
   document.addEventListener('click', ()=> document.getElementById('role-menu').classList.remove('open'));
 
   /* access-check tied to backend) */
-  const titles = {
+    const titles = {
     home: ["Home", "You're signed in — more features arrive in later iterations"],
     resources: ["Resources", "Browse, search, and manage lab equipment and tools"],
     bookings: ["Requests", "Review and track lab resource bookings"],
     maintenance: ["Maintenance", "Report resource issues and track repairs"],
     checkin: ["Check in / Check out", "Check in to your approved bookings"],
+    dashboard: ["Dashboard", "Lab status and resource utilization at a glance"],
+    activity: ["Activity log", "Who did what, and when"],
+    appointments: ["Appointments", "Ask a professor for advice, or answer students' requests"],
     access: ["User & Access", "Manage accounts, roles, and permissions"]
   };
   document.querySelectorAll('.nav-item').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
       const key = btn.dataset.view;
-
+      if(!key) return;   // the bell is styled like a nav item but is not a page
       // SRS-12: deny out-of-role access attempts for all roles.
       if(key === 'access'){
         const {ok} = await apiAuthGet('/api/admin/access-check');
@@ -1575,13 +1907,22 @@
       document.body.dataset.view = key;
       window.scrollTo({top: 0});
 
-      if(key === 'home'){ loadHome(); loadAnnouncements(); }      
+      if(key === 'home'){ loadHome(); loadAnnouncements(); }
       if(key === 'resources') loadResources();
       if(key === 'bookings') loadBookings();
       if(key === 'maintenance') loadMaintenance();
       if(key === 'checkin') loadCheckin();
+      if(key === 'dashboard') loadDashboard();
+      if(key === 'activity') openActivity();
+      if(key === 'appointments') loadAppointments();
+      if(key === 'access') loadUsers();
     });
   });
+
+  function toInstant(localValue){
+    const d = new Date(localValue);
+    return isNaN(d) ? localValue : d.toISOString().replace(/\.\d{3}Z$/, 'Z');
+  }
 
   /* Toast */
   function toast(msg){
@@ -1650,7 +1991,6 @@
   const loginNoticeText = document.getElementById('login-notice-text');
   const loginResendRow = document.getElementById('login-resend-row');
   let verifyEmailAddress = '';   // Address where the verification link was or should be sent.
-
   function showLoginNotice(msg){
     loginNoticeText.textContent = msg;
     loginNotice.classList.add('show');
@@ -1682,6 +2022,7 @@
   }
 
   let currentUser = null;
+
   // Detailed status shown in the account dropdown (the side menu itself only shows the short role label).
   const BACKEND_ROLE_LABEL = {
     phd_student: 'Ph.D. Student',
@@ -1723,6 +2064,7 @@
     applyRealUser(user);
     loadAnnouncements();
     loadHome();
+    startNotifications();  // the bell  
   }
 
   function signOut(){
@@ -1761,7 +2103,7 @@
         headers: token ? {'Authorization': 'Bearer ' + token} : {}
       });
       const data = await res.json().catch(()=>({}));
-      if(res.status === 401) handleExpiredSession(token);
+      if(res.status === 401) handleExpiredSession();
       if(!res.ok && !data.error) data.error = `Server error (${res.status}). Please try again.`;
       return {ok: res.ok, status: res.status, data};
     }catch(err){
@@ -2115,14 +2457,19 @@
     const statusLocked = resource?.status === 'Maintenance';
 
     document.getElementById('modal-box').innerHTML = `
+      <div class="modal-wide">
       <h3>${resource ? 'Edit Resource' : 'Add Resource'}</h3>
       <div id="resource-form-error" class="login-error"><span>⚠</span><span id="resource-form-error-text"></span></div>
-      <form id="resource-form">
+      <form id="resource-form" class="mgrid">
         <div class="field"><label>Name</label><input id="res-name" required value="${escapeHtml(resource?.name)}"></div>
         <div class="field"><label>Type</label><input id="res-type" required value="${escapeHtml(resource?.type)}"></div>
         <div class="field"><label>Category</label><input id="res-category" required value="${escapeHtml(resource?.category)}"></div>
         <div class="field"><label>Location</label><input id="res-location" required value="${escapeHtml(resource?.location)}"></div>
+        <div class="field"><label>Building <small>(optional)</small></label><input id="res-building" maxlength="100" value="${escapeHtml(resource?.building)}"></div>
+        <div class="field"><label>Floor <small>(optional)</small></label><input id="res-floor" maxlength="50" value="${escapeHtml(resource?.floor)}"></div>
         <div class="field"><label>Owner</label><input id="res-owner" required value="${escapeHtml(resource?.owner)}"></div>
+        <div class="field"><label>Capacity — people <small>(optional, for rooms)</small></label><input id="res-capacity" type="number" min="1" max="100000" step="1" value="${escapeHtml(resource?.capacity ?? '')}"></div>
+        <div class="field"><label>Facilities <small>(optional, separate with commas)</small></label><input id="res-features" maxlength="500" placeholder="Projector, Whiteboard, Wi-Fi" value="${escapeHtml((resource?.features || []).join(', '))}"></div>
         <div class="field">
           <label>Status</label>
           ${statusLocked ? `
@@ -2134,11 +2481,13 @@
             <option ${resource?.status === 'In Use' ? 'selected' : ''}>In Use</option>
           </select>`}
         </div>
-        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
+        <div class="field span2"><label>What it can be used for <small>(optional)</small></label><textarea id="res-notes" rows="3" maxlength="1000" style="width:100%; font-family:inherit; font-size:13px; padding:8px; border:1px solid var(--line); border-radius:6px;">${escapeHtml(resource?.usage_notes)}</textarea></div>
+        <div class="span2" style="display:flex; gap:8px; justify-content:flex-end; margin-top:2px;">
           <button class="btn no" type="button" id="resource-form-cancel">Cancel</button>
           <button class="btn ok" type="submit">Save</button>
         </div>
       </form>
+      </div>
     `;
     document.getElementById('modal-backdrop').classList.add('open');
     document.getElementById('resource-form-cancel').addEventListener('click', closeModal);
@@ -2160,7 +2509,13 @@
       category: document.getElementById('res-category').value.trim(),
       location: document.getElementById('res-location').value.trim(),
       owner: document.getElementById('res-owner').value.trim(),
-      status: document.getElementById('res-status').value
+      status: document.getElementById('res-status').value,
+      // optional details (blank clears them)
+      building: document.getElementById('res-building').value.trim() || null,
+      floor: document.getElementById('res-floor').value.trim() || null,
+      capacity: document.getElementById('res-capacity').value.trim() || null,
+      features: document.getElementById('res-features').value,
+      usage_notes: document.getElementById('res-notes').value.trim() || null
     };
 
     const method = editingResourceId ? 'PUT' : 'POST';
@@ -2235,7 +2590,7 @@
   }
 
   function bookingBadge(status){
-    const map = {Pending:'b-amber', Approved:'b-green', Rejected:'b-rust'};
+    const map = {Pending:'b-amber', Approved:'b-green', Rejected:'b-rust', Cancelled:'b-faint'};
     return `<span class="badge ${map[status] || ''}">${status}</span>`;
   }
 
@@ -2314,8 +2669,11 @@
     const resName = b.resource_name || `#${b.resource_id}`;
     const who = b.requester_name || b.requester_email || `User #${b.requester_id}`;
     const showEmail = b.requester_email && b.requester_email !== who;
-    const decided = b.decided_at ? `Decided ${new Date(b.decided_at).toLocaleString([], {dateStyle:'medium', timeStyle:'short'})}` : '';
+    const decided = b.status === 'Cancelled' && b.cancelled_at
+      ? `Cancelled ${new Date(b.cancelled_at).toLocaleString([], {dateStyle:'medium', timeStyle:'short'})}`
+      : (b.decided_at ? `Decided ${new Date(b.decided_at).toLocaleString([], {dateStyle:'medium', timeStyle:'short'})}` : '');
     const canDecide = isAdmin && b.status === 'Pending';
+    const canCancel = !isAdmin && (b.status === 'Pending' || (b.status === 'Approved' && e > new Date()));    
     return `
       <article class="req" data-id="${b.id}" data-status="${escapeHtml(b.status)}" data-name="${escapeHtml(resName)}">
         <div class="req-row">
@@ -2334,6 +2692,7 @@
               ${decided ? `<span>${decided}</span>` : ''}
             </div>` : ''}
           </div>
+          ${canCancel ? `<div class="req-actions"><button class="req-btn decline" type="button" data-act="ask-cancel">Cancel request</button></div>` : ''}
           ${canDecide ? `<div class="req-actions">
             <button class="req-btn decline" type="button" data-act="ask-reject">Reject</button>
             <button class="req-btn approve" type="button" data-act="ask-approve">Approve</button>
@@ -2399,6 +2758,10 @@
       (decline && reasonBox ? reasonBox : go).focus();
       return;
     }
+    if(act === 'ask-cancel'){
+      openCancelBookingModal(card.dataset.id, card.dataset.name, card.dataset.status);
+      return;
+    }
     if(act === 'cancel'){
       card.classList.remove('asking', 'is-decline');
       return;
@@ -2418,6 +2781,22 @@
       loadBookings();
     }
   });
+
+  function openCancelBookingModal(id, name, status){
+    document.getElementById('modal-box').innerHTML = `
+      <h3>Cancel this ${status === 'Approved' ? 'booking' : 'request'}?</h3>
+      <p class="note" style="margin:0 0 10px;">${escapeHtml(name)} — the time slot becomes free for others.</p>
+      <div class="ci-foot"><button class="btn no" type="button" id="bk-cancel-back">Go back</button><button class="btn ok" type="button" id="bk-cancel-go">Yes, cancel it</button></div>`;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('bk-cancel-back').addEventListener('click', closeModal);
+    document.getElementById('bk-cancel-go').addEventListener('click', async (e) => {
+      e.target.disabled = true;
+      const {ok, data} = await apiAuthSend('POST', `/api/bookings/${id}/cancel`);
+      closeModal();
+      toast(ok ? 'Cancelled' : (data.error || 'Could not cancel'));
+      loadBookings();
+    });
+  }
 
   async function openBookingModal(preselectId){
     if(!resourceCache.length){
@@ -2443,6 +2822,7 @@
         <div class="field"><label>Start</label><input id="bk-start" type="datetime-local" required></div>
         <div class="field"><label>End</label><input id="bk-end" type="datetime-local" required></div>
         <div class="field"><label>Purpose</label><input id="bk-purpose" required maxlength="255" placeholder="e.g. Sprint planning meeting"></div>
+        <p class="note" style="margin:0 0 8px;">One booking can last up to 12 hours and be made up to 90 days ahead. You can have up to 5 requests waiting at a time.</p>        
         <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:6px;">
           <button class="btn no" type="button" id="booking-form-cancel">Cancel</button>
           <button class="btn ok" type="submit">Submit</button>
@@ -2467,8 +2847,8 @@
 
     const payload = {
       resource_id: Number(document.getElementById('bk-resource').value),
-      start_time: document.getElementById('bk-start').value,
-      end_time: document.getElementById('bk-end').value,
+      start_time: toInstant(document.getElementById('bk-start').value),
+      end_time: toInstant(document.getElementById('bk-end').value),
       purpose: document.getElementById('bk-purpose').value.trim()
     };
 
@@ -3041,9 +3421,898 @@
     });
   }
 
-  
+  // Shared little helpers for the new pages.
+  function s5When(iso){
+    return new Date(iso).toLocaleString([], {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit', hour12:false});
+  }
+  function s5Time(iso){
+    return new Date(iso).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', hour12:false});
+  }
+  const S5_ICON_PERSON = (c) => `<svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" fill="${c}"/><circle cx="24" cy="19" r="8" fill="#fff" opacity=".92"/><path d="M8 48c2-11 10-15 16-15s14 4 16 15z" fill="#fff" opacity=".92"/></svg>`;
+  const S5_COLORS = ['#2C5F8A', '#A03B2A', '#2F6F4F', '#95651C', '#6B4C9A', '#1F7A86'];
+  // No photo yet (uploads arrive with User Management): a coloured placeholder per professor.
+  const profAvatar = (id, cls = '') => `<div class="prof-av ${cls}">${S5_ICON_PERSON(S5_COLORS[id % S5_COLORS.length])}</div>`;
+  const s5Badge = (text, cls) => `<span class="badge ${cls || 'b-faint'}">${escapeHtml(text)}</span>`;
+
+  /* Notifications (the bell) */
+  let notifTimer = null;
+
+  function setBellBadge(n){
+    const b = document.getElementById('bell-badge');
+    b.textContent = n > 99 ? '99+' : String(n);
+    b.classList.toggle('show', n > 0);
+  }
+  async function refreshUnread(){
+    const {ok, data} = await apiAuthGet('/api/notifications/unread-count');
+    if(ok) setBellBadge(data.unread);
+  }
+  function startNotifications(){
+    clearInterval(notifTimer);
+    refreshUnread();
+    notifTimer = setInterval(() => { if(!document.hidden) refreshUnread(); }, 45000);
+  }
+  let bellItems = [];
+  let bellHasMore = false;
+  function renderBell(){
+    const box = document.getElementById('bell-list');
+    box.innerHTML = (bellItems.length ? bellItems.map(n => `
+      <button type="button" class="bell-item-row ${n.is_read ? '' : 'unread'}" data-nid="${n.id}" data-view="${escapeHtml(n.view)}">
+        <b>${escapeHtml(n.title)}</b><span>${escapeHtml(n.body)}</span><small>${s5When(n.created_at)}</small>
+      </button>`).join('') : '<div class="bell-empty">No notifications yet.</div>')
+      + (bellHasMore ? '<button type="button" class="btn" id="bell-more" style="margin:10px 14px;">Load more</button>' : '');
+  }
+
+  function viewAvailable(key){
+    const btn = document.querySelector(`.nav-item[data-view="${key}"]`);
+    return !!btn && getComputedStyle(btn).display !== 'none';
+  }
+  function placeBell(){
+    const menu = document.getElementById('bell-menu');
+    const r = document.getElementById('bell-btn').getBoundingClientRect();
+    const w = menu.offsetWidth, h = menu.offsetHeight, vw = window.innerWidth, vh = window.innerHeight;
+    let left, top;
+    if(r.left + r.width / 2 < vw / 3){
+      // The bell lives in the side rail: open the menu beside the rail, level with the bell.
+      left = Math.min(Math.max(r.right + 12, 262), vw - w - 12);
+      top = Math.min(r.top, vh - h - 12);
+    } else {
+      // The bell is in a top bar: open the menu underneath it.
+      left = Math.min(r.right - w, vw - w - 12);
+      top = r.bottom + 8;
+    }
+    menu.style.left = Math.max(12, left) + 'px';
+    menu.style.top = Math.max(12, Math.min(top, vh - h - 12)) + 'px';
+    menu.style.bottom = 'auto';
+  }
+  async function toggleBell(){
+    const menu = document.getElementById('bell-menu');
+    if(menu.classList.contains('open')){ menu.classList.remove('open'); return; }
+    const {ok, data} = await apiAuthGet('/api/notifications');
+    if(!ok){ toast(data.error || 'Could not load notifications'); return; }
+    bellItems = data.notifications;
+    bellHasMore = !!data.has_more;
+    renderBell();
+    setBellBadge(data.unread);
+    menu.classList.add('open');
+    placeBell();
+  }
+  async function loadMoreBell(btn){
+    if(!bellItems.length) return;
+    btn.disabled = true;
+    const {ok, data} = await apiAuthGet('/api/notifications?before=' + bellItems[bellItems.length - 1].id);
+    if(!ok){ btn.disabled = false; toast(data.error || 'Could not load more'); return; }
+    bellItems = bellItems.concat(data.notifications);
+    bellHasMore = !!data.has_more;
+    const list = document.getElementById('bell-list');
+    const top = list.scrollTop;
+    renderBell();
+    list.scrollTop = top;
+    placeBell();
+  }
+  document.getElementById('bell-btn').addEventListener('click', (e) => { e.stopPropagation(); toggleBell(); });
+  document.getElementById('bell-menu').addEventListener('click', async (e) => {
+    e.stopPropagation();
+    const more = e.target.closest('#bell-more');
+    if(more){ loadMoreBell(more); return; }
+    const row = e.target.closest('[data-nid]');
+    if(!row) return;
+    document.getElementById('bell-menu').classList.remove('open');
+    apiAuthSend('POST', `/api/notifications/${row.dataset.nid}/read`).then(refreshUnread);
+    if(!viewAvailable(row.dataset.view)){
+      toast('That page is not available for your account.');
+      return;
+    }
+    goView(row.dataset.view);   // straight to the page it is about
+  });
+  document.getElementById('bell-readall').addEventListener('click', async (e) => {
+    e.stopPropagation();
+    await apiAuthSend('POST', '/api/notifications/read-all');
+    bellItems.forEach(n => { n.is_read = true; });
+    document.querySelectorAll('#bell-list .unread').forEach(el => el.classList.remove('unread'));
+    setBellBadge(0);
+  });
+  document.addEventListener('click', () => document.getElementById('bell-menu').classList.remove('open'));
+  /* ---------- Dashboard (US-9) ---------- */
+  let dashDays = '30';
+  let dashRange = null;  
+
+  /* Charts are plain SVG/CSS (no library): ring gauge, donut, horizontal bars. */
+  const DX_ICON = {
+    cal:   '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4M9.5 15l2 2 3.5-4"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    wrench:'<path d="M14.7 6.3a4 4 0 0 0-5 5L4 17l3 3 5.7-5.7a4 4 0 0 0 5-5l-2.5 2.5-2.2-.5-.5-2.2z"/>',
+    gauge: '<path d="M4 18a8 8 0 1 1 16 0"/><path d="m12 18 4-5"/>',
+    info:  '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/>'
+  };
+  const dxIcon = (k) => `<svg viewBox="0 0 24 24" aria-hidden="true">${DX_ICON[k]}</svg>`;
+  const DX_GO = '<svg class="dx-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+  const DX_BUSY = 85;  
+
+  function dxPct(v){
+    const n = Math.round((Number(v) || 0) * 10) / 10;
+    return (Number.isInteger(n) ? n : n.toFixed(1)) + '%';
+  }
+  function dxDate(iso){
+    return new Date(iso).toLocaleDateString([], {day:'numeric', month:'short', year:'numeric'});
+  }
+  function dxRing(pct){
+    const R = 26, C = 2 * Math.PI * R, len = Math.max(0, Math.min(100, pct)) / 100 * C;
+    const fg = len > 0.5 ? `<circle class="dx-ring-fg" cx="32" cy="32" r="${R}" stroke-dasharray="${len.toFixed(1)} ${(C - len).toFixed(1)}" transform="rotate(-90 32 32)"/>` : '';
+    return `<svg class="dx-ring" viewBox="0 0 64 64" aria-hidden="true"><circle class="dx-ring-bg" cx="32" cy="32" r="${R}"/>${fg}</svg>`;
+  }
+  function dxDonut(segs, total){
+    const R = 54, C = 2 * Math.PI * R;
+    const live = segs.filter(s => s.v > 0);
+    const gap = live.length > 1 ? 3 : 0;
+    let off = 0;
+    const arcs = total ? live.map(s => {
+      const len = s.v / total * C, dash = Math.max(len - gap, 0.5);
+      const el = `<circle class="dx-arc" data-k="${s.key}" cx="70" cy="70" r="${R}" style="stroke:${s.color}" stroke-dasharray="${dash.toFixed(2)} ${(C - dash).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"><title>${escapeHtml(s.label)}: ${s.v}</title></circle>`;
+      off += len;
+      return el;
+    }).join('') : '';
+    return `<svg class="dx-donut" viewBox="0 0 140 140" role="img" aria-label="Resources by status, ${total} in total">
+      <circle class="dx-donut-bg" cx="70" cy="70" r="${R}"/>
+      <g transform="rotate(-90 70 70)">${arcs}</g>
+      <text class="dx-donut-num" x="70" y="70" text-anchor="middle">${total}</text>
+      <text class="dx-donut-cap" x="70" y="88" text-anchor="middle">resources</text>
+    </svg>`;
+  }
+  function dxKpi({tone, icon, label, num, sub, hot, goto}){
+    const head = `<div class="dx-kpi-top"><span class="dx-ico">${dxIcon(icon)}</span><span>${escapeHtml(label)}</span>${goto ? DX_GO : ''}</div>
+      <div class="dx-num">${num}</div><div class="dx-sub">${escapeHtml(sub)}</div>`;
+    const cls = `dx-kpi dx-t-${tone}${hot ? ' dx-hot' : ''}`;
+    return goto
+      ? `<button type="button" class="${cls}" data-goto="${goto}">${head}</button>`
+      : `<div class="${cls}">${head}</div>`;
+  }
+
+  let dashReq = 0;   
+  async function loadDashboard(){
+    const box = document.getElementById('dash-content');
+    const myReq = ++dashReq;
+    if(!box.firstElementChild){
+      box.innerHTML = `<div class="dx-kpis">${'<div class="dx-skel" style="height:128px"></div>'.repeat(4)}</div>
+        <div class="dx-grid"><div class="dx-skel" style="height:300px"></div><div class="dx-skel" style="height:300px"></div></div>`;
+    }
+    box.setAttribute('aria-busy', 'true');
+    const query = dashRange ? `from=${dashRange.from}&to=${dashRange.to}` : `days=${dashDays}`;
+    let res;
+    try{ res = await apiAuthGet('/api/dashboard?' + query); }
+    catch(err){ res = {ok:false, data:{error:'Could not reach the server.'}}; }
+    if(myReq !== dashReq) return;
+    box.removeAttribute('aria-busy');
+    const {ok, data} = res;
+    if(!ok){
+      box.innerHTML = `<div class="dx-empty"><b>Couldn’t load the dashboard</b>${escapeHtml((data && data.error) || 'Something went wrong. Please try again.')}<br><button class="btn ok" type="button" data-dx-retry>Try again</button></div>`;
+      return false;
+    }
+
+    const r = data.resources, b = data.bookings, i = data.issues;
+    const cats = [...data.utilization].sort((a, c) => c.utilization_pct - a.utilization_pct);
+    const totRes = cats.reduce((s, u) => s + u.resources, 0);
+    const overall = totRes ? cats.reduce((s, u) => s + u.utilization_pct * u.resources, 0) / totRes : 0;
+    const overallBusy = overall >= DX_BUSY;
+
+    /* KPI row */
+    const kpis = `<div class="dx-kpis">
+      <div class="dx-kpi dx-kpi-ring dx-t-${overallBusy ? 'amber' : 'green'}">
+        <div>
+          <div class="dx-kpi-top"><span>Overall utilization</span></div>
+          <div class="dx-num">${dxPct(overall)}</div>
+          <div class="dx-sub">${totRes ? 'of available hours were booked' : 'no resources yet'}</div>
+        </div>${dxRing(overall)}
+      </div>
+      ${dxKpi({tone:'blue', icon:'cal', label:'Active bookings', num:b.active, sub: b.active ? 'approved and happening now' : 'nothing booked right now'})}
+      ${dxKpi({tone:'amber', icon:'clock', label:'Requests waiting', num:b.pending, sub: b.pending ? 'need an administrator’s decision' : 'all caught up', hot: b.pending > 0, goto:'bookings'})}
+      ${dxKpi({tone:'rust', icon:'wrench', label:'Open issues', num:i.open, sub: i.pending_review ? `+ ${i.pending_review} waiting for review` : (i.open ? 'confirmed, not yet resolved' : 'no open issues'), hot: i.open > 0 || i.pending_review > 0, goto:'maintenance'})}
+    </div>`;
+
+    /* Resource status donut */
+    const segs = [
+      {key:'Available',   label:'Available',      sub:'ready to book', v:r.available,   color:'var(--green)'},
+      {key:'In Use',      label:'In use',         sub:'checked in now',    v:r.in_use,      color:'var(--blue)'},
+      {key:'Maintenance', label:'Maintenance',    sub:'not bookable',  v:r.maintenance, color:'var(--brown-soft)'}
+    ];
+    const legend = segs.map(s => `
+      <button type="button" class="dx-leg" data-k="${s.key}" data-goto="resources" data-status="${s.key}">
+        <i class="dx-dot" style="background:${s.color}"></i>
+        <span class="dx-leg-name">${s.label}<small>${s.sub}</small></span>
+        <b>${s.v}</b><span class="dx-leg-pct">${r.total ? Math.round(s.v / r.total * 100) : 0}%</span>
+      </button>`).join('');
+    const statusPanel = `<section class="dx-panel" aria-labelledby="dx-h-status">
+      <div class="dx-panel-head"><h3 id="dx-h-status">Resource status</h3><p>Right now · archived resources aren’t counted</p></div>
+      ${r.total
+        ? `<div class="dx-donut-wrap">${dxDonut(segs, r.total)}<div class="dx-legend">${legend}</div></div>`
+        : `<div class="dx-empty"><b>No resources yet</b>Add your first resource to see its status here.<br><button class="btn ok" type="button" data-goto="resources">Go to resources</button></div>`}
+    </section>`;
+
+    /* Utilization bars */
+    let insight = '';
+    if(cats.length && cats.every(u => !u.booked_hours)){
+      insight = 'No bookings were made in this period yet.';
+    } else if(cats.length > 1 && cats[0].utilization_pct !== cats[cats.length - 1].utilization_pct){
+      const hi = cats[0], lo = cats[cats.length - 1];
+      insight = `<b>${escapeHtml(hi.category)}</b> is the busiest at ${dxPct(hi.utilization_pct)}. <b>${escapeHtml(lo.category)}</b> has the most room at ${dxPct(lo.utilization_pct)}.`;
+    }
+    const bars = cats.map(u => {
+      const pct = Number(u.utilization_pct) || 0, busy = pct >= DX_BUSY;
+      const w = Math.min(100, pct), shown = pct > 0 ? Math.max(w, 1.5) : 0;
+      return `<button type="button" class="dx-bar" data-lvl="${busy ? 'busy' : 'ok'}" data-goto="resources" data-category="${escapeHtml(u.category)}"
+          aria-label="${escapeHtml(u.category)}: ${dxPct(pct)} utilization. Open resources.">
+        <div class="dx-bar-top"><span class="dx-bar-name">${escapeHtml(u.category)}</span>
+          <span class="dx-bar-val">${dxPct(pct)}</span></div>
+        <div class="dx-track" aria-hidden="true"><i style="--w:${shown}%"></i></div>
+        <div class="dx-bar-sub"><span>${u.resources} resource${u.resources === 1 ? '' : 's'} · ${u.booked_hours} h booked</span>${busy ? '<span class="badge b-amber">Near capacity</span>' : ''}</div>
+      </button>`;
+    }).join('');
+    const utilPanel = `<section class="dx-panel" aria-labelledby="dx-h-util">
+      <div class="dx-panel-head"><h3 id="dx-h-util">Utilization by category</h3><p>Booked hours ÷ (resources × hours in the period). Select a category to see its resources.</p></div>
+      ${cats.length
+        ? `<div class="dx-bars">${bars}</div><div class="dx-axis" aria-hidden="true"><span>0%</span><span>50%</span><span>100%</span></div>
+           ${insight ? `<div class="dx-insight">${dxIcon('info')}<span>${insight}</span></div>` : ''}`
+        : `<div class="dx-empty"><b>No categories yet</b>Utilization appears once resources are added.</div>`}
+    </section>`;
+
+    box.innerHTML = `
+      <div class="dx-meta"><span>Showing <b>${dxDate(data.period.from)} – ${dxDate(data.period.to)}</b></span></div>
+      ${kpis}
+      <div class="dx-grid">${statusPanel}${utilPanel}</div>`;
+    return true;
+  }
+
+  /* highlight the matching donut slice while hovering / focusing a legend row; retry after an error */
+  (function(){
+    const box = document.getElementById('dash-content');
+    const hl = (e, on) => {
+      const leg = e.target.closest('.dx-leg'); if(!leg) return;
+      box.querySelectorAll('.dx-arc').forEach(a => { a.style.opacity = (!on || a.dataset.k === leg.dataset.k) ? '' : '.25'; });
+    };
+    box.addEventListener('mouseover', e => hl(e, true));
+    box.addEventListener('mouseout',  e => hl(e, false));
+    box.addEventListener('focusin',   e => hl(e, true));
+    box.addEventListener('focusout',  e => hl(e, false));
+    box.addEventListener('click', e => { if(e.target.closest('[data-dx-retry]')) loadDashboard(); });
+    // "Custom" opens with the last 30 days pre-filled so the person only has to adjust it
+    document.getElementById('dash-period').addEventListener('click', e => {
+      if(!e.target.closest('button[data-days="custom"]')) return;
+      const from = document.getElementById('dash-from'), to = document.getElementById('dash-to');
+      if(!to.value) to.value = new Date().toLocaleDateString('en-CA');
+      if(!from.value) from.value = new Date(Date.now() - 29 * 864e5).toLocaleDateString('en-CA');
+    });
+  })();
+
+  document.getElementById('dash-period').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-days]');
+    if(!btn) return;
+    document.querySelectorAll('#dash-period .filter-chip').forEach(b => b.classList.toggle('active', b === btn));
+    const custom = btn.dataset.days === 'custom';
+    document.getElementById('dash-custom').style.display = custom ? 'flex' : 'none';
+    if(!custom){ dashDays = btn.dataset.days; dashRange = null; loadDashboard(); }
+  });
+  document.getElementById('dash-apply').addEventListener('click', () => {
+    const from = document.getElementById('dash-from').value, to = document.getElementById('dash-to').value;
+    if(!from || !to){ toast('Choose both dates'); return; }
+    dashRange = {from, to};
+    loadDashboard();
+  });
+  setupRefreshButton('btn-refresh-dash', () => loadDashboard());
+
+  // Activity log (US-8)
+  // Display events in a timeline with paginated loading and category filters.
+  const ACT_PER_PAGE = 20;
+  const ACT_CATS = ['All', 'Bookings', 'Check-in / out', 'Maintenance', 'Resources', 'Other'];
+  const ACT_ICON = {
+    alert:  '<circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/>',
+    wrench: '<path d="M14.7 6.3a4 4 0 0 0-5 5L4 17l3 3 5.7-5.7a4 4 0 0 0 5-5l-2.5 2.5-2.2-.5-.5-2.2z"/>',
+    warn:   '<path d="M12 3 2.5 20h19z"/><path d="M12 10v4M12 17v.5"/>',
+    out:    '<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>',
+    inn:    '<path d="M15 4h4v16h-4M8 8l-4 4 4 4M4 12h11"/>',
+    ok:     '<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+    cal:    '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+    box:    '<path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/>',
+    dot:    '<circle cx="12" cy="12" r="3"/>'
+  };
+  function actCategory(action){
+    const a = String(action || '');
+    if(a.startsWith('booking.')) return 'Bookings';
+    if(a.startsWith('checkin.') || a.startsWith('checkout.')) return 'Check-in / out';
+    if(a.startsWith('maintenance.')) return 'Maintenance';
+    if(a.startsWith('resource.')) return 'Resources';
+    return 'Other';
+  }
+  function actStyle(action){
+    const a = String(action || ''), cat = actCategory(a);
+    if(a === 'checkin.code_failed' || a === 'auth.login_failed' || a === 'booking.rejected' || a === 'appointment.declined') return {tone:'r', icon: ACT_ICON.alert};
+    if(a === 'booking.approved') return {tone:'b', icon: ACT_ICON.ok};
+    if(cat === 'Bookings') return {tone:'b', icon: ACT_ICON.cal};
+    if(a.startsWith('checkout.')) return {tone:'g', icon: ACT_ICON.out};
+    if(a.startsWith('checkin.')) return {tone:'g', icon: ACT_ICON.inn};
+    if(a === 'maintenance.reported') return {tone:'a', icon: ACT_ICON.warn};
+    if(cat === 'Maintenance') return {tone:'a', icon: ACT_ICON.wrench};
+    if(cat === 'Resources') return {tone:'g', icon: ACT_ICON.box};
+    return {tone:'b', icon: ACT_ICON.dot};
+  }
+  const ACT_DETAIL_LABEL = {'Bookings': 'Booking', 'Check-in / out': 'Resource', 'Maintenance': 'Issue', 'Resources': 'Resource', 'Other': 'Details'};
+
+  let actCat = 'All';
+  let actActions = [];          // [{value,label}] from /api/activity/meta
+  let actItems = [];            // records currently shown, newest first
+  let actTotal = 0;
+  let actPage = 1, actPages = 1;   // server paging ("All" tab)
+  let actAll = [], actShown = 0;   // client paging (category tabs)
+  let actToken = 0, actLoading = false;
+
+  async function loadActivityMeta(){
+    const {ok, data} = await apiAuthGet('/api/activity/meta');
+    if(!ok) return;
+    const user = document.getElementById('act-user'), action = document.getElementById('act-action');
+    const keepU = user.value, keepA = action.value;
+    actActions = data.actions;
+    user.innerHTML = '<option value="">All users</option>' + data.users.map(u => `<option value="${u.id}">${escapeHtml(u.name)}</option>`).join('');
+    action.innerHTML = '<option value="">All actions</option>' + data.actions.map(a => `<option value="${escapeHtml(a.value)}">${escapeHtml(a.label)}</option>`).join('');
+    user.value = keepU; action.value = keepA;
+  }
+  function actParams(extra){
+    const params = new URLSearchParams(extra);
+    const f = {from: 'act-from', to: 'act-to', user: 'act-user'};
+    for(const [k, id] of Object.entries(f)){
+      const v = document.getElementById(id).value;
+      if(v) params.set(k, v);
+    }
+    return params;
+  }
+  async function actFetch(extra){
+    return apiAuthGet('/api/activity?' + actParams(extra).toString());
+  }
+  // Start over (filters or tab changed): load the first screen.
+  async function loadActivity(){
+    const token = ++actToken;
+    actLoading = true;
+    actItems = []; actAll = []; actShown = 0; actPage = 1; actPages = 1; actTotal = 0;
+    const box = document.getElementById('act-content');
+    const picked = document.getElementById('act-action').value;
+    if(actCat === 'All'){
+      const extra = {page: 1, per_page: ACT_PER_PAGE};
+      if(picked) extra.action = picked;
+      const {ok, data} = await actFetch(extra);
+      if(token !== actToken) return true;
+      actLoading = false;
+      if(!ok){ box.innerHTML = `<p class="note">${escapeHtml(data.error || 'Could not load the activity log')}</p>`; return false; }
+      actItems = data.items; actTotal = data.total; actPages = data.pages;
+    }else{
+      let kinds = actActions.filter(a => actCategory(a.value) === actCat).map(a => a.value);
+      if(picked) kinds = kinds.filter(k => k === picked);
+      const results = await Promise.all(kinds.map(async kind => {
+        const out = [];
+        for(let page = 1; page <= 10; page++){          // 10 x 100 per action type is far beyond a lab's log
+          const {ok, data} = await actFetch({page, per_page: 100, action: kind});
+          if(!ok) return {error: data.error};
+          out.push(...data.items);
+          if(page >= data.pages) break;
+        }
+        return {items: out};
+      }));
+      if(token !== actToken) return true;
+      actLoading = false;
+      const failed = results.find(r => r.error);
+      if(failed){ box.innerHTML = `<p class="note">${escapeHtml(failed.error || 'Could not load the activity log')}</p>`; return false; }
+      actAll = results.flatMap(r => r.items).sort((a, b) => (a.created_at < b.created_at ? 1 : a.created_at > b.created_at ? -1 : b.id - a.id));
+      actTotal = actAll.length;
+      actShown = Math.min(ACT_PER_PAGE, actAll.length);
+      actItems = actAll.slice(0, actShown);
+    }
+    renderActivity();
+    return true;
+  }
+  // Scrolled to the end: append the next page to the same timeline.
+  async function loadMoreActivity(){
+    if(actLoading || actItems.length >= actTotal) return;
+    if(actCat !== 'All'){
+      actShown = Math.min(actShown + ACT_PER_PAGE, actAll.length);
+      actItems = actAll.slice(0, actShown);
+      renderActivity();
+      return;
+    }
+    const token = actToken;
+    actLoading = true;
+    const extra = {page: actPage + 1, per_page: ACT_PER_PAGE};
+    const picked = document.getElementById('act-action').value;
+    if(picked) extra.action = picked;
+    const {ok, data} = await actFetch(extra);
+    if(token !== actToken) return;
+    actLoading = false;
+    if(!ok){ toast(data.error || 'Could not load more activity'); return; }
+    actPage = data.page; actPages = data.pages; actTotal = data.total;
+    actItems = actItems.concat(data.items);
+    renderActivity();
+  }
+  function actDay(d){ return d.toLocaleDateString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'}); }
+  function actDayKey(d){ return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; }
+  function actInitials(name){ return String(name || '?').split(/\s+/).filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase() || '?'; }
+  function renderActivity(){
+    const tabs = document.getElementById('act-tabs');
+    tabs.innerHTML = ACT_CATS.map(c => `<button class="act-tab" type="button" role="tab" aria-selected="${c === actCat}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('')
+      + `<span class="act-showing">${actItems.length ? `Showing ${actItems.length} of ${actTotal}` : `${actTotal} records`}</span>`;
+    const box = document.getElementById('act-content'), end = document.getElementById('act-end');
+    if(!actItems.length){
+      // AD-5: no matching records -> say so
+      box.innerHTML = '<div class="act-empty">No activity records match these filters.</div>';
+      end.textContent = '';
+      return;
+    }
+    let html = '<div class="act-tl">', last = '';
+    for(const a of actItems){
+      const when = new Date(a.created_at);
+      const key = actDayKey(when);
+      if(key !== last){ html += `<div class="act-day"><span>${escapeHtml(actDay(when))}</span><i></i></div>`; last = key; }
+      const cat = actCategory(a.action), st = actStyle(a.action);
+      // "Printer (2 attempts left)" -> the attempts go in the badge, the resource stays in the details
+      let detail = a.summary || '', badge = cat;
+      const m = a.action === 'checkin.code_failed' && /^(.*) \((\d+ attempts? left)\)$/.exec(detail);
+      if(m){ detail = m[1]; badge = m[2]; }
+      html += `<div class="act-ev"><div class="act-node act-${st.tone}"><svg viewBox="0 0 24 24" aria-hidden="true">${st.icon}</svg></div>
+        <div class="act-card act-${st.tone}">
+          <div class="act-main">
+            <div class="act-ttl">${escapeHtml(a.action_label)}<span class="act-badge">${escapeHtml(badge)}</span></div>
+            <div class="act-time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>${when.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', hour12: true})}</div>
+            <div class="act-det"><b>${ACT_DETAIL_LABEL[cat]}</b>${escapeHtml(detail)}</div>
+          </div>
+          <div class="act-who"><span class="act-av">${escapeHtml(actInitials(a.actor_name))}</span><span>${escapeHtml(a.actor_name)}</span></div>
+        </div></div>`;
+    }
+    box.innerHTML = html + '</div>';
+    end.textContent = actItems.length < actTotal ? 'Loading more…' : 'End of log';
+    requestAnimationFrame(maybeMoreActivity);
+  }
+  function maybeMoreActivity(){
+    if(!document.getElementById('view-activity').classList.contains('active')) return;
+    const end = document.getElementById('act-end');
+    if(actItems.length < actTotal && end.getBoundingClientRect().top < window.innerHeight + 120) loadMoreActivity();
+  }
+  async function openActivity(){
+    await loadActivityMeta();
+    return loadActivity();
+  }
+  document.getElementById('act-tabs').addEventListener('click', e => {
+    const b = e.target.closest('.act-tab');
+    if(b && b.dataset.cat !== actCat){ actCat = b.dataset.cat; loadActivity(); }
+  });
+  ['act-from', 'act-to', 'act-user', 'act-action'].forEach(id => {
+    document.getElementById(id).addEventListener('change', loadActivity);
+  });
+  document.getElementById('act-clear').addEventListener('click', () => {
+    ['act-from', 'act-to', 'act-user', 'act-action'].forEach(id => { document.getElementById(id).value = ''; });
+    actCat = 'All'; loadActivity();
+  });
+  // Same behaviour as the other Refresh buttons: spinner, "Updated hh:mm:ss", toast
+  setupRefreshButton('act-refresh', () => openActivity());
+  document.addEventListener('scroll', maybeMoreActivity, true);   // capture: works whichever element scrolls
+  window.addEventListener('resize', maybeMoreActivity);
+
+  /* Resource detail (click a card) */
+  async function openResourceDetail(id){
+    const {ok, data} = await apiAuthGet(`/api/resources/${id}/detail`);
+    if(!ok){ toast(data.error || 'Could not load the resource'); return; }
+    const r = data.resource, staff = isStaffRole();
+    const place = [r.building, r.floor, r.location].filter(Boolean).map(escapeHtml).join(' · ');
+    const slots = data.schedule.length ? data.schedule.map(s => `
+      <div class="rd-slot"><span>${s5When(s.start_time)} – ${s5Time(s.end_time)}</span>
+        <span>${staff ? `${escapeHtml(s.requester_name)}${s.purpose ? ' · ' + escapeHtml(s.purpose) : ''}` : 'Booked'}</span></div>`).join('')
+      : '<p class="note" style="margin:0;">No upcoming bookings — free to book.</p>';
+    let staffHtml = '';
+    if(staff){
+      const using = data.in_use_by;
+      staffHtml = `
+        <h4 class="s5-sec">In use right now</h4>
+        ${using ? `<div class="rd-slot"><span><b>${escapeHtml(using.name)}</b> since ${s5When(using.since)}</span>
+            <span>until ${s5Time(using.booked_until)} ${using.overdue ? s5Badge('Overdue', 'b-rust') : ''}</span></div>`
+          : '<p class="note" style="margin:0;">Nobody.</p>'}
+        <h4 class="s5-sec">Repair history</h4>
+        ${data.maintenance.length ? data.maintenance.map(m => `
+          <div class="rd-slot"><span>${escapeHtml(m.description)}</span><span>${escapeHtml(m.status)} · ${escapeHtml(m.reporter_name)}</span></div>`).join('')
+          : '<p class="note" style="margin:0;">No issues recorded.</p>'}
+        <h4 class="s5-sec">Recent activity</h4>
+        ${data.activity.length ? data.activity.map(a => `
+          <div class="rd-slot"><span>${escapeHtml(a.action_label)} — ${escapeHtml(a.summary)}</span><span>${s5When(a.created_at)} · ${escapeHtml(a.actor_name)}</span></div>`).join('')
+          : '<p class="note" style="margin:0;">Nothing yet.</p>'}`;
+    }
+    const canRequest = currentRole === 'user' && !r.is_archived && (r.status === 'Available' || r.status === 'In Use');
+    document.getElementById('modal-box').innerHTML = `
+      <div class="rcard-code">${escapeHtml(r.resource_code)}${r.is_archived ? ' · Archived' : ''}</div>
+      <h3 style="margin:2px 0 8px;">${escapeHtml(r.name)}</h3>
+      <div>${s5Badge(r.status, {Available:'b-green', 'In Use':'b-amber', Maintenance:'b-rust'}[r.status])}
+        <span class="tag">#${escapeHtml(r.category)}</span><span class="tag plain">${escapeHtml(r.type)}</span></div>
+      <div class="rd-line">
+        ${place ? `<span>📍 ${place}</span>` : ''}
+        ${r.capacity ? `<span>👥 Up to ${r.capacity} people</span>` : ''}
+        <span>Owner: ${escapeHtml(r.owner)}</span>
+      </div>
+      ${r.features.length ? `<div style="margin:6px 0;">${r.features.map(f => `<span class="s5-pill">${escapeHtml(f)}</span>`).join(' ')}</div>` : ''}
+      ${r.usage_notes ? `<p style="margin:10px 0; font-size:13.5px; color:var(--ink-soft); white-space:pre-line;">${escapeHtml(r.usage_notes)}</p>` : ''}
+      <h4 class="s5-sec">Upcoming bookings</h4>${slots}
+      ${staffHtml}
+      <div class="ci-foot">
+        <button class="btn no" type="button" id="rd-close">Close</button>
+        <span>${r.is_archived ? '' : '<button class="btn" type="button" id="rd-report">Report issue</button>'}
+          ${canRequest ? ' <button class="btn ok" type="button" id="rd-book">Request</button>' : ''}</span>
+      </div>`;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('rd-close').addEventListener('click', closeModal);
+    const rep = document.getElementById('rd-report');
+    if(rep) rep.addEventListener('click', () => { closeModal(); openMaintenanceModal(id); });
+    const book = document.getElementById('rd-book');
+    if(book) book.addEventListener('click', () => { closeModal(); openBookingModal(id); });
+  }
+  const isStaffRole = () => currentRole === 'admin' || currentRole === 'professor';
+
+  /* Appointments */
+  let apptProfessors = [], apptMine = [], apptQuery = '', apptTag = 'All';
+
+  const APPT_BADGE = {Pending:'b-amber', Accepted:'b-green', Declined:'b-rust', Cancelled:'b-faint', Expired:'b-faint'};
+  const apptStatus = (a) => a.expired ? 'Expired' : a.status;
+
+  async function loadAppointments(){
+    const box = document.getElementById('appt-content');
+    if(currentRole === 'professor'){
+      const {ok, data} = await apiAuthGet('/api/appointments/inbox');
+      if(!ok){ box.innerHTML = `<p class="note">${escapeHtml(data.error || 'Could not load requests')}</p>`; return; }
+      renderProfessorInbox(data.appointments);
+      return;
+    }
+    const [p, m] = await Promise.all([apiAuthGet('/api/appointments/professors'), apiAuthGet('/api/appointments/mine')]);
+    if(!p.ok || !m.ok){ box.innerHTML = `<p class="note">${escapeHtml((p.data && p.data.error) || (m.data && m.data.error) || 'Could not load appointments')}</p>`; return; }
+    apptProfessors = p.data.professors;
+    apptMine = m.data.appointments;
+    renderStudentAppointments();
+  }
+
+  function renderStudentAppointments(){
+    const box = document.getElementById('appt-content');
+    const tags = ['All'];
+    apptProfessors.forEach(pr => pr.expertise.forEach(t => { if(!tags.includes(t)) tags.push(t); }));
+    const q = apptQuery.trim().toLowerCase();
+    const list = apptProfessors.filter(pr =>
+      (apptTag === 'All' || pr.expertise.includes(apptTag)) &&
+      (!q || `${pr.name} ${pr.expertise.join(' ')} ${pr.bio}`.toLowerCase().includes(q)));
+    const mineHtml = apptMine.length ? apptMine.map(a => {
+      const st = apptStatus(a);
+      return `
+      <div class="appt-item" data-st="${st}">
+        <div class="appt-row"><b>${escapeHtml(a.topic)}</b>${s5Badge(st, APPT_BADGE[st])}</div>
+        <p>with <b>${escapeHtml(a.professor_name)}</b> · ${s5When(a.start_time)} – ${s5Time(a.end_time)}</p>
+        ${a.details ? `<p>${escapeHtml(a.details)}</p>` : ''}
+        ${a.decision_reason ? `<p><b>Reason:</b> ${escapeHtml(a.decision_reason)}</p>` : ''}
+        ${(a.status === 'Pending' && !a.expired) || (a.status === 'Accepted' && new Date(a.start_time) > new Date()) ? `<div class="appt-acts"><button class="btn" type="button" data-appt-cancel="${a.id}">${a.status === 'Accepted' ? 'Cancel appointment' : 'Cancel request'}</button></div>` : ''}
+      </div>`;
+    }).join('') : '<p class="note">You have not asked anyone yet.</p>';
+    box.innerHTML = `
+      <p class="note" style="margin:0 0 12px;">Not sure who to ask? Search by the topic you need help with — each professor lists what they are good at.</p>
+      <div class="s5-filters"><div style="flex:1; min-width:220px;"><label for="appt-search">Search</label>
+        <input id="appt-search" style="width:100%;" placeholder="A name or a topic, e.g. testing, database, security" value="${escapeHtml(apptQuery)}"></div></div>
+      <div class="seg" style="margin-bottom:14px; flex-wrap:wrap;">${tags.map(t => `<button class="filter-chip ${t === apptTag ? 'active' : ''}" type="button" data-appt-tag="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join('')}</div>
+      <div class="prof-grid">${list.length ? list.map(pr => `
+        <div class="prof-card">
+          <div class="prof-head">${profAvatar(pr.id)}<div><h3>${escapeHtml(pr.name)}</h3>
+            <div>${pr.expertise.map(t => `<span class="s5-pill">${escapeHtml(t)}</span>`).join(' ')}</div></div></div>
+          <p class="prof-bio">${escapeHtml(pr.bio)}</p>
+          <button class="btn ok" type="button" data-appt-ask="${pr.id}">Request appointment</button>
+        </div>`).join('') : '<p class="note">No professor matches — try another topic.</p>'}</div>
+      <h3 class="s5-sec">My appointments</h3>${mineHtml}`;
+    const search = document.getElementById('appt-search');
+    search.addEventListener('input', () => {
+      apptQuery = search.value;
+      const pos = search.selectionStart;
+      renderStudentAppointments();
+      const again = document.getElementById('appt-search');
+      again.focus(); again.setSelectionRange(pos, pos);
+    });
+  }
+
+  function renderProfessorInbox(items){
+    const box = document.getElementById('appt-content');
+    const waiting = items.filter(a => a.status === 'Pending' && !a.expired);
+    const rest = items.filter(a => !(a.status === 'Pending' && !a.expired)).reverse();
+    const card = (a, actions) => {
+      const st = apptStatus(a);
+      return `
+      <div class="appt-item" data-st="${st}">
+        <div class="appt-row"><b>${escapeHtml(a.topic)}</b>${s5Badge(st, APPT_BADGE[st])}</div>
+        <p><b>${escapeHtml(a.student_name)}</b> · ${s5When(a.start_time)} – ${s5Time(a.end_time)}</p>
+        ${a.details ? `<p>${escapeHtml(a.details)}</p>` : ''}
+        ${a.decision_reason ? `<p><b>Reason:</b> ${escapeHtml(a.decision_reason)}</p>` : ''}
+        ${actions ? `<div class="appt-acts"><button class="btn no" type="button" data-appt-decline="${a.id}">Decline</button>
+          <button class="btn ok" type="button" data-appt-accept="${a.id}">Accept</button></div>` : ''}
+      </div>`;
+    };
+    box.innerHTML = `
+      <h3 class="s5-sec">Waiting for your answer (${waiting.length})</h3>
+      ${waiting.map(a => card(a, true)).join('') || '<p class="note">All caught up.</p>'}
+      <h3 class="s5-sec">Answered and closed</h3>
+      ${rest.map(a => card(a, false)).join('') || '<p class="note">Nothing yet.</p>'}`;
+  }
+
+  function defaultAppointmentTime(){
+    const d = new Date(Date.now() + 24 * 3600 * 1000);
+    d.setHours(10, 0, 0, 0);
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function openAppointmentModal(professorId){
+    const pr = apptProfessors.find(x => x.id === professorId);
+    if(!pr) return;
+    document.getElementById('modal-box').innerHTML = `
+      <h3>Request an appointment</h3>
+      <div class="prof-head" style="margin-bottom:10px;">${profAvatar(pr.id)}<div><b>${escapeHtml(pr.name)}</b>
+        <div>${pr.expertise.map(t => `<span class="s5-pill">${escapeHtml(t)}</span>`).join(' ')}</div></div></div>
+      <div id="appt-form-error" class="login-error"><span>⚠</span><span id="appt-form-error-text"></span></div>
+      <form id="appt-form">
+        <div class="field"><label>Topic</label><input id="appt-topic" required minlength="3" maxlength="100" placeholder="What do you want to talk about?"></div>
+        <div class="field"><label>More details <small>(optional)</small></label><textarea id="appt-details" rows="3" maxlength="500" placeholder="Describe the problem so the professor can decide" style="width:100%; font-family:inherit; font-size:13px; padding:8px; border:1px solid var(--line); border-radius:6px;"></textarea></div>
+        <div class="field"><label>Preferred date and time <small>(30 minutes)</small></label><input id="appt-when" type="datetime-local" required value="${defaultAppointmentTime()}"></div>
+        <div class="ci-foot"><button class="btn no" type="button" id="appt-cancel">Cancel</button><button class="btn ok" type="submit">Send request</button></div>
+      </form>`;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('appt-cancel').addEventListener('click', closeModal);
+    document.getElementById('appt-topic').focus();
+    document.getElementById('appt-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      document.getElementById('appt-form-error').classList.remove('show');
+      const {ok, data} = await apiAuthSend('POST', '/api/appointments', {
+        professor_id: professorId,
+        topic: document.getElementById('appt-topic').value.trim(),
+        details: document.getElementById('appt-details').value.trim() || null,
+        start_time: toInstant(document.getElementById('appt-when').value)
+      });
+      if(!ok){
+        document.getElementById('appt-form-error-text').textContent = data.error || 'Could not send the request.';
+        document.getElementById('appt-form-error').classList.add('show');
+        return;
+      }
+      closeModal();
+      toast(`Request sent to ${pr.name}`);
+      loadAppointments();
+    });
+  }
+
+  function openDeclineModal(id){
+    document.getElementById('modal-box').innerHTML = `
+      <h3>Decline this request?</h3>
+      <div class="field"><label>Reason <small>(optional — the student will see it)</small></label><input id="appt-reason" maxlength="255" placeholder="e.g. I am travelling that week"></div>
+      <div class="ci-foot"><button class="btn no" type="button" id="appt-back">Go back</button><button class="btn ok" type="button" id="appt-go">Yes, decline</button></div>`;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('appt-reason').focus();
+    document.getElementById('appt-back').addEventListener('click', closeModal);
+    document.getElementById('appt-go').addEventListener('click', async () => {
+      const reason = document.getElementById('appt-reason').value.trim();
+      const {ok, data} = await apiAuthSend('POST', `/api/appointments/${id}/decide`, reason ? {decision: 'decline', reason} : {decision: 'decline'});
+      closeModal();
+      toast(ok ? 'Request declined' : (data.error || 'Could not decline'));
+      loadAppointments();
+    });
+  }
+
+  document.getElementById('appt-content').addEventListener('click', async (e) => {
+    const t = e.target.closest('button');
+    if(!t) return;
+    if(t.dataset.apptTag !== undefined){ apptTag = t.dataset.apptTag; renderStudentAppointments(); }
+    else if(t.dataset.apptAsk) openAppointmentModal(Number(t.dataset.apptAsk));
+    else if(t.dataset.apptAccept){
+      t.disabled = true;
+      const {ok, data} = await apiAuthSend('POST', `/api/appointments/${t.dataset.apptAccept}/decide`, {decision: 'accept'});
+      toast(ok ? 'Appointment accepted' : (data.error || 'Could not accept'));
+      loadAppointments();
+    }
+    else if(t.dataset.apptDecline) openDeclineModal(Number(t.dataset.apptDecline));
+    else if(t.dataset.apptCancel){
+      t.disabled = true;
+      const {ok, data} = await apiAuthSend('POST', `/api/appointments/${t.dataset.apptCancel}/cancel`);
+      toast(ok ? 'Cancelled' : (data.error || 'Could not cancel'));
+      loadAppointments();
+    }
+  });
+
+  /* User & Access (administrators manage accounts and roles) */
+  let usrList = [], usrTimer = null;
+  const USR_ROLE_OPTIONS = [['undergrad_student', 'Undergraduate Student'], ['phd_student', 'Ph.D. Student'],
+                            ['professor', 'Professor'], ['admin', 'Lab Administrator']];
+
+  async function loadUsers(){
+    const box = document.getElementById('usr-content');
+    const qs = new URLSearchParams();
+    const q = document.getElementById('usr-q').value.trim();
+    if(q) qs.set('q', q);
+    ['role', 'status'].forEach(k => { const v = document.getElementById('usr-' + k).value; if(v) qs.set(k, v); });
+    const {ok, data} = await apiAuthGet('/api/admin/users' + (qs.toString() ? '?' + qs.toString() : ''));
+    if(!ok){ box.innerHTML = `<p class="note">${escapeHtml(data.error || 'Could not load users')}</p>`; return; }
+    usrList = data.users;
+    renderUsers();
+  }
+
+  const UA_PERSON = '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="19" r="8" fill="#FBF8EF"/><path d="M8 48c2-11 10-15 16-15s14 4 16 15z" fill="#FBF8EF"/></svg>';
+  const ICON_MAIL = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="3.5" width="12" height="9" rx="1.8" stroke="currentColor" stroke-width="1.3"/><path d="M2.6 4.6 8 8.6l5.4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function userCard(u, myId){
+    const mine = u.id === myId;
+    const off = !u.is_active;
+    const unverified = u.is_active && !u.email_verified;
+    const statusText = off ? 'Deactivated' : (unverified ? 'Unverified' : 'Active');
+    const statusCls = off ? 'st-off' : (unverified ? 'st-inuse' : 'st-available');
+    // top line: student ID for students; the faculty name for everyone else (or whenever there is no ID)
+    const code = u.student_id || u.faculty || (u.role === 'admin' ? 'Software Eng. Lab' : '—');
+    const extra = (u.role === 'undergrad_student' && u.year) ? `Year ${u.year}` : (u.major || '');
+    // professors: their expertise as #topics under the e-mail (students search by these)
+    const topics = u.role === 'professor'
+      ? (Array.isArray(u.expertise) ? u.expertise : String(u.expertise || '').split(',')).map(t => String(t).trim()).filter(Boolean)
+      : [];
+    const topicHtml = topics.length
+      ? `<div class="tags">${topics.slice(0, 3).map(t => `<span class="tag exp">#${escapeHtml(t)}</span>`).join('')}${topics.length > 3 ? `<span class="tag exp" title="${escapeHtml(topics.slice(3).join(', '))}">+${topics.length - 3}</span>` : ''}</div>`
+      : '';
+    return `
+      <article class="rcard ua-card ${off ? 'is-off' : ''}" data-role="${escapeHtml(u.role)}">
+        <div class="rcard-art"><div class="ua-av">${UA_PERSON}</div><span class="rcard-status ${statusCls}">${statusText}</span></div>
+        <div class="rcard-code">${escapeHtml(code)}</div>
+        <h3 title="${escapeHtml(u.full_name || u.email)}">${escapeHtml(u.full_name || '(no name)')}${mine ? '<span class="ua-you">You</span>' : ''}</h3>
+        <div class="pill" title="${escapeHtml(u.email)}">${ICON_MAIL}<span>${escapeHtml(u.email)}</span></div>
+        ${topicHtml}<div class="tags"><span class="tag">${escapeHtml(u.role_label)}</span>${extra ? `<span class="tag plain">${escapeHtml(extra)}</span>` : ''}</div>
+        <div class="rcard-actions">
+          <button class="btn" type="button" data-usr-edit="${u.id}">Edit</button>
+          ${u.is_active
+            ? `<button class="btn no" type="button" data-usr-off="${u.id}" ${mine ? 'disabled title="You cannot deactivate your own account"' : ''}>Deactivate</button>`
+            : `<button class="btn ok" type="button" data-usr-on="${u.id}">Reactivate</button>`}
+        </div>
+      </article>`;
+  }
+
+  function renderUsers(){
+    const box = document.getElementById('usr-content');
+    document.getElementById('usr-count').textContent = `${usrList.length} account${usrList.length === 1 ? '' : 's'}`;
+    if(!usrList.length){ box.innerHTML = '<p class="note" style="grid-column:1/-1;">No account matches.</p>'; return; }
+    const myId = currentUser ? currentUser.id : null;
+    box.innerHTML = usrList.map(u => userCard(u, myId)).join('');
+  }
+
+  function openUserModal(id){
+    const u = id ? usrList.find(x => x.id === id) : null;
+    if(id && !u) return;
+    const self = !!(u && currentUser && u.id === currentUser.id);
+    const v = (k) => escapeHtml(u && u[k] != null ? String(u[k]) : '');
+    const role0 = u ? u.role : 'undergrad_student';
+    const area = 'width:100%; font-family:inherit; font-size:13px; padding:8px; border:1px solid var(--line); border-radius:6px;';
+    const created = u && u.created_at ? new Date(u.created_at).toLocaleString([], {dateStyle:'long', timeStyle:'short'}) : '';
+    document.getElementById('modal-box').innerHTML = `
+      <div class="modal-wide">
+      <h3>${u ? 'Edit user' : 'Add user'}</h3>
+      <div id="usr-form-error" class="login-error"><span>⚠</span><span id="usr-form-error-text"></span></div>
+      <form id="usr-form" class="mgrid" autocomplete="off">
+        <div class="field"><label>Full name</label><input id="usr-name" required maxlength="150" value="${v('full_name')}"></div>
+        <div class="field"><label>Email</label><input id="usr-email" type="email" required maxlength="150" value="${v('email')}"></div>
+        <div class="field"><label>Role</label>
+          <select id="usr-role-sel" ${self ? 'disabled' : ''}>${USR_ROLE_OPTIONS.map(([val, label]) =>
+            `<option value="${val}" ${val === role0 ? 'selected' : ''}>${label}</option>`).join('')}</select>
+          ${self ? '<small>You cannot change your own role.</small>' : (u ? '<small>A role change takes effect immediately.</small>' : '')}</div>
+        <div class="field" data-for="student"><label>Student ID <small>(10 digits, optional)</small></label>
+          <input id="usr-sid" maxlength="10" inputmode="numeric" value="${v('student_id')}"></div>
+        <div class="field" data-for="undergrad"><label>Class year</label>
+          <select id="usr-year">${[1, 2, 3, 4, 5, 6].map(n => `<option value="${n}" ${(u && u.year === n) ? 'selected' : ''}>Year ${n}</option>`).join('')}</select></div>
+        <div class="field"><label>Faculty <small>(optional)</small></label><input id="usr-faculty" maxlength="150" value="${v('faculty')}"></div>
+        <div class="field"><label>Major <small>(optional)</small></label><input id="usr-major" maxlength="150" value="${v('major')}"></div>
+        ${u ? `<div class="field"><label>Created at</label><input id="usr-created" value="${escapeHtml(created || '—')}" disabled></div>` : ''}
+        <div class="field span2" data-for="professor"><label>Expertise <small>(topics separated by commas; students search by these)</small></label>
+          <input id="usr-exp" maxlength="500" placeholder="e.g. Databases, Security" value="${v('expertise')}"></div>
+        <div class="field span2" data-for="professor"><label>Short bio <small>(optional)</small></label>
+          <textarea id="usr-bio" rows="3" maxlength="500" style="${area}">${v('bio')}</textarea></div>
+        ${u ? '' : `<div class="field span2"><label>Temporary password <small>(at least 8 characters)</small></label>
+          <input id="usr-pw" type="text" required minlength="8" maxlength="72" autocomplete="new-password">
+          <small>Give it to the user; they can change it later with “Forgot password”.</small></div>`}
+        <div class="ci-foot span2" style="margin-top:4px;"><button class="btn no" type="button" id="usr-cancel">Cancel</button>
+          <button class="btn ok" type="submit" id="usr-save">${u ? 'Save changes' : 'Create account'}</button></div>
+      </form>
+      </div>`;
+    const form = document.getElementById('usr-form');
+    const roleSel = document.getElementById('usr-role-sel');
+    const currentRoleValue = () => self ? u.role : roleSel.value;
+    const sync = () => {
+      const r = currentRoleValue();
+      form.querySelector('[data-for="student"]').style.display = (r === 'undergrad_student' || r === 'phd_student') ? '' : 'none';
+      form.querySelector('[data-for="undergrad"]').style.display = r === 'undergrad_student' ? '' : 'none';
+      form.querySelectorAll('[data-for="professor"]').forEach(el => { el.style.display = r === 'professor' ? '' : 'none'; });
+    };
+    roleSel.addEventListener('change', sync);
+    sync();
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('usr-cancel').addEventListener('click', closeModal);
+    document.getElementById('usr-name').focus();
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errBox = document.getElementById('usr-form-error');
+      errBox.classList.remove('show');
+      const role = currentRoleValue();
+      const val = (id) => document.getElementById(id).value.trim();
+      const body = {full_name: val('usr-name'), email: val('usr-email'), role,
+                    faculty: val('usr-faculty') || null, major: val('usr-major') || null};
+      if(role === 'undergrad_student' || role === 'phd_student') body.student_id = val('usr-sid') || null;
+      if(role === 'undergrad_student') body.year = Number(document.getElementById('usr-year').value);
+      if(role === 'professor'){ body.expertise = val('usr-exp'); body.bio = val('usr-bio'); }
+      if(!u) body.password = document.getElementById('usr-pw').value;
+      const save = document.getElementById('usr-save');
+      save.disabled = true;
+      const {ok, data} = u ? await apiAuthSend('PUT', `/api/admin/users/${u.id}`, body)
+                           : await apiAuthSend('POST', '/api/admin/users', body);
+      save.disabled = false;
+      if(!ok){
+        document.getElementById('usr-form-error-text').textContent = data.error || 'Could not save the account.';
+        errBox.classList.add('show');
+        return;
+      }
+      closeModal();
+      toast(u ? 'Changes saved' : 'Account created');
+      loadUsers();
+    });
+  }
+
+  function openUserToggleModal(id, activate){
+    const u = usrList.find(x => x.id === id);
+    if(!u) return;
+    document.getElementById('modal-box').innerHTML = `
+      <h3>${activate ? 'Reactivate this account?' : 'Deactivate this account?'}</h3>
+      <p style="margin:0 0 6px;"><b>${escapeHtml(u.full_name || u.email)}</b> · ${escapeHtml(u.email)}</p>
+      <p class="note" style="margin:0 0 12px;">${activate
+        ? 'They will be able to log in again.'
+        : 'They are signed out at once and cannot log in until you reactivate the account. Their bookings and history are kept.'}</p>
+      <div id="usr-toggle-error" class="login-error"><span>⚠</span><span id="usr-toggle-error-text"></span></div>
+      <div class="ci-foot"><button class="btn" type="button" id="usr-toggle-back">Go back</button>
+        <button class="btn ${activate ? 'ok' : 'no'}" type="button" id="usr-toggle-go">${activate ? 'Yes, reactivate' : 'Yes, deactivate'}</button></div>`;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('usr-toggle-back').addEventListener('click', closeModal);
+    document.getElementById('usr-toggle-go').addEventListener('click', async (e) => {
+      e.currentTarget.disabled = true;
+      const {ok, data} = await apiAuthSend('POST', `/api/admin/users/${id}/${activate ? 'reactivate' : 'deactivate'}`);
+      if(!ok){
+        e.currentTarget.disabled = false;
+        document.getElementById('usr-toggle-error-text').textContent = data.error || 'Could not change the account.';
+        document.getElementById('usr-toggle-error').classList.add('show');
+        return;
+      }
+      closeModal();
+      toast(activate ? 'Account reactivated' : 'Account deactivated');
+      loadUsers();
+    });
+  }
+
+  document.getElementById('usr-add').addEventListener('click', () => openUserModal());
+  document.getElementById('usr-q').addEventListener('input', () => { clearTimeout(usrTimer); usrTimer = setTimeout(loadUsers, 250); });
+  ['usr-role', 'usr-status'].forEach(id => document.getElementById(id).addEventListener('change', loadUsers));
+  document.getElementById('usr-content').addEventListener('click', (e) => {
+    const t = e.target.closest('button');
+    if(!t || t.disabled) return;
+    if(t.dataset.usrEdit) openUserModal(Number(t.dataset.usrEdit));
+    else if(t.dataset.usrOff) openUserToggleModal(Number(t.dataset.usrOff), false);
+    else if(t.dataset.usrOn) openUserToggleModal(Number(t.dataset.usrOn), true);
+  });
+
   /* Announcements */
-    async function loadAnnouncements(){
+  async function loadAnnouncements(){
     const {ok, data} = await apiAuthGet('/api/announcements');
     if(!ok){
       toast(data.error || 'Could not load announcements');
@@ -3062,6 +4331,8 @@
     }
     empty.style.display = 'none';
     const me = currentUser; // set in applyRealUser(); null if not yet restored
+    // The author or an administrator may pin / delete (the server enforces the same rule)
+    const mine = a => !!me && (me.id === a.author_id || me.role === 'admin');
     list.innerHTML = items.map(a => `
       <article class="ann ${a.is_pinned ? 'pinned' : ''}">
         <div class="ann-top">
@@ -3070,8 +4341,8 @@
             <b>${escapeHtml(a.title)}</b>
           </div>
           <div class="ann-actions">
-            <button class="btn req-announcer" type="button" data-act="pin" data-id="${a.id}">${a.is_pinned ? 'Unpin' : 'Pin'}</button>
-            ${me && me.id === a.author_id ? `<button class="btn no" type="button" data-act="delete" data-id="${a.id}">Delete</button>` : ''}
+            ${mine(a) ? `<button class="btn req-announcer" type="button" data-act="pin" data-id="${a.id}">${a.is_pinned ? 'Unpin' : 'Pin'}</button>` : ''}
+            ${mine(a) ? `<button class="btn no" type="button" data-act="delete" data-id="${a.id}">Delete</button>` : ''}
           </div>
         </div>
         <p class="ann-body">${escapeHtml(a.body)}</p>
@@ -3248,7 +4519,7 @@
       actions.push(`<button class="btn" type="button" data-action="report" data-id="${r.id}">Report issue</button>`);
     }
     return `
-      <article class="rcard" data-tone="${toneOf(r.category)}">
+      <article class="rcard" data-rid="${r.id}" data-tone="${toneOf(r.category)}">
         <div class="rcard-art">${resIcon(r.category)}<span class="rcard-status ${STATUS_CLASS[r.status] || ''}">${escapeHtml(r.status)}</span></div>
         <div class="rcard-code">${escapeHtml(r.resource_code)}${r.is_archived ? ' · Archived' : ''}</div>
         <h3 title="${escapeHtml(r.name)}">${escapeHtml(r.name)}</h3>
@@ -3260,7 +4531,7 @@
 
   function resourceHCard(r){
     return `
-      <div class="hcard" data-tone="${toneOf(r.category)}">
+      <div class="hcard" data-rid="${r.id}" data-tone="${toneOf(r.category)}">
         <div class="rcard-art">${resIcon(r.category)}<span class="rcard-status ${STATUS_CLASS[r.status] || ''}">${escapeHtml(r.status)}</span></div>
         <div class="hcard-body">
           <div class="rcard-code">${escapeHtml(r.resource_code)}</div>
@@ -3286,7 +4557,11 @@
   /* shared click handling for resource cards (Edit / Archive / Request) */
   function cardActionHandler(e){
     const btn = e.target.closest('button[data-action]');
-    if(!btn) return;
+    if(!btn){
+      const card = e.target.closest('[data-rid]');
+      if(card && !e.target.closest('button, a')) openResourceDetail(Number(card.dataset.rid));
+      return;
+    }
     const id = Number(btn.dataset.id);
     if(btn.dataset.action === 'edit') openResourceModal(id);
     if(btn.dataset.action === 'archive') archiveResource(id);
@@ -3458,6 +4733,7 @@
   document.getElementById('home-clear-inline').addEventListener('click', clearHomeSearch);
   document.addEventListener('click', () => homeFilterCard.classList.remove('open'));
 
+
   /* floating side menu: tap/click support for touch screens */
   (function(){
     const nb = document.getElementById('navbar');
@@ -3465,15 +4741,13 @@
     nb.addEventListener('click', (e) => { if(e.target.closest('.nav-item')) nb.classList.remove('open'); });
     document.addEventListener('click', (e) => { if(!e.target.closest('.navbar-in')) nb.classList.remove('open'); });
   })();
-
   /* init calls */
   applyRole('admin'); // default demo state (overridden below if a real session restores)
   restoreSession();
-  // open the reset password page when a reset token is in the URL
-  if (new URLSearchParams(window.location.search).get('reset_token')) {
+  if(new URLSearchParams(window.location.search).get('reset_token')){
     showAuthView('reset-password');
   }
-  
+
   // backend, drop the token from the address bar (single-use), and tell the user on the login screen.
   (async function handleVerifyLink(){
     const token = new URLSearchParams(window.location.search).get('verify_token');
