@@ -151,6 +151,29 @@ class TestDatabase:
         self._patches = []
         self.dir.cleanup()
 
+    def execute(self, sql, params=()):
+        conn = self.connect()
+        try:
+            cur = conn.cursor()
+            cur.execute(sql, params)
+            conn.commit()
+            return cur.lastrowid
+        finally:
+            conn.close()
+
+    def query(self, sql, params=()):
+        conn = self.connect()
+        try:
+            cur = conn.cursor(dictionary=True)
+            cur.execute(sql, params)
+            return cur.fetchall()
+        finally:
+            conn.close()
+
+    def one(self, sql, params=()):
+        rows = self.query(sql, params)
+        return rows[0] if rows else None
+
     # Create a test user
     def add_user(self, role, name, email=None, active=1):
         email = email or f"{name.lower().replace(' ', '.')}@ku.th"
