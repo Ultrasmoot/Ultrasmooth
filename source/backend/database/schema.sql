@@ -26,6 +26,11 @@ CREATE TABLE IF NOT EXISTS resources (
     location VARCHAR(150) NOT NULL,
     owner VARCHAR(150) NOT NULL,
     status ENUM('Available','In Use','Maintenance') NOT NULL DEFAULT 'Available',
+    building VARCHAR(100) NULL,
+    floor_level VARCHAR(50) NULL,
+    capacity INT UNSIGNED NULL,
+    features VARCHAR(500) NULL,
+    usage_notes VARCHAR(1000) NULL,
     is_archived TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -39,10 +44,11 @@ CREATE TABLE IF NOT EXISTS bookings (
     start_time DATETIME NOT NULL,
     end_time DATETIME NOT NULL,
     purpose VARCHAR(255) NOT NULL,
-    status ENUM('Pending','Approved','Rejected') NOT NULL DEFAULT 'Pending',
+    status ENUM('Pending','Approved','Rejected','Cancelled') NOT NULL DEFAULT 'Pending',
     decided_by INT NULL,
     decided_at TIMESTAMP NULL,
     decision_reason VARCHAR(255) NULL,
+    cancelled_at DATETIME NULL,
     checked_in_at DATETIME NULL,
     checked_out_at DATETIME NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -120,4 +126,67 @@ CREATE TABLE IF NOT EXISTS checkin_codes (
     FOREIGN KEY (booking_id) REFERENCES bookings(id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     INDEX idx_checkin_booking (booking_id, id)
+);
+
+-- Stores activity history with the original actor name.
+-- actor_id is NULL for events without a signed-in user.
+CREATE TABLE IF NOT EXISTS activity_log (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    actor_id INT NULL,
+    actor_name VARCHAR(150) NOT NULL,
+    action VARCHAR(40) NOT NULL,
+    resource_id INT NULL,
+    target_type VARCHAR(30) NULL,
+    target_id INT NULL,
+    summary VARCHAR(500) NOT NULL,
+    created_at DATETIME NOT NULL,
+    INDEX idx_activity_created (created_at),
+    INDEX idx_activity_actor (actor_id, created_at),
+    INDEX idx_activity_action (action, created_at),
+    INDEX idx_activity_resource (resource_id, created_at),
+    FOREIGN KEY (actor_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE SET NULL
+);
+
+-- In-web notifications
+CREATE TABLE IF NOT EXISTS notifications (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    kind VARCHAR(40) NOT NULL,
+    title VARCHAR(150) NOT NULL,
+    body VARCHAR(500) NOT NULL DEFAULT '',
+    link_view VARCHAR(30) NOT NULL DEFAULT 'home',
+    is_read TINYINT(1) NOT NULL DEFAULT 0,
+    created_at DATETIME NOT NULL,
+    INDEX idx_notifications_user (user_id, is_read, created_at),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Professor profiles
+CREATE TABLE IF NOT EXISTS professor_profiles (
+    user_id INT PRIMARY KEY,
+    expertise VARCHAR(500) NOT NULL DEFAULT '',
+    bio VARCHAR(500) NOT NULL DEFAULT '',
+    photo_path VARCHAR(255) NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Students can request 30-minute appointments with professors
+-- Professors can accept or decline requests
+CREATE TABLE IF NOT EXISTS appointments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    professor_id INT NOT NULL,
+    topic VARCHAR(100) NOT NULL,
+    details VARCHAR(500) NULL,
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL,
+    status ENUM('Pending','Accepted','Declined','Cancelled') NOT NULL DEFAULT 'Pending',
+    decision_reason VARCHAR(255) NULL,
+    decided_at DATETIME NULL,
+    created_at DATETIME NOT NULL,
+    INDEX idx_appt_professor (professor_id, status, start_time),
+    INDEX idx_appt_student (student_id, status),
+    FOREIGN KEY (student_id) REFERENCES users(id),
+    FOREIGN KEY (professor_id) REFERENCES users(id)
 );
