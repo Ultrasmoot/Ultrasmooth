@@ -3602,6 +3602,35 @@
     });
   }
 
+  function openUserToggleModal(id, activate){
+    const u = usrList.find(x => x.id === id);
+    if(!u) return;
+    document.getElementById('modal-box').innerHTML = `
+      <h3>${activate ? 'Reactivate this account?' : 'Deactivate this account?'}</h3>
+      <p style="margin:0 0 6px;"><b>${escapeHtml(u.full_name || u.email)}</b> · ${escapeHtml(u.email)}</p>
+      <p class="note" style="margin:0 0 12px;">${activate
+        ? 'They will be able to log in again.'
+        : 'They are signed out at once and cannot log in until you reactivate the account. Their bookings and history are kept.'}</p>
+      <div id="usr-toggle-error" class="login-error"><span>⚠</span><span id="usr-toggle-error-text"></span></div>
+      <div class="ci-foot"><button class="btn" type="button" id="usr-toggle-back">Go back</button>
+        <button class="btn ${activate ? 'ok' : 'no'}" type="button" id="usr-toggle-go">${activate ? 'Yes, reactivate' : 'Yes, deactivate'}</button></div>`;
+    document.getElementById('modal-backdrop').classList.add('open');
+    document.getElementById('usr-toggle-back').addEventListener('click', closeModal);
+    document.getElementById('usr-toggle-go').addEventListener('click', async (e) => {
+      e.currentTarget.disabled = true;
+      const {ok, data} = await apiAuthSend('POST', `/api/admin/users/${id}/${activate ? 'reactivate' : 'deactivate'}`);
+      if(!ok){
+        e.currentTarget.disabled = false;
+        document.getElementById('usr-toggle-error-text').textContent = data.error || 'Could not change the account.';
+        document.getElementById('usr-toggle-error').classList.add('show');
+        return;
+      }
+      closeModal();
+      toast(activate ? 'Account reactivated' : 'Account deactivated');
+      loadUsers();
+    });
+  }
+
   /* Announcements */
     async function loadAnnouncements(){
     const {ok, data} = await apiAuthGet('/api/announcements');
