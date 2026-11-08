@@ -3462,6 +3462,58 @@
   setupRefreshButton('act-refresh', () => openActivity());
   document.addEventListener('scroll', maybeMoreActivity, true);   // capture: works whichever element scrolls
   window.addEventListener('resize', maybeMoreActivity);
+
+  /* User & Access (administrators manage accounts and roles) */
+  let usrList = [], usrTimer = null;
+  const USR_ROLE_OPTIONS = [['undergrad_student', 'Undergraduate Student'], ['phd_student', 'Ph.D. Student'],
+                            ['professor', 'Professor'], ['admin', 'Lab Administrator']];
+
+  async function loadUsers(){
+    const box = document.getElementById('usr-content');
+    const qs = new URLSearchParams();
+    const q = document.getElementById('usr-q').value.trim();
+    if(q) qs.set('q', q);
+    ['role', 'status'].forEach(k => { const v = document.getElementById('usr-' + k).value; if(v) qs.set(k, v); });
+    const {ok, data} = await apiAuthGet('/api/admin/users' + (qs.toString() ? '?' + qs.toString() : ''));
+    if(!ok){ box.innerHTML = `<p class="note">${escapeHtml(data.error || 'Could not load users')}</p>`; return; }
+    usrList = data.users;
+    renderUsers();
+  }
+
+  const UA_PERSON = '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="19" r="8" fill="#FBF8EF"/><path d="M8 48c2-11 10-15 16-15s14 4 16 15z" fill="#FBF8EF"/></svg>';
+  const ICON_MAIL = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="3.5" width="12" height="9" rx="1.8" stroke="currentColor" stroke-width="1.3"/><path d="M2.6 4.6 8 8.6l5.4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function userCard(u, myId){
+    const mine = u.id === myId;
+    const off = !u.is_active;
+    const unverified = u.is_active && !u.email_verified;
+    const statusText = off ? 'Deactivated' : (unverified ? 'Unverified' : 'Active');
+    const statusCls = off ? 'st-off' : (unverified ? 'st-inuse' : 'st-available');
+    // top line: student ID for students; the faculty name for everyone else (or whenever there is no ID)
+    const code = u.student_id || u.faculty || (u.role === 'admin' ? 'Software Eng. Lab' : '—');
+    const extra = (u.role === 'undergrad_student' && u.year) ? `Year ${u.year}` : (u.major || '');
+    // professors: their expertise as #topics under the e-mail (students search by these)
+    const topics = u.role === 'professor'
+      ? (Array.isArray(u.expertise) ? u.expertise : String(u.expertise || '').split(',')).map(t => String(t).trim()).filter(Boolean)
+      : [];
+    const topicHtml = topics.length
+      ? `<div class="tags">${topics.slice(0, 3).map(t => `<span class="tag exp">#${escapeHtml(t)}</span>`).join('')}${topics.length > 3 ? `<span class="tag exp" title="${escapeHtml(topics.slice(3).join(', '))}">+${topics.length - 3}</span>` : ''}</div>`
+      : '';
+    return `
+      <article class="rcard ua-card ${off ? 'is-off' : ''}" data-role="${escapeHtml(u.role)}">
+        <div class="rcard-art"><div class="ua-av">${UA_PERSON}</div><span class="rcard-status ${statusCls}">${statusText}</span></div>
+        <div class="rcard-code">${escapeHtml(code)}</div>
+        <h3 title="${escapeHtml(u.full_name || u.email)}">${escapeHtml(u.full_name || '(no name)')}${mine ? '<span class="ua-you">You</span>' : ''}</h3>
+        <div class="pill" title="${escapeHtml(u.email)}">${ICON_MAIL}<span>${escapeHtml(u.email)}</span></div>
+        ${topicHtml}<div class="tags"><span class="tag">${escapeHtml(u.role_label)}</span>${extra ? `<span class="tag plain">${escapeHtml(extra)}</span>` : ''}</div>
+        <div class="rcard-actions">
+          <button class="btn" type="button" data-usr-edit="${u.id}">Edit</button>
+          ${u.is_active
+            ? `<button class="btn no" type="button" data-usr-off="${u.id}" ${mine ? 'disabled title="You cannot deactivate your own account"' : ''}>Deactivate</button>`
+            : `<button class="btn ok" type="button" data-usr-on="${u.id}">Reactivate</button>`}
+        </div>
+      </article>`;
+  }
   
   /* Announcements */
     async function loadAnnouncements(){
