@@ -47,18 +47,19 @@ VALUES (
 ON DUPLICATE KEY UPDATE email = email;
 
 INSERT INTO bookings (resource_id, requester_id, start_time, end_time, purpose, status)
-SELECT v.resource_id, u.id, v.start_time, v.end_time, v.purpose, v.status
+SELECT r.id, u.id, v.start_time, v.end_time, v.purpose, v.status
 FROM users u
 JOIN (
     -- Dates are relative to "now" so the demo never goes stale. The Pending request starts
     -- after the check-in demo booking below (which runs until +7 days) so approving it
     -- does not hit the "overlaps an approved booking" rule.
-    SELECT 1 AS resource_id, CURDATE() + INTERVAL 10 DAY + INTERVAL 9 HOUR AS start_time, CURDATE() + INTERVAL 10 DAY + INTERVAL 11 HOUR AS end_time, 'Print enclosure prototype' AS purpose, 'Pending'  AS status
+    SELECT 'RES-0001' AS resource_code, CURDATE() + INTERVAL 10 DAY + INTERVAL 9 HOUR AS start_time, CURDATE() + INTERVAL 10 DAY + INTERVAL 11 HOUR AS end_time, 'Print enclosure prototype' AS purpose, 'Pending'  AS status
     UNION ALL
-    SELECT 2, CURDATE() + INTERVAL 4 DAY + INTERVAL 13 HOUR, CURDATE() + INTERVAL 4 DAY + INTERVAL 15 HOUR, 'Debug signal noise issue',   'Approved'
+    SELECT 'RES-0002', CURDATE() + INTERVAL 4 DAY + INTERVAL 13 HOUR, CURDATE() + INTERVAL 4 DAY + INTERVAL 15 HOUR, 'Debug signal noise issue',   'Approved'
     UNION ALL
-    SELECT 3, CURDATE() + INTERVAL 2 DAY + INTERVAL 10 HOUR, CURDATE() + INTERVAL 2 DAY + INTERVAL 12 HOUR, 'Soldering workshop prep',    'Rejected'
+    SELECT 'RES-0003', CURDATE() + INTERVAL 2 DAY + INTERVAL 10 HOUR, CURDATE() + INTERVAL 2 DAY + INTERVAL 12 HOUR, 'Soldering workshop prep',    'Rejected'
 ) v
+JOIN resources r ON r.resource_code = v.resource_code
 WHERE u.email = 'student@ku.th';
 
 INSERT INTO maintenance_records (resource_id, reported_by, description, status, issue_date, confirmed_by, confirmed_at)
