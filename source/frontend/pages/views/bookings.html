@@ -1,0 +1,24 @@
+    <!-- requests students submit track admins review pending -->
+    <section class="view" id="view-bookings">
+      <div class="req-top">
+        <div class="seg req-admin" id="admin-bk-tabs">
+          <button class="filter-chip active" type="button" data-tab="pending">Pending</button>
+          <button class="filter-chip" type="button" data-tab="history">History</button>
+        </div>
+        <div class="seg req-booker" id="booking-filters">
+          <button class="filter-chip active" type="button" data-filter="All">All</button>
+          <button class="filter-chip" type="button" data-filter="Pending">Pending</button>
+          <button class="filter-chip" type="button" data-filter="Approved">Approved</button>
+          <button class="filter-chip" type="button" data-filter="Rejected">Rejected</button>
+          <button class="filter-chip" type="button" data-filter="Cancelled">Cancelled</button>
+        </div>
+        <div class="req-top-actions">
+          <button class="btn" id="btn-refresh-bookings" type="button">Refresh</button>
+          <button class="btn ok req-booker" id="btn-new-booking" type="button">+ New booking</button>
+        </div>
+      </div>
+      <p class="req-note req-admin" id="admin-bk-note">Showing requests awaiting your review.</p>
+      <p class="req-note req-booker" id="booking-filter-note">These are your booking requests and their current status.</p>
+      <div class="req-list" id="bk-list"></div>
+      <p class="note" id="bk-empty" style="display:none; margin-top:10px;">No requests to show.</p>
+    </section>

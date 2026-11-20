@@ -1,0 +1,13 @@
+    <!-- check in out history -->
+    <section class="view" id="view-history">
+      <div class="act-filters hist-filters">
+        <div class="act-field"><label for="hist-from">From</label><input type="date" id="hist-from"></div>
+        <div class="act-field"><label for="hist-to">To</label><input type="date" id="hist-to"></div>
+        <div class="act-field"><select id="hist-user" aria-label="User"><option value="">All users</option></select></div>
+        <div class="act-field"><select id="hist-resource" aria-label="Resource"><option value="">All resources</option></select></div>
+        <button class="btn" type="button" id="hist-clear">Clear filters</button>
+        <button class="btn" type="button" id="hist-refresh">Refresh</button>
+      </div>
+      <div id="hist-content" aria-live="polite"></div>
+      <div class="act-end" id="hist-end"></div>
+    </section>
