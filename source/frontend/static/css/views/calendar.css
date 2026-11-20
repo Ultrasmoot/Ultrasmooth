@@ -1,0 +1,71 @@
+/* month calendar: bookings and professor appointments */
+.cal-bar{display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+.cal-bar .btn{margin-right:0; min-width:38px; height:34px;}
+.cal-title{min-width:170px; text-align:center; font:600 17px var(--font-head);}
+.cal-legend{display:flex; flex-wrap:wrap; gap:6px 18px; margin-bottom:10px; font-size:12.5px; color:var(--ink-soft);}
+.cal-legend i{display:inline-block; width:12px; height:12px; margin-right:6px; border-radius:3px; vertical-align:-1px;}
+.cal-grid{background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+.cal-head, .cal-body{display:grid; grid-template-columns:repeat(7, minmax(0, 1fr));}
+.cal-head span{padding:8px 6px; text-align:center; font-size:11.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--ink-faint); border-bottom:1px solid var(--line);}
+.cal-cell{min-height:92px; padding:6px; display:flex; flex-direction:column; gap:3px; text-align:left; border:0; border-right:1px solid var(--line); border-bottom:1px solid var(--line); background:transparent; font:inherit; color:var(--ink); cursor:pointer;}
+.cal-cell:nth-child(7n){border-right:0;}
+.cal-cell:hover{background:var(--cream-deep);}
+.cal-empty{cursor:default; background:var(--paper);}
+.cal-empty:hover{background:var(--paper);}
+.cal-num{font-size:13px; font-weight:600; font-variant-numeric:tabular-nums;}
+.cal-today .cal-num{display:inline-grid; place-items:center; width:24px; height:24px; border-radius:50%; background:var(--ink); color:#fff;}
+.cal-selected{outline:2px solid var(--blue); outline-offset:-2px;}
+.cal-chip{display:block; padding:1px 6px; border-radius:5px; font-size:11px; line-height:1.5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.cal-more{font-size:11px; color:var(--ink-soft);}
+.cal-approved{background:var(--blue-bg); color:var(--blue);}
+.cal-accepted{background:var(--green-bg); color:var(--green);}
+.cal-pending{background:var(--amber-bg); color:var(--amber);}
+.cal-legend .cal-approved, .cal-legend .cal-accepted, .cal-legend .cal-pending{color:inherit;}
+.cal-detail{margin-top:16px;}
+/* resource calendar: toolbar grid and day details */
+.cal-toolbar{display:flex; flex-wrap:wrap; align-items:flex-end; gap:10px 16px; margin-bottom:12px;}
+.cal-res{display:flex; flex-direction:column; gap:4px; min-width:220px;}
+.cal-res label{font-size:12.5px; color:var(--ink-soft);}
+.cal-res select{padding:8px 10px; border:1px solid var(--line); border-radius:8px; background:#fff; font:inherit; color:var(--ink);}
+.cal-toolbar .cal-bar{margin-bottom:0;}
+.cal-refresh{margin-left:auto; display:flex; align-items:center; gap:10px;}
+.cal-refresh .btn{margin-right:0;}
+.cal-legend{margin-bottom:8px;}
+.cal-layout{display:grid; grid-template-columns:minmax(0, 1fr) 300px; gap:16px; align-items:start;}
+.cal-layout .cal-detail{margin-top:0; max-height:calc(100vh - 340px); overflow:auto;}
+#view-calendar .cal-cell{min-height:0; height:clamp(56px, calc((100vh - 372px) / 6), 104px); overflow:hidden;}
+#view-calendar .cal-head span{padding:6px;}
+/* appointments toolbar: tabs left refresh right */
+.appt-top{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px;}
+#appt-tabs{margin-bottom:0;}
+.appt-refresh{margin-left:auto; display:flex; align-items:center; gap:10px;}
+.appt-refresh .btn{margin-right:0;}
+@media (max-width:900px){
+  .cal-layout{grid-template-columns:minmax(0, 1fr);}
+  .cal-layout .cal-detail{max-height:none; margin-top:4px;}
+}
+@media (max-width:760px){
+  #view-calendar .cal-cell{height:64px;}
+  .cal-cell{min-height:64px; padding:4px;}
+  .cal-chip{font-size:10px; padding:0 3px;}
+  .cal-title{min-width:0; flex:1;}
+}
+#appt-tabs[hidden]{display:none;}
+
+/* UI student check in/out appointments */
+/* check in/out reduce gaps between toolbar, note and headings */
+#view-checkin .req-top{margin-bottom:0;}
+#view-checkin .req-note{margin:0 2px 14px;}
+#view-checkin .ci-h{margin:16px 0 6px;}
+#view-checkin .ci-h:first-child{margin-top:0;}
+#view-checkin .note{margin:0 0 4px; font-size:13px;}
+/* student appointments search width and refresh alignment */
+.appt-search-row{align-items:flex-end; gap:10px; flex-wrap:nowrap;}
+.appt-search-box{flex:1 1 auto; min-width:0;}
+.appt-search-row #appt-refresh-slot{flex:none;}
+.appt-search-row .appt-refresh{margin-left:0;}
+.appt-search-row .appt-refresh .btn{height:40px; margin-right:0;}
+/* hide the empty student toolbar professors use it */
+body[data-role="user"] #view-appointments .appt-top:not(:has(*)){display:none;}
+body[data-role="user"] #view-appointments .appt-top{margin-bottom:0;}
+@media (max-width:600px){ .appt-search-row{flex-wrap:wrap;} .appt-search-box{flex:1 1 100%;} }

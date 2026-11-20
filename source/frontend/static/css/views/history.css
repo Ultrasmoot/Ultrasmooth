@@ -1,0 +1,13 @@
+
+/* Check in / check out history */
+.hist-filters select{min-width:150px;}
+.hist-table td{white-space:nowrap;}
+.hist-sub{color:var(--ink-faint); font-size:12px;}
+.hist-page{margin:0 8px; font-variant-numeric:tabular-nums;}
+.hist-table tbody tr:hover{background:var(--cream-deep);}
+@media (max-width:760px){
+  .hist-filters > div{flex:1 1 140px;}
+  .hist-table td{white-space:normal;}
+}
+.hist-table + .s5-pager .btn:disabled, .s5-pager .btn:disabled{opacity:.45; cursor:default;}
+.hist-meta{margin:0 0 10px; text-align:right; font-size:12.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
