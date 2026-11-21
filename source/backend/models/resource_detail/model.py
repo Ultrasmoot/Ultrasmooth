@@ -1,9 +1,8 @@
-# the page behind a resource card: schedule, and (for staff) who is using it,
-# its repair history and its recent activity
+# Resource details, booking schedule and activity history
 import datetime
 
 from database.db import get_connection
-from models.activity_model import ActivityModel
+from models.activity.model import ActivityModel
 
 SCHEDULE_LIMIT = 20
 HISTORY_LIMIT = 10
@@ -17,7 +16,7 @@ class ResourceDetailModel:
 
     @classmethod
     def get(cls, resource_id: int, staff: bool, include_archived: bool = False, now=None):
-        # Returns None when the resource does not exist (or is archived and the caller may not see it)
+        """Get resource details and related history."""
         now = now or _now()
         conn = get_connection()
         try:
@@ -46,7 +45,7 @@ class ResourceDetailModel:
                 ],
             }
             if not staff:
-                return result   # students never get names, repair notes or the activity log
+                return result  # Hide personal and staff-only information.
 
             cur.execute(
                 """SELECT u.full_name AS requester_name, b.checked_in_at, b.end_time
@@ -78,7 +77,7 @@ class ResourceDetailModel:
         finally:
             conn.close()
 
-        from services.events import ACTIONS
+        from services.events.service import ACTIONS
         recent = ActivityModel.list(resource_id=resource_id, per_page=HISTORY_LIMIT)["items"]
         result["activity"] = [
             {"created_at": a["created_at"].isoformat(), "actor_name": a["actor_name"],

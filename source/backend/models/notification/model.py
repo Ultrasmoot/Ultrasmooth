@@ -1,4 +1,5 @@
-# in-web notifications (the bell). Creating them is done by services/events.py.
+# in-web notifications (the bell)
+# Creating them is done by services/events.py
 from database.db import get_connection
 
 LIST_LIMIT = 30
@@ -31,7 +32,7 @@ class NotificationModel:
 
     @staticmethod
     def mark_read(user_id: int, notification_id: int) -> bool:
-    # the owner can mark a notification (someone else's id simply does nothing)
+        """Only the owner can mark a notification (someone else's id simply does nothing)."""
         conn = get_connection()
         try:
             cur = conn.cursor(dictionary=True)

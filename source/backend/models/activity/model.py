@@ -1,7 +1,8 @@
+# reading the activity log (US-8, SRS-8). writing is done by services/events.py.
 import datetime
 
 from database.db import get_connection
-from services.events import ACTIONS
+from services.events.service import ACTIONS
 
 DEFAULT_PER_PAGE = 20
 MAX_PER_PAGE = 100
@@ -11,40 +12,14 @@ class ValidationError(Exception):
     pass
 
 
-def _parse_date(value, name):
-    try:
-        return datetime.date.fromisoformat(str(value).strip())
-    except (TypeError, ValueError):
-        raise ValidationError(f"{name} must be a date like 2026-10-31.")
-
-
-def _positive_int(value, name, maximum=None):
-    try:
-        number = int(value)
-    except (TypeError, ValueError, OverflowError):
-        raise ValidationError(f"{name} must be a number.")
-    if number < 1 or (maximum and number > maximum):
-        raise ValidationError(f"{name} must be between 1 and {maximum}." if maximum else f"{name} must be 1 or more.")
-    return number
-
-
 class ActivityModel:
 
     @classmethod
     def list(cls, date_from=None, date_to=None, user_id=None, action=None, resource_id=None,
              page=1, per_page=DEFAULT_PER_PAGE):
-        """Newest first. Filters (all optional): date range (inclusive), the user who did it,
-        the type of action, and the resource it concerns."""
-        clauses, params = [], []
-        if date_from:
-            clauses.append("created_at >= %s")
-            params.append(datetime.datetime.combine(_parse_date(date_from, "from"), datetime.time.min))
-        if date_to:
-            clauses.append("created_at < %s")
-            params.append(datetime.datetime.combine(_parse_date(date_to, "to") + datetime.timedelta(days=1),
-                                                    datetime.time.min))
-        if date_from and date_to and _parse_date(date_from, "from") > _parse_date(date_to, "to"):
-            raise ValidationError("'from' must not be after 'to'.")
+        # newest first. Filters (all optional): date range (inclusive), the user who did it,
+        # the type of action, and the resource it concerns.
+        clauses, params = _date_range("created_at", date_from, date_to)
         if user_id not in (None, ""):
             clauses.append("actor_id = %s")
             params.append(_positive_int(user_id, "user"))
@@ -77,7 +52,7 @@ class ActivityModel:
 
     @staticmethod
     def users():
-        """People who appear in the log, for the 'user' filter."""
+        # people who appear in the log, for the 'user' filter
         conn = get_connection()
         try:
             cur = conn.cursor(dictionary=True)
@@ -88,3 +63,6 @@ class ActivityModel:
             return cur.fetchall()
         finally:
             conn.close()
+
+
+from models.activity.parse_date_positive_int import _date_range, _positive_int  # noqa: E402

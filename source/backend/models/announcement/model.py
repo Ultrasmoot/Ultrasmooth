@@ -1,16 +1,19 @@
 from database.db import get_connection
-from services import events
+from services.events import service as events  # activity log + notifications
+
 POSTER_ROLES = {"professor", "admin"}
-MAX_TITLE_LENGTH = 150  # matches announcements.title VARCHAR(150)
-MAX_BODY_LENGTH = 10000  
+MAX_TITLE_LENGTH = 150
+MAX_BODY_LENGTH = 10000 
 
 
 class ValidationError(Exception):
     pass
 
 
-class AnnouncementModel:
+from models.announcement.delete_toggle_pin import AnnouncementModelDeleteTogglePin  # noqa: E402
 
+
+class AnnouncementModel(AnnouncementModelDeleteTogglePin):
     @staticmethod
     def _validate(data: dict):
         for field in ("title", "body"):
@@ -40,7 +43,7 @@ class AnnouncementModel:
 
     @staticmethod
     def list():
-    # Pinned announcements first, newest first within each group
+        """Pinned announcements first, newest first within each group."""
         conn = get_connection()
         try:
             cur = conn.cursor(dictionary=True)
@@ -62,42 +65,8 @@ class AnnouncementModel:
                 (author_id, title, body),
             )
             new_id = cur.lastrowid
-            events.announcement_posted(conn, new_id, author_id)   # Iteration 5
+            events.announcement_posted(conn, new_id, author_id) 
             conn.commit()
             return cls.get(new_id)
-        finally:
-            conn.close()
-
-    @classmethod
-    def delete(cls, announcement_id: int, user_id: int):
-        # Only the author may delete their own announcement
-        announcement = cls.get(announcement_id)
-        if not announcement:
-            raise ValidationError("Announcement not found.")
-        if announcement["author_id"] != user_id:
-            raise ValidationError("You can only delete your own announcement.")
-        conn = get_connection()
-        try:
-            cur = conn.cursor()
-            cur.execute("DELETE FROM announcements WHERE id = %s", (announcement_id,))
-            events.announcement_deleted(conn, announcement_id, announcement["title"], user_id)   # Iteration 5
-            conn.commit()
-        finally:
-            conn.close()
-
-    @classmethod
-    def toggle_pin(cls, announcement_id: int):
-        announcement = cls.get(announcement_id)
-        if not announcement:
-            raise ValidationError("Announcement not found.")
-        conn = get_connection()
-        try:
-            cur = conn.cursor()
-            cur.execute(
-                "UPDATE announcements SET is_pinned = %s WHERE id = %s",
-                (0 if announcement["is_pinned"] else 1, announcement_id),
-            )
-            conn.commit()
-            return cls.get(announcement_id)
         finally:
             conn.close()
