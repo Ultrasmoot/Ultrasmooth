@@ -1,5 +1,3 @@
-# Send check-in codes by e-mail (us-10)
-# Print to log if SMTP is not configured
 import logging
 import smtplib
 import ssl
@@ -22,7 +20,7 @@ def send_email(to_email: str, subject: str, body: str, dev_log_line: str = None)
     msg["To"] = to_email
 
     # The timeout covers connect AND every later step on the socket (STARTTLS,
-    # Verify the server certificate and set a timeout
+    # login, send). The server certificate is verified.
     with smtplib.SMTP(Config.SMTP_HOST, Config.SMTP_PORT, timeout=Config.SMTP_TIMEOUT_SECONDS) as server:
         server.starttls(context=ssl.create_default_context())
         if Config.SMTP_USER:
@@ -31,7 +29,8 @@ def send_email(to_email: str, subject: str, body: str, dev_log_line: str = None)
 
 
 def send_email_in_background(to_email: str, subject: str, body: str, dev_log_line: str = None):
-    # Send e-mail in the background and log any errors
+    """Send email in the background without delaying the request.
+    Errors are logged and never raised."""
 
     def _run():
         try:
