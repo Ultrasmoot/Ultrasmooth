@@ -1,7 +1,7 @@
 import threading
 import time
-from collections import defaultdict, deque
 from functools import wraps
+from collections import defaultdict, deque
 
 from flask import jsonify, request
 
@@ -11,7 +11,7 @@ _last_sweep = 0.0
 
 
 def _sweep(now: float, max_window: float):
-    # Drop stale keys occasionally so memory can't grow without bound
+    # drop stale keys occasionally so memory can't grow without bound
     global _last_sweep
     if now - _last_sweep < 60:
         return
@@ -21,6 +21,7 @@ def _sweep(now: float, max_window: float):
 
 
 def check_rate_limit(key: str, limit: int, window_seconds: int):
+    # record one attempt for key Returns (allowed, retry_after_seconds)
     now = time.monotonic()
     with _lock:
         _sweep(now, max(window_seconds, 3600))
@@ -46,9 +47,7 @@ def rate_limit(name: str, limit: int, window_seconds: int, by_email: bool = Fals
             keys = [f"{name}:ip:{request.remote_addr}"]
             if by_email:
                 data = request.get_json(silent=True)
-                if not isinstance(data, dict):
-                    data = {}
-                email = str(data.get("email") or "").strip().lower()[:254]
+                email = str((data if isinstance(data, dict) else {}).get("email") or "").strip().lower()[:254]
                 if email:
                     keys.append(f"{name}:email:{email}")
             for key in keys:
@@ -59,5 +58,7 @@ def rate_limit(name: str, limit: int, window_seconds: int, by_email: bool = Fals
                     resp.headers["Retry-After"] = str(retry_after)
                     return resp
             return fn(*args, **kwargs)
+
         return wrapper
+
     return decorator
