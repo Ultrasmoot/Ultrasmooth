@@ -1,0 +1,27 @@
+    <!-- user & access admin : manage accounts, roles and activation -->
+    <section class="view" id="view-access">
+      <div class="bar">
+        <input class="fld ua-search" id="usr-q" placeholder="Search by name, email or student ID…" autocomplete="off">
+        <select class="fld" id="usr-role">
+          <option value="">All roles</option>
+          <option value="undergrad_student">Undergraduate Student</option>
+          <option value="phd_student">Ph.D. Student</option>
+          <option value="professor">Professor</option>
+          <option value="admin">Lab Administrator</option>
+        </select>
+        <select class="fld" id="usr-status">
+          <option value="">All statuses</option>
+          <option value="active">Active</option>
+          <option value="inactive">Deactivated</option>
+        </select>
+        <div class="seg ua-view" id="usr-view" role="group" aria-label="View">
+          <button class="filter-chip active" type="button" data-usr-view="cards" aria-pressed="true">Cards</button>
+          <button class="filter-chip" type="button" data-usr-view="list" aria-pressed="false">List</button>
+        </div>
+        <button class="btn ok ua-add" type="button" id="usr-add">+ Add user</button>
+      </div>
+      <div class="sec-head" style="margin-top:0;">
+        <span class="note" id="usr-count" style="font-style:normal;"></span>
+      </div>
+      <div class="grid" id="usr-content"></div>
+    </section>

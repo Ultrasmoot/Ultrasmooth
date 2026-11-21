@@ -1,0 +1,48 @@
+/* access page styles */
+/* user & access: resource style cards with person avatars */
+.ua-card[data-role="undergrad_student"]{--tone-bg:#DCEBF7; --tone-fg:#3C6EA5;}
+.ua-card[data-role="phd_student"]{--tone-bg:#DEE9D8; --tone-fg:#3E6B4F;}
+.ua-card[data-role="professor"]{--tone-bg:#EEDFC8; --tone-fg:#8A5A32;}
+.ua-card[data-role="admin"]{--tone-bg:#E7E1F1; --tone-fg:#6B5B9A;}
+.ua-card{cursor:default;}
+.ua-search{flex:1 1 240px; min-width:200px;}
+.ua-av{width:78px; height:78px; border-radius:50%; background:var(--tone-fg); overflow:hidden; box-shadow:0 0 0 5px rgba(255,254,250,0.60), 0 6px 16px rgba(27,42,73,0.14);}
+.ua-you{display:inline-block; vertical-align:middle; margin-left:6px; padding:1px 9px; border-radius:99px; background:var(--green-bg); color:var(--green-deep); font:600 11px var(--font-body);}
+.ua-card h3{min-height:0; margin-bottom:10px;}
+
+/* user & access list view */
+.ua-view{align-self:center;}
+.ua-list{display:block; background:var(--panel); border:1px solid var(--line); border-radius:14px; overflow-x:auto;}
+.ua-row{display:grid; grid-template-columns:minmax(200px,1.7fr) minmax(140px,1.4fr) minmax(240px,1.6fr) minmax(110px,1fr) 100px 170px; gap:10px; align-items:center; padding:10px 16px; border-top:1px solid var(--line); min-width:960px; font-size:13.5px;}
+.ua-row:first-child{border-top:0;}
+.ua-row:not(.ua-headrow):hover{background:var(--cream-deep);}
+.ua-headrow{padding-top:9px; padding-bottom:9px; font-size:11.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--ink-faint);}
+.ua-c{min-width:0;}
+.ua-name{display:flex; align-items:center; gap:10px;}
+.ua-name b{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.ua-dot{width:30px; height:30px; flex:none; border-radius:50%; overflow:hidden; background:var(--tone-fg, #8A5A32);}
+.ua-dot svg{width:100%; height:100%; display:block;}
+.ua-row[data-role="undergrad_student"]{--tone-bg:#DCEBF7; --tone-fg:#3C6EA5;}
+.ua-row[data-role="phd_student"]{--tone-bg:#DEE9D8; --tone-fg:#3E6B4F;}
+.ua-row[data-role="professor"]{--tone-bg:#EEDFC8; --tone-fg:#8A5A32;}
+.ua-row[data-role="admin"]{--tone-bg:#E7E1F1; --tone-fg:#6B5B9A;}
+.ua-mail, .ua-code{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--ink-soft);}
+.ua-state{display:inline-block; color:#fff; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:99px;}
+.ua-acts{display:flex; gap:6px; justify-content:flex-end;}
+.ua-role{white-space:nowrap;}
+
+/* user & access list fit page width without horizontal scroll */
+.ua-list{overflow:hidden; box-shadow:var(--shadow-sm);}
+.ua-row{grid-template-columns:minmax(0,2.2fr) minmax(0,1.6fr) minmax(0,1.1fr) 104px 156px; gap:14px; min-width:0; padding:12px 18px;}
+.ua-headrow{background:rgba(138,90,50,0.05); padding-top:11px; padding-bottom:11px; font-weight:600;}
+.ua-name{gap:12px;}
+.ua-dot{width:38px; height:38px;}
+.ua-who{min-width:0; flex:1;}
+.ua-nm{display:flex; align-items:center; gap:6px; min-width:0;}
+.ua-nm b{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:14.5px;}
+.ua-nm .ua-you{margin-left:0; flex:none;}
+.ua-who .ua-mail{font-size:12.5px; margin-top:2px;}
+.ua-role{display:flex; flex-direction:column; align-items:flex-start; gap:4px;}
+.ua-yr{font-size:12px; color:var(--ink-soft); padding-left:4px;}
+.ua-code{font-size:13.5px;}
+.ua-acts{gap:6px;}

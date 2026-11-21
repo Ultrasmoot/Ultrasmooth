@@ -1,0 +1,29 @@
+    <!-- resources: view search manage -->
+    <section class="view" id="view-resources">
+      <div class="bar">
+        <input class="fld grow" id="res-search" placeholder="Search by name…">
+        <select class="fld" id="res-filter-category"><option value="">All categories</option></select>
+        <select class="fld" id="res-filter-location"><option value="">All locations</option></select>
+        <select class="fld" id="res-filter-status">
+          <option value="">All statuses</option>
+          <option>Available</option>
+          <option>In Use</option>
+          <option>Maintenance</option>
+        </select>
+        <select class="fld" id="res-sort">
+          <option value="status" selected>Sort: Status</option>
+          <option value="name">Sort: Name</option>
+          <option value="category">Sort: Category</option>
+          <option value="location">Sort: Location</option>
+          <option value="availability">Sort: Availability</option>
+        </select>
+        <label class="fld fld-check"><input type="checkbox" id="res-filter-availability"> Available now</label>
+        <label class="fld fld-check fld-archived req-admin"><input type="checkbox" id="res-show-archived"> Show archived</label>
+        <button class="btn ok req-admin" id="btn-add-resource" type="button">+ Add Resource</button>
+      </div>
+      <div class="sec-head" style="margin-top:0;">
+        <span class="note" id="res-count" style="font-style:normal;"></span>
+      </div>
+      <div class="grid" id="res-grid"></div>
+      <p class="note" id="res-empty" style="display:none; margin-top:10px;">No resources found.</p>
+    </section>

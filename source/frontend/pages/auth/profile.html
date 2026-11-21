@@ -1,0 +1,40 @@
+  <!-- complete profile first time Google sign in -->
+  <div class="auth-card" id="complete-profile-view">
+    <div class="auth-brand">
+      <div class="stamp-badge">V</div>
+      <div class="name">VASE</div>
+      <div class="sub">Software Eng. Lab</div>
+    </div>
+    <h2>Complete your profile</h2>
+    <p class="auth-hint" style="margin-top:-10px;">Signed in as <b id="g-profile-name">—</b> (<span id="g-profile-email">—</span>). This is your first time signing in — tell us your role to finish setting up your account.</p>
+
+    <div id="complete-profile-error" class="login-error">
+      <span>⚠</span><span id="complete-profile-error-text"></span>
+    </div>
+
+    <form id="complete-profile-form">
+      <div class="field">
+        <label>I am a</label>
+        <select id="complete-profile-role" required>
+          <option value="" disabled selected>Select your role</option>
+          <option value="phd_student">Ph.D. Student</option>
+          <option value="undergrad_student">Undergraduate Student</option>
+        </select>
+      </div>
+      <!-- year is for undergraduate students only options match sign up form -->
+      <div class="field" id="complete-profile-year-field" style="display:none;">
+        <label>Year</label>
+        <select id="complete-profile-year">
+          <option value="" disabled selected>Select your year</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+        </select>
+      </div>
+      <button class="btn-primary" type="submit">Continue</button>
+    </form>
+    <div class="switch-form"><a id="complete-profile-cancel">Cancel and go back to log in</a></div>
+  </div>

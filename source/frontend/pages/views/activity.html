@@ -1,0 +1,14 @@
+    <!-- activity log admin and professor-->
+    <section class="view" id="view-activity">
+      <div class="act-filters">
+        <div class="act-field"><label for="act-from">From</label><input type="date" id="act-from"></div>
+        <div class="act-field"><label for="act-to">To</label><input type="date" id="act-to"></div>
+        <div class="act-field"><select id="act-user" aria-label="User"><option value="">All users</option></select></div>
+        <div class="act-field"><select id="act-action" aria-label="Action"><option value="">All actions</option></select></div>
+        <button class="btn" type="button" id="act-clear">Clear filters</button>
+        <button class="btn" type="button" id="act-refresh">Refresh</button>
+      </div>
+      <div class="act-tabs" id="act-tabs" role="tablist" aria-label="Activity category"></div>
+      <div id="act-content" aria-live="polite"></div>
+      <div class="act-end" id="act-end"></div>
+    </section>
