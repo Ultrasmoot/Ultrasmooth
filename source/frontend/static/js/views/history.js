@@ -1,5 +1,4 @@
-/* Napakhet */
-/* ---------------- Check-in / check-out history (admin only) ---------------- */
+/* Check-in / check-out history (admin only) */
 const HIST_PER_PAGE = 20;
 let histPage = 1;
 let histWired = false;

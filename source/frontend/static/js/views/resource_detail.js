@@ -1,4 +1,4 @@
-/* ---------- Resource detail (click a card) ---------- */
+/* Resource detail (click a card) */
 async function openResourceDetail(id){
   const {ok, data} = await apiAuthGet(`/api/resources/${id}/detail`);
   if(!ok){ toast(data.error || 'Could not load the resource'); return; }
@@ -48,7 +48,6 @@ async function openResourceDetail(id){
     </div>`;
   document.getElementById('modal-backdrop').classList.add('open');
   document.getElementById('rd-close').addEventListener('click', closeModal);
-  /* Panisara */
   document.getElementById('rd-calendar').addEventListener('click', () => { closeModal(); showCalendarFor(id); });
   const rep = document.getElementById('rd-report');
   if(rep) rep.addEventListener('click', () => { closeModal(); openMaintenanceModal(id); });

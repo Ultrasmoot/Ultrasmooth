@@ -1,5 +1,5 @@
-/* ---------- Activity log (US-8) ---------- */
-// A timeline of event cards, 20 per page, with page buttons under the list. "All" asks the server for one page at a time;
+/* Activity log */
+// A timeline of event cards, 20 per page, with page buttons under the list. "All" asks the server for one page at a time
 // a category tab collects the matching action types (the API filters by one action at a time) and pages through them here.
 const ACT_PER_PAGE = 20;
 const ACT_CATS = ['All', 'Bookings', 'Check-in / out', 'Maintenance', 'Resources', 'Other'];
@@ -37,11 +37,11 @@ function actStyle(action){
 const ACT_DETAIL_LABEL = {'Bookings': 'Booking', 'Check-in / out': 'Resource', 'Maintenance': 'Issue', 'Resources': 'Resource', 'Other': 'Details'};
 
 let actCat = 'All';
-let actActions = [];          // [{value,label}] from /api/activity/meta
-let actItems = [];            // records currently shown, newest first
+let actActions = [];
+let actItems = [];
 let actTotal = 0;
-let actPage = 1, actPages = 1;   // current page and page count
-let actAll = [];                 // every matching record of a category tab (paged here in the browser)
+let actPage = 1, actPages = 1;
+let actAll = [];
 let actToken = 0, actLoading = false;
 
 async function loadActivityMeta(){
@@ -66,7 +66,7 @@ function actParams(extra){
 async function actFetch(extra){
   return apiAuthGet('/api/activity?' + actParams(extra).toString());
 }
-// Load one page (filters or tab changed: page 1).
+
 async function loadActivity(page = 1){
   const token = ++actToken;
   actLoading = true;
@@ -118,7 +118,7 @@ function goActivityPage(page){
   document.getElementById('view-activity').scrollIntoView({block: 'start'});
   window.scrollTo({top: 0});
 }
-// 1 … 4 5 [6] 7 8 … 12
+
 function actPageList(cur, last){
   const keep = new Set([1, last, cur - 1, cur, cur + 1]);
   const out = []; let prev = 0;
@@ -141,7 +141,6 @@ function renderActivity(){
     + `<span class="act-showing">${actItems.length ? `Showing ${(actPage - 1) * ACT_PER_PAGE + 1}–${(actPage - 1) * ACT_PER_PAGE + actItems.length} of ${actTotal}` : `${actTotal} records`}</span>`;
   const box = document.getElementById('act-content'), end = document.getElementById('act-end');
   if(!actItems.length){
-    // AD-5: no matching records -> say so
     box.innerHTML = '<div class="act-empty">No activity records match these filters.</div>';
     end.innerHTML = '';
     return;
@@ -152,7 +151,6 @@ function renderActivity(){
     const key = actDayKey(when);
     if(key !== last){ html += `<div class="act-day"><span>${escapeHtml(actDay(when))}</span><i></i></div>`; last = key; }
     const cat = actCategory(a.action), st = actStyle(a.action);
-    // "Printer (2 attempts left)" -> the attempts go in the badge, the resource stays in the details
     let detail = a.summary || '', badge = cat;
     const m = a.action === 'checkin.code_failed' && /^(.*) \((\d+ attempts? left)\)$/.exec(detail);
     if(m){ detail = m[1]; badge = m[2]; }
@@ -184,7 +182,7 @@ document.getElementById('act-clear').addEventListener('click', () => {
   ['act-from', 'act-to', 'act-user', 'act-action'].forEach(id => { document.getElementById(id).value = ''; });
   actCat = 'All'; loadActivity();
 });
-// Same behaviour as the other Refresh buttons: spinner, "Updated hh:mm:ss", toast
+// Same behaviour as the other Refresh buttons: spinner
 setupRefreshButton('act-refresh', () => openActivity());
 document.getElementById('act-end').addEventListener('click', e => {
   const b = e.target.closest('.act-pg');

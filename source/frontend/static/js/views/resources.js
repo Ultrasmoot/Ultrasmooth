@@ -1,5 +1,4 @@
-/* Panyasiri */
-/* ---------------- Resource Management — US-1 (view/search, all roles) + US-2 (manage, admin) ---------------- */
+/* Resource Management */
 let resourceCache = [];
 let editingResourceId = null; // null = creating a new resource
 
@@ -46,7 +45,7 @@ async function loadResources(){
   const statusEl = document.getElementById('res-filter-status');
   const availableOnly = document.getElementById('res-filter-availability').checked;
   // "Available now" is a separate filter dimension from the detailed
-  // status dropdown (SRS-1/URS-1: filter by category/location/availability
+  // status dropdown (filter by category/location/availability
   // /status independently). When it's checked it takes priority so the
   // two controls never disagree silently.
   const status = availableOnly ? 'Available' : statusEl.value;
@@ -87,7 +86,7 @@ function closeModal(){
 function openResourceModal(resourceId = null){
   editingResourceId = resourceId;
   const resource = resourceId ? resourceCache.find(r => r.id === resourceId) : null;
-  // Iteration 4: "Maintenance" is set/cleared only by maintenance records, so a
+  // Maintenance is set/cleared only by maintenance records, so a
   // resource that is in Maintenance shows it locked, and nobody can pick it here.
   const statusLocked = resource?.status === 'Maintenance';
 
@@ -145,7 +144,7 @@ async function submitResourceForm(e){
     location: document.getElementById('res-location').value.trim(),
     owner: document.getElementById('res-owner').value.trim(),
     status: document.getElementById('res-status').value,
-    // Iteration 5: optional details (blank clears them)
+    // optional details (blank clears them)
     building: document.getElementById('res-building').value.trim() || null,
     floor: document.getElementById('res-floor').value.trim() || null,
     capacity: document.getElementById('res-capacity').value.trim() || null,
@@ -158,7 +157,7 @@ async function submitResourceForm(e){
 
   const {ok, data} = await apiAuthSend(method, path, payload);
   if(!ok){
-    // SRS-2: missing/invalid data blocks saving with a validation message.
+    // missing/invalid data blocks saving with a validation message.
     errText.textContent = data.error || 'Could not save resource.';
     errBox.classList.add('show');
     return;
@@ -168,7 +167,7 @@ async function submitResourceForm(e){
 }
 
 async function archiveResource(id){
-  // AD-1: archiving hides the resource from the active list rather than deleting it.
+  // archiving hides the resource from the active list rather than deleting it.
   const {ok, data} = await apiAuthSend('POST', `/api/resources/${id}/archive`);
   if(!ok){
     toast(data.error || 'Could not archive resource');
@@ -188,7 +187,7 @@ async function unarchiveResource(id){
   loadResources();
 }
 
-// SRS-7: Maintenance -> Available. Open issues of the resource are resolved together with it.
+// Maintenance -> Available. Open issues of the resource are resolved together with it.
 function openRestoreConfirm(id){
   const r = resourceCache.find(x => x.id === id);
   document.getElementById('modal-box').innerHTML = `

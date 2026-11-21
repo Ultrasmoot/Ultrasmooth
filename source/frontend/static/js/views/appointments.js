@@ -1,4 +1,4 @@
-/* ---------- Appointments ---------- */
+/* Appointments */
 let apptProfessors = [], apptMine = [], apptQuery = '', apptTag = 'All';
 
 const APPT_BADGE = {Pending:'b-amber', Accepted:'b-green', Declined:'b-rust', Cancelled:'b-faint', Expired:'b-faint'};
@@ -7,9 +7,9 @@ setupRefreshButton('btn-refresh-appointments', () => loadAppointments());
 
 async function loadAppointments(){
   const box = document.getElementById('appt-content');
-  renderApptTabs();  /* Panisara */
+  renderApptTabs();
   if(currentRole === 'professor'){
-    if(apptView === 'calendar') return loadProfessorCalendar();  /* Panisara */
+    if(apptView === 'calendar') return loadProfessorCalendar(); 
     const {ok, data} = await apiAuthGet('/api/appointments/inbox');
     if(!ok){ box.innerHTML = `<p class="note">${escapeHtml(data.error || 'Could not load requests')}</p>`; return false; }
     renderProfessorInbox(data.appointments);

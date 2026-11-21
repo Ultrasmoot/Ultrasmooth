@@ -1,5 +1,4 @@
-/* Panisara */
-/* ---------------- UI redesign: cards, Home, search, navbar ---------------- */
+/* UI redesign: cards, Home, search, navbar */
 const ICON_PIN = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 14s4.5-4 4.5-7.5a4.5 4.5 0 0 0-9 0C3.5 10 8 14 8 14z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="6.5" r="1.6" stroke="currentColor" stroke-width="1.3"/></svg>';
 const ICON_CLOCK = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 4.8V8l2.2 1.4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>';
 const ICON_NEXT = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M8.5 6.5L12 10l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -45,7 +44,7 @@ function resourceCard(r, opts = {}){
   if((r.status === 'Available' || r.status === 'In Use') && !r.is_archived){
     actions.push(`<button class="btn ok req-booker" type="button" data-action="book" data-id="${r.id}">Request</button>`);
   }
-  // Iteration 4 (US-6): every role can report a problem with a resource.
+  // every role can report a problem with a resource.
   if(manage && !r.is_archived){
     actions.push(`<button class="btn" type="button" data-action="report" data-id="${r.id}">Report issue</button>`);
   }
@@ -85,11 +84,11 @@ function requestCard(b, isAdmin){
     </article>`;
 }
 
-/* ----- shared click handling for resource cards (Edit / Archive / Request) ----- */
+/* shared click handling for resource cards (Edit / Archive / Request) */
 function cardActionHandler(e){
   const btn = e.target.closest('button[data-action]');
   if(!btn){
-    // Iteration 5: clicking the card itself (not one of its buttons) opens the detail page
+    // clicking the card itself (not one of its buttons) opens the detail page
     const card = e.target.closest('[data-rid]');
     if(card && !e.target.closest('button, a')) openResourceDetail(Number(card.dataset.rid));
     return;
@@ -106,7 +105,7 @@ function cardActionHandler(e){
   document.getElementById(id).addEventListener('click', cardActionHandler);
 });
 
-/* ----- navigation helpers ("View All" links, banners, logo) ----- */
+/* navigation helpers ("View All" links, banners, logo) */
 function goView(key, filters = {}){
   if(key === 'resources'){
     document.getElementById('res-filter-category').value = filters.category || '';
@@ -129,7 +128,7 @@ window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
 });
 
-/* ----- Home data ----- */
+/* Home data */
 function fillSelect(sel, firstLabel, values){
   const prev = sel.value;
   sel.innerHTML = `<option value="">${firstLabel}</option>` +
@@ -241,7 +240,7 @@ async function loadHome(){
   else if(ap && ap.ok) renderHomeAppointments(ap.data.appointments, isProfessor);
 }
 
-/* ----- Home search + filter card ----- */
+/* Home search + filter card */
 const homeSearch = document.getElementById('home-search');
 const homeFilterCard = document.getElementById('home-filter-card');
 let homeSearchTimer = null;
@@ -302,18 +301,12 @@ document.addEventListener('click', () => homeFilterCard.classList.remove('open')
   nb.addEventListener('click', (e) => { if(e.target.closest('.nav-item')) nb.classList.remove('open'); });
   document.addEventListener('click', (e) => { if(!e.target.closest('.navbar-in')) nb.classList.remove('open'); });
 })();
-/* Jirat */
-/* ---------------- Init + Napakhet + Panisara ---------------- */
 applyRole('admin'); // default demo state; overridden below if a real session restores
 restoreSession();
-// Opening the emailed reset link (/?reset_token=...) jumps straight to
-// the "set a new password" form instead of the login screen.
 if(new URLSearchParams(window.location.search).get('reset_token')){
   showAuthView('reset-password');
 }
 
-// Opening the emailed verification link (/?verify_token=...): confirm it with the
-// backend, drop the token from the address bar (single-use), and tell the user on the login screen.
 (async function handleVerifyLink(){
   const token = new URLSearchParams(window.location.search).get('verify_token');
   if(!token) return;

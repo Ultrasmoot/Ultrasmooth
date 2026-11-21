@@ -1,9 +1,6 @@
-/* Jirat */
-/* ---------------- Maintenance (US-6 / US-7) — Iteration 4 ---------------- */
-// Everyone can report an issue; only an admin confirms / edits / resolves / dismisses.
-// Non-admins only ever see (and the server only ever returns) their own reports.
+/* Maintenance */
 const MT_BADGE = {'Reported':'b-blue', 'Open':'b-rust', 'In Progress':'b-amber', 'Resolved':'b-green', 'Dismissed':'b-faint'};
-const MT_LABEL = {'Open':'Confirmed', 'Dismissed':'Rejected'};   // display only — the stored status value stays "Open"
+const MT_LABEL = {'Open':'Confirmed', 'Dismissed':'Rejected'};   // display only the stored status value stays "Open"
 const MT_HELP = {
   'Reported':'Waiting for an administrator to review this report.',
   'Open':'Confirmed — the resource is in Maintenance and cannot be booked.',
@@ -198,7 +195,7 @@ function showMaintenanceError(msg){
   document.getElementById('maintenance-form-error').classList.add('show');
 }
 
-// US-6: report an issue. Admin: saved as Open and the resource moves to Maintenance.
+// report an issue. Admin: saved as Open and the resource moves to Maintenance.
 // Anyone else: saved as Reported; the resource is untouched until an admin confirms.
 async function openMaintenanceModal(preselectId){
   const isAdmin = currentRole === 'admin';
@@ -277,7 +274,7 @@ async function openMaintenanceModal(preselectId){
     submitBtn.disabled = false;
     submitBtn.textContent = submitLabel;
     if(!ok){
-      // SRS-6: missing/invalid data blocks saving with a validation message.
+      // missing/invalid data blocks saving with a validation message.
       showMaintenanceError(data.error || 'Could not save the issue.');
       return;
     }
@@ -289,7 +286,7 @@ async function openMaintenanceModal(preselectId){
   });
 }
 
-// US-7: admin edits an open record (the resource itself cannot be changed).
+// admin edits an open record (the resource itself cannot be changed).
 function openMaintenanceEditModal(id){
   const m = maintenanceCache.find(x => x.id === id);
   if(!m) return;

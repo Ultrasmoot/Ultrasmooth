@@ -1,8 +1,7 @@
-/* ---------- Dashboard (US-9) ---------- */
+/* Dashboard */
 let dashDays = '30';
-let dashRange = null;   // {from, to} when "Custom" is applied
+let dashRange = null; 
 
-/* Charts are plain SVG/CSS (no library): ring gauge, donut, horizontal bars. */
 const DX_ICON = {
   cal:   '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4M9.5 15l2 2 3.5-4"/>',
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',

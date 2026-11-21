@@ -1,10 +1,7 @@
-/* Panisara */
-/* ---------------- Check in / Check out (US-10) — Iteration 4 ---------------- */
-// Student flow: approved booking -> "Check in" -> a 6-digit code is e-mailed -> enter it ->
-// the server verifies it and sets the resource to "In Use". Check-out just asks to confirm.
+/* Check in / Check out */
 const CI_RES_BADGE = {'Available':'b-green', 'In Use':'b-amber', 'Maintenance':'b-rust'};
 let checkinData = {in_use: [], ready: [], done: []};
-let ciFlow = null;      // {id, step: 1|2|3, hint, expiresAt, resendAt, attemptsLeft, locked}
+let ciFlow = null; 
 let ciTimer = null;
 
 function ciTime(iso){
@@ -166,8 +163,7 @@ async function ciSendCode(){
       ciFlow.resendAt = Date.now() + (data.retry_after || 30) * 1000;
       ciShowError(data.error);
     } else if(status === 400 && !/wait/i.test(data.error || '')){
-      // The booking itself can no longer be checked in to (resource went into
-      // maintenance, booking ended, ...): say so and refresh the list.
+      // The booking itself can no longer be checked in to 
       closeModal();
       toast(data.error || 'Could not send the code');
       loadCheckin(true);

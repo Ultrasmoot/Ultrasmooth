@@ -1,4 +1,4 @@
-/* ---------------- Requests (US-3/US-4/US-5) ---------------- */
+/* Requests */
 function fmtRange(startIso, endIso){
   const opts = {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'};
   return `${new Date(startIso).toLocaleString([], opts)} – ${new Date(endIso).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
@@ -45,9 +45,7 @@ async function loadBookings(silent = false){
   return true;
 }
 
-// SRS-4: status changes made by a Lab Manager/Administrator show up on their
-// own — manual Refresh button plus a quiet background reload every 30 s while
-// the Requests view is open (skipped when the tab is hidden or a form is open).
+// status changes made by a Lab Manager/Administrator show up on their
 setupRefreshButton('btn-refresh-bookings', () => loadBookings());
 setInterval(() => {
   const onRequests = document.getElementById('view-bookings').classList.contains('active');
@@ -271,7 +269,7 @@ async function submitBookingForm(e){
 
   const {ok, data} = await apiAuthSend('POST', '/api/bookings', payload);
   if(!ok){
-    // SRS-3: missing/invalid info or an overlapping booking blocks submission with a message.
+    // missing/invalid info or an overlapping booking blocks submission with a message.
     errText.textContent = data.error || 'Could not submit request.';
     errBox.classList.add('show');
     return;

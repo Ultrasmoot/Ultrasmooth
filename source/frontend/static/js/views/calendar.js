@@ -1,5 +1,4 @@
-/* Panisara */
-/* ---------------- Month calendar: shared grid, resource calendar, professor appointment calendar ---------------- */
+/* Month calendar: shared grid, resource calendar, professor appointment calendar */
 const CAL_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const CAL_MAX_CHIPS = 2;
 
@@ -18,8 +17,6 @@ function calTitle(key){
   return new Date(y, m - 1, 1).toLocaleDateString([], {month: 'long', year: 'numeric'});
 }
 
-// items: [{start: Date, end: Date, ...}] -> {'2026-11-05': [item, ...]}. An item that runs past
-// midnight is listed on every day it touches.
 function calGroupByDay(items){
   const days = {};
   items.forEach(item => {
@@ -46,7 +43,7 @@ function calBar(key){
 // chip(item) returns the little label shown inside a day cell.
 function calGrid(key, byDay, selected, chip){
   const [y, m] = key.split('-').map(Number);
-  const lead = (new Date(y, m - 1, 1).getDay() + 6) % 7;      // weeks start on Monday
+  const lead = (new Date(y, m - 1, 1).getDay() + 6) % 7; // weeks start on Monday
   const total = new Date(y, m, 0).getDate();
   const today = calDayKey(new Date());
   let cells = '<div class="cal-cell cal-empty"></div>'.repeat(lead);
@@ -83,7 +80,7 @@ function calNextMonth(key, how){
   return calKey(new Date());
 }
 
-/* ----- Resource calendar (everyone) ----- */
+/* Resource calendar (everyone) */
 const calRes = {id: null, month: calKey(new Date()), bookings: [], selected: null, wired: false};
 let calPreselect = null;
 
@@ -170,7 +167,7 @@ function showCalendarFor(resourceId){
   document.querySelector('.nav-item[data-view="calendar"]').click();
 }
 
-/* ----- Professor appointment calendar (professors only) ----- */
+/* Professor appointment calendar (professors only) */
 const calProf = {month: calKey(new Date()), appointments: [], selected: null, wired: false};
 let apptView = 'list';
 

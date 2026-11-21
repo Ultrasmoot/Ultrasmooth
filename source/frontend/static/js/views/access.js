@@ -1,6 +1,6 @@
-/* ---------------- User & Access (US-13): administrators manage accounts and roles ---------------- */
+/* administrators manage accounts and roles */
 let usrList = [], usrTimer = null;
-let usrView = 'cards';   // 'cards' or 'list' (not remembered: it starts as cards every time)
+let usrView = 'cards';
 const USR_ROLE_OPTIONS = [['undergrad_student', 'Undergraduate Student'], ['phd_student', 'Ph.D. Student'],
                           ['professor', 'Professor'], ['admin', 'Lab Administrator']];
 
@@ -25,7 +25,7 @@ function userCard(u, myId){
   const unverified = u.is_active && !u.email_verified;
   const statusText = off ? 'Deactivated' : (unverified ? 'Unverified' : 'Active');
   const statusCls = off ? 'st-off' : (unverified ? 'st-inuse' : 'st-available');
-  // top line: student ID for students; the faculty name for everyone else (or whenever there is no ID)
+  // top line: student ID for students the faculty name for everyone else (or whenever there is no ID)
   const code = u.student_id || u.faculty || (u.role === 'admin' ? 'Software Eng. Lab' : '—');
   const extra = (u.role === 'undergrad_student' && u.year) ? `Year ${u.year}` : (u.major || '');
   // professors: their expertise as #topics under the e-mail (students search by these)
