@@ -1,9 +1,7 @@
 import os
-
 _INSECURE_SECRET_KEYS = {"", "dev-secret-change-me", "change-me"}
 
 def _load_secret_key(app_env: str) -> str:
-    """Require a real SECRET_KEY in production; allow a temporary key only in development."""
     key = os.getenv("SECRET_KEY", "")
     if key not in _INSECURE_SECRET_KEYS:
         return key
@@ -38,24 +36,22 @@ class Config:
 
     GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
     GOOGLE_CLOCK_SKEW_SECONDS = _bounded_int_env("GOOGLE_CLOCK_SKEW_SECONDS", 10, 0, 60)
-    
-    # restrict account creation (signup + google sign-in) to this email
+    # Restrict account creation (signup AND Google sign-in) to this email
+    # domain, enforced server-side regardless of frontend validation or the
+    # Cloud project's Audience (Internal/External) setting.
     ALLOWED_EMAIL_DOMAIN = os.getenv("ALLOWED_EMAIL_DOMAIN", "ku.th")
 
-    # forgot Password (reset links = single-use, time-limited)
+    # Forgot Password: reset links are single-use and time-limited.
     APP_BASE_URL = os.getenv("APP_BASE_URL", "http://localhost:5000")
     RESET_TOKEN_EXPIRES_MINUTES = int(os.getenv("RESET_TOKEN_EXPIRES_MINUTES", "30"))
-    
-    # e-mail verification (SRS-11)
+    # E-mail verification (SRS-11): the link sent after sign-up is single-use and time-limited.
     VERIFY_TOKEN_EXPIRES_MINUTES = int(os.getenv("VERIFY_TOKEN_EXPIRES_MINUTES", "1440"))
-    
     SMTP_HOST = os.getenv("SMTP_HOST", "")
     SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
     SMTP_USER = os.getenv("SMTP_USER", "")
     SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
     SMTP_FROM = os.getenv("SMTP_FROM", "no-reply@vase-lab.local")
     SMTP_TIMEOUT_SECONDS = _bounded_int_env("SMTP_TIMEOUT_SECONDS", 10, 1, 60)
-
     AUTO_CHECKOUT_GRACE_MINUTES = _bounded_int_env("AUTO_CHECKOUT_GRACE_MINUTES", 20, 0, 240)
     JOB_INTERVAL_SECONDS = _bounded_int_env("JOB_INTERVAL_SECONDS", 60, 10, 3600)
     NOTIFICATION_RETENTION_DAYS = _bounded_int_env("NOTIFICATION_RETENTION_DAYS", 45, 0, 3650)
