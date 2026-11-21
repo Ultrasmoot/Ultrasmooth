@@ -1,10 +1,8 @@
-# User & Access management (US-13). Every route is administrator-only; the role is
-# checked on the server by role_required, so hiding the menu item in the UI is not the protection
 from flask import Blueprint, jsonify, request
 
 from middleware.auth_middleware import get_current_user, role_required
-from models.user_admin_model import NotFoundError, UserAdminModel
-from models.user_model import ValidationError
+from models.user_admin.model import NotFoundError, UserAdminModel
+from models.user.model import ValidationError
 
 user_admin_bp = Blueprint("user_admin", __name__, url_prefix="/api/admin/users")
 

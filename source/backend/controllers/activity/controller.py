@@ -1,12 +1,13 @@
+# activity history 
 from flask import Blueprint, jsonify, request
 
 from middleware.auth_middleware import role_required
-from models.activity_model import ActivityModel, ValidationError
-from services.events import ACTIONS
+from models.activity.model import ActivityModel, ValidationError
+from services.events.service import ACTIONS
 
 activity_bp = Blueprint("activity", __name__, url_prefix="/api/activity")
 
-# SRS-8 view and filter the log.
+# view filter the log
 VIEWER_ROLES = ("admin", "professor")
 
 
@@ -39,7 +40,7 @@ def list_activity():
     return jsonify(result), 200
 
 
-# Options for the filter drop-downs
+# options for the filter drop downs
 @activity_bp.get("/meta")
 @role_required(*VIEWER_ROLES)
 def activity_meta():

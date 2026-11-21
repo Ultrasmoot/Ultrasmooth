@@ -1,8 +1,11 @@
+# maintenance management
 from flask import Blueprint, jsonify, request
+
 from middleware.auth_middleware import get_current_user, login_required, role_required
-from models.maintenance_model import MaintenanceModel, ValidationError
+from models.maintenance.model import MaintenanceModel, ValidationError
 
 maintenance_bp = Blueprint("maintenance", __name__, url_prefix="/api/maintenance")
+
 
 def _iso(value):
     return value.isoformat() if value else None
@@ -28,6 +31,7 @@ def _serialize(m: dict) -> dict:
     }
 
 
+# all authenticated users report issues
 @maintenance_bp.post("")
 @login_required
 def report_issue():
@@ -40,6 +44,7 @@ def report_issue():
     return jsonify({"record": _serialize(record)}), 201
 
 
+# admins see all records
 @maintenance_bp.get("")
 @login_required
 def list_records():
@@ -57,7 +62,7 @@ def list_records():
 def get_record(record_id):
     user = get_current_user()
     record = MaintenanceModel.get(record_id)
-    # A non-admin asking for someone else's report gets the same 404 as a missing one.
+    # return 404 missing records
     if not record or (user["role"] != "admin" and record["reported_by"] != user["id"]):
         return jsonify({"error": "Maintenance record not found."}), 404
     return jsonify({"record": _serialize(record)}), 200
@@ -71,7 +76,7 @@ def _admin_action(fn, record_id, *args):
     return jsonify({"record": _serialize(record)}), 200
 
 
-# Admin-only: confirm a report (resource -> Maintenance) or dismiss it.
+# admin actions maintenance records
 @maintenance_bp.post("/<int:record_id>/confirm")
 @role_required("admin")
 def confirm_record(record_id):
@@ -81,16 +86,18 @@ def confirm_record(record_id):
 @maintenance_bp.post("/<int:record_id>/dismiss")
 @role_required("admin")
 def dismiss_record(record_id):
-    # "Reject" in the UI. A reason is required and is shown to the person who reported it.
+    # Require a reason when dismissing a report
     data = request.get_json(silent=True) or {}
     return _admin_action(MaintenanceModel.dismiss, record_id, get_current_user()["id"], data.get("reason"))
 
 
+# admins edit resolve open records
 @maintenance_bp.put("/<int:record_id>")
 @role_required("admin")
 def update_record(record_id):
     data = request.get_json(silent=True) or {}
     return _admin_action(MaintenanceModel.update, record_id, data, get_current_user()["id"])
+
 
 @maintenance_bp.post("/<int:record_id>/resolve")
 @role_required("admin")

@@ -1,11 +1,12 @@
+# Iteration 5 - appointments with professors
 import datetime
 
 from flask import Blueprint, jsonify, request
 
 from middleware.auth_middleware import get_current_user, role_required
 from middleware.rate_limit import rate_limit
-from models.appointment_model import AppointmentModel, ValidationError
-from models.user_model import STUDENT_ROLES
+from models.appointment.model import AppointmentModel, ValidationError
+from models.user.model import STUDENT_ROLES
 
 appointment_bp = Blueprint("appointments", __name__, url_prefix="/api/appointments")
 
@@ -26,6 +27,7 @@ def _serialize(a: dict) -> dict:
         "start_time": _iso(a["start_time"]),
         "end_time": _iso(a["end_time"]),
         "status": a["status"],
+        # A request nobody answered before its time is shown as expired (the row itself is left alone).
         "expired": a["status"] == "Pending" and a["start_time"] <= datetime.datetime.now(),
         "decision_reason": a["decision_reason"],
         "decided_at": _iso(a["decided_at"]),
@@ -36,13 +38,15 @@ def _fail(e):
     return jsonify({"error": str(e)}), 400
 
 
+# The directory a student picks from. Only name, what they are good at and a short bio -
+# never an e-mail address.
 @appointment_bp.get("/professors")
 @role_required(*STUDENT_ROLES)
 def professors():
     return jsonify({"professors": [
         {"id": p["id"], "name": p["full_name"],
          "expertise": [e.strip() for e in p["expertise"].split(",") if e.strip()],
-         "bio": p["bio"], "photo_url": None}
+         "bio": p["bio"], "photo_url": None}      # photo upload arrives with User Management (Iteration 6)
         for p in AppointmentModel.professors()
     ]}), 200
 

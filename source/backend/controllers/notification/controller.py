@@ -1,8 +1,7 @@
-# in-web notifications (the bell)
 from flask import Blueprint, jsonify
 
 from middleware.auth_middleware import get_current_user, login_required
-from models.notification_model import NotificationModel
+from models.notification.model import NotificationModel
 
 notification_bp = Blueprint("notifications", __name__, url_prefix="/api/notifications")
 
@@ -19,7 +18,7 @@ def _serialize(n: dict) -> dict:
     }
 
 
-# Everyone sees only their own notifications
+# everyone sees only their own notifications
 @notification_bp.get("")
 @login_required
 def list_notifications():

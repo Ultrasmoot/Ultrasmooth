@@ -1,12 +1,10 @@
-# Operations dashboard (US-9, SRS-9, AD-6)
 from flask import Blueprint, jsonify, request
 
 from middleware.auth_middleware import role_required
-from models.dashboard_model import DashboardModel, ValidationError, resolve_period
+from models.dashboard.model import DashboardModel, ValidationError, resolve_period
 
 dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/api/dashboard")
 
-# SRS-9: Lab Managers/Administrators and Professors may view the dashboard.
 VIEWER_ROLES = ("admin", "professor")
 
 
