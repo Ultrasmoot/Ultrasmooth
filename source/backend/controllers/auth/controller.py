@@ -9,7 +9,7 @@ from config import Config
 from middleware.auth_middleware import password_fingerprint
 from middleware.rate_limit import rate_limit
 from models.user.model import UserModel, ValidationError
-from services.events import service as events  # Iteration 5: failed logins go to the activity log
+from services.events import service as events  # failed logins go to the activity log
 from services.mailer.service import send_email_in_background
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
@@ -27,17 +27,17 @@ from controllers.auth.reset_password import reset_password  # noqa: E402
 @auth_bp.post("/signup")
 @rate_limit("signup", limit=10, window_seconds=3600)
 def signup():
-    """Create-account screen: students only, admin/professor added later (SRS-11, URS-9)."""
+    # create-account screen for students only, admin/professor added later
     data = request.get_json(silent=True) or {}
     try:
         user = UserModel.create_student_account(data)
     except ValidationError as e:
         return jsonify({"error": str(e)}), 400
-    # No session yet: the account works only after the emailed link is opened
+    # the account works only after the emailed link is opened
     try:
         _send_verification_email(user["email"])
     except Exception:
-        # The account exists; the user can ask for a fresh link ("Resend verification email")
+        # The account exists, the user can ask for a fresh link ("Resend verification email")
         current_app.logger.exception("Could not send verification email")
     return jsonify({
         "message": "Account created. Check your email for a verification link, then log in.",
@@ -48,7 +48,7 @@ def signup():
 @auth_bp.post("/login")
 @rate_limit("login", limit=10, window_seconds=300, by_email=True)
 def login():
-    """Email/password login (SRS-11)."""
+    # email/password login
     data = request.get_json(silent=True) or {}
     email = data.get("email")
     password = data.get("password")

@@ -3,7 +3,7 @@ import controllers.auth.controller as _m
 # google login
 @_m.auth_bp.post("/google")
 def google_login():
-    """Verifies the Google ID token from the frontend's OAuth flow (SRS-11)."""
+    # verifies the Google ID token from the frontend's OAuth flow
     data = _m.request.get_json(silent=True) or {}
     identity, error = _m._verify_google_credential(data.get("credential"))
     if error:

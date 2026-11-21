@@ -37,8 +37,8 @@ def _send_reset_email(to_email: str, reset_link: str):
 @_m.auth_bp.post("/forgot-password")
 @_m.rate_limit("forgot-password", limit=5, window_seconds=900, by_email=True)
 def forgot_password():
-    """Requests a reset link. Always responds the same way regardless of
-    whether the email exists, to avoid revealing which emails have accounts."""
+    # requests a reset link. Always responds the same way regardless of
+    # whether the email exists, to avoid revealing which emails have accounts
     data = _m.request.get_json(silent=True) or {}
     email = data.get("email")
     if email is not None and not isinstance(email, str):
