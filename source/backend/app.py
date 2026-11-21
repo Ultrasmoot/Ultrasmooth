@@ -1,36 +1,40 @@
-from flask import Flask, jsonify, render_template, request
-from werkzeug.exceptions import HTTPException
+import secrets
 
+from flask import Flask, g, jsonify, render_template, request
 from config import Config
-from controllers.auth_controller import auth_bp
-from controllers.resource_controller import resource_bp
-from controllers.booking_controller import booking_bp
-from controllers.announcement_controller import announcement_bp
-from controllers.maintenance_controller import maintenance_bp
-from controllers.checkin_controller import checkin_bp
-
-from controllers.activity_controller import activity_bp 
-from controllers.appointment_controller import appointment_bp 
-from controllers.dashboard_controller import dashboard_bp 
-from controllers.notification_controller import notification_bp 
-from controllers.user_admin_controller import user_admin_bp 
+from controllers.auth.controller import auth_bp
+from controllers.resource.controller import resource_bp
+from controllers.booking.controller import booking_bp
+from controllers.announcement.controller import announcement_bp
+from controllers.maintenance.controller import maintenance_bp  
+from controllers.checkin.controller import checkin_bp 
+from controllers.activity.controller import activity_bp 
+from controllers.appointment.controller import appointment_bp  
+from controllers.dashboard.controller import dashboard_bp 
+from controllers.notification.controller import notification_bp 
+from controllers.user_admin.controller import user_admin_bp 
+from controllers.history.controller import history_bp 
+from controllers.calendar.controller import calendar_bp 
 from middleware.auth_middleware import login_required, role_required
+from web.errors import register_error_handlers
+from web.headers import register_security_headers
 
 
 def create_app():
-    app = Flask(__name__, template_folder="../frontend")
+    app = Flask(__name__, template_folder="../frontend", static_folder="../frontend/static", static_url_path="/static")
     app.register_blueprint(auth_bp)
     app.register_blueprint(resource_bp)
     app.register_blueprint(booking_bp)
     app.register_blueprint(announcement_bp)
-    app.register_blueprint(maintenance_bp)
-    app.register_blueprint(checkin_bp)
-    # Panisara
-    app.register_blueprint(activity_bp) 
+    app.register_blueprint(maintenance_bp) 
+    app.register_blueprint(checkin_bp) 
+    app.register_blueprint(activity_bp)
     app.register_blueprint(appointment_bp) 
     app.register_blueprint(dashboard_bp) 
-    app.register_blueprint(notification_bp) 
-    app.register_blueprint(user_admin_bp) 
+    app.register_blueprint(notification_bp)  
+    app.register_blueprint(user_admin_bp)  
+    app.register_blueprint(history_bp) 
+    app.register_blueprint(calendar_bp) 
 
     @app.before_request
     def require_json_object():
@@ -39,21 +43,15 @@ def create_app():
             if body is not None and not isinstance(body, dict):
                 return jsonify({"error": "Request body must be a JSON object."}), 400
 
-    # unexpected server error on an /api route frontend can show a message 
-    @app.errorhandler(Exception)
-    def api_error(e):
-        if not request.path.startswith("/api/"):
-            if isinstance(e, HTTPException):
-                return e
-            raise e
-        if isinstance(e, HTTPException):
-            return jsonify({"error": e.description}), e.code
-        app.logger.exception("Unhandled error on %s %s", request.method, request.path)
-        return jsonify({"error": "Something went wrong on the server. Please try again."}), 500
+    register_error_handlers(app)
 
     @app.get("/")
     def index():
-        return render_template("index.html", google_client_id=Config.GOOGLE_CLIENT_ID)
+        # One-time value that lets the single inline <script> in index.html run under the CSP
+        g.csp_nonce = secrets.token_urlsafe(16)
+        return render_template("index.html", google_client_id=Config.GOOGLE_CLIENT_ID, csp_nonce=g.csp_nonce)
+
+    register_security_headers(app)
 
     @app.get("/api/health")
     def health():
@@ -63,8 +61,10 @@ def create_app():
     @login_required
     def ping():
         return {"status": "authenticated"}
-    
-    # user access , frontend calls this (server-side)
+
+    # Real server-side gate for the "User & Access" nav item 
+    # The frontend calls this before switching into that view, so access is
+    # enforced by the backend guard, not just by hiding the nav button.
     @app.get("/api/admin/access-check")
     @role_required("admin")
     def access_check():
@@ -76,9 +76,10 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    # Background jobs (auto check-out, old-row cleanup)
+    # Background jobs (auto check-out, old-row cleanup). With the debug reloader the code runs
+    # twice only the child process that serves requests starts the worker.
     import os
-    from services.housekeeping import start_background_worker
+    from services.housekeeping.service import start_background_worker
 
     if not Config.DEBUG or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         start_background_worker()
