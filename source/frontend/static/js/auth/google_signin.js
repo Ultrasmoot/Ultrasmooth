@@ -1,4 +1,4 @@
-/* ---------------- Google Sign-In (real, via Google Identity Services) ---------------- */
+/* Google Sign-In (real, via Google Identity Services) */
 let pendingGoogleProfile = null; // holds {email, full_name} for display while a first-time Google user picks a role
 let pendingGoogleCredential = null; // Google ID token, re-sent so the backend can verify it again
 
@@ -23,7 +23,7 @@ async function handleGoogleCredential(response){
 
 window.addEventListener('load', () => {
   if(!window.google || !google.accounts){
-    // GSI script failed to load (e.g. offline) — leave the button inert rather than crash.
+    // GSI script failed to load leave the button inert rather than crash.
     return;
   }
   google.accounts.id.initialize({
@@ -40,7 +40,6 @@ document.getElementById('btn-google-login').addEventListener('click', () => {
   google.accounts.id.prompt();
 });
 
-// Panisara
 document.getElementById('complete-profile-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   if(!pendingGoogleProfile) return;
@@ -98,7 +97,6 @@ document.getElementById('complete-profile-cancel').addEventListener('click', () 
   showAuthView('login');
 });
 
-// Napakhet
 document.getElementById('login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   loginError.classList.remove('show');
@@ -117,7 +115,6 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     const {ok, data} = await apiPost('/login', {email, password});
     if(!ok){
       showLoginError(data.error || 'Invalid email or password.');
-      // 403 + needs_verification: right password, but the email is not verified yet
       if(data.needs_verification) showResendLink(data.email || email);
       return;
     }
@@ -129,7 +126,6 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
   }
 });
 
-// Panisara
 function showAuthView(view){
   document.getElementById('login-view').classList.toggle('active', view === 'login');
   document.getElementById('create-view').classList.toggle('active', view === 'create');
@@ -143,8 +139,7 @@ function togglePw(id){
   el.type = el.type === 'password' ? 'text' : 'password';
 }
 
-// The page's Content-Security-Policy blocks inline onclick="..." attributes, so the sign-in links and the
-// show-password buttons carry data attributes and are handled here.
+
 document.addEventListener('click', (e) => {
   const pw = e.target.closest('[data-toggle-pw]');
   if(pw){ togglePw(pw.dataset.togglePw); return; }
@@ -216,8 +211,8 @@ document.getElementById('create-form').addEventListener('submit', async (e) => {
       return;
     }
     // Sign-up is limited to Ph.D./Undergraduate Student (see dropdown options).
-    // Lab Admin / Professor accounts are assigned later by an Administrator (SRS-11, URS-9).
-    // No session yet: the account is usable only after the emailed link is opened.
+    // Lab Admin / Professor accounts are assigned later by an Administrator
+    // the account is usable only after the emailed link is opened.
     createError.classList.remove('show');
     loginError.classList.remove('show');
     document.getElementById('login-email').value = data.email || payload.email || '';

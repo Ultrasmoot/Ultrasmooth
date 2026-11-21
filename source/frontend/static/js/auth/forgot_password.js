@@ -1,5 +1,4 @@
-/* Napakhet */
-/* ---------------- Forgot Password ---------------- */
+/* Forgot Password */
 document.getElementById('forgot-password-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = document.getElementById('forgot-email').value.trim();
@@ -9,7 +8,7 @@ document.getElementById('forgot-password-form').addEventListener('submit', async
   submitBtn.disabled = true;
   try{
     const {data} = await apiPost('/forgot-password', {email});
-    // Same message whether or not the email has an account — avoids
+    // Same message whether or not the email has an account avoids
     // revealing which emails exist.
     msgBox.textContent = data.message || 'If an account exists for this email, a reset link has been sent.';
     msgBox.style.display = 'block';

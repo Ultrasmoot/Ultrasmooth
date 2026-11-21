@@ -1,7 +1,5 @@
-/* Napakhet */
-/* ---------------- Login (US-11 / SRS-11) — wired to real backend ---------------- */
+/* wired to real backend */
 const API_BASE = '/api/auth';
-// Jirat + Napakhet + Panisara
 // Backend roles (phd_student/undergrad_student/professor/admin) map
 // onto the frontend's display roles (user/professor/admin).
 const BACKEND_TO_UI_ROLE = {
@@ -18,7 +16,7 @@ function showLoginError(msg){
   loginErrorText.textContent = msg;
   loginError.classList.add('show');
 }
-// ---- e-mail verification (SRS-11) ----
+// e-mail verification
 const loginNotice = document.getElementById('login-notice');
 const loginNoticeText = document.getElementById('login-notice-text');
 const loginResendRow = document.getElementById('login-resend-row');
@@ -54,7 +52,6 @@ function showCreateError(msg){
   createError.classList.add('show');
 }
 
-// Jirat + Napakhet + Panisara
 let currentUser = null;
 
 // Detailed status shown in the account dropdown (the side menu itself only shows the short role label).
@@ -99,7 +96,7 @@ function signIn(token, user){
   applyRealUser(user);
   loadAnnouncements();
   loadHome();
-  startNotifications();   // Iteration 5: the bell
+  startNotifications();   // the bell
 }
 
 function signOut(){
@@ -147,7 +144,7 @@ async function apiAuthGet(path){
 }
 
 // Generic authenticated write (POST/PUT), used by Resource Management
-// (US-2) — same Bearer-token pattern as apiAuthGet, with a JSON body.
+// same Bearer-token pattern as apiAuthGet, with a JSON body.
 async function apiAuthSend(method, path, body){
   const token = localStorage.getItem('vase_token');
   try{
@@ -160,7 +157,6 @@ async function apiAuthSend(method, path, body){
       body: body !== undefined ? JSON.stringify(body) : undefined
     });
     const data = await res.json().catch(()=>({}));
-    // A non-JSON error page (e.g. a 500) used to leave `data.error` empty, so the UI had nothing to show.
     if(res.status === 401) handleExpiredSession();
     if(!res.ok && !data.error) data.error = `Server error (${res.status}). Please try again.`;
     return {ok: res.ok, status: res.status, data};
@@ -169,10 +165,7 @@ async function apiAuthSend(method, path, body){
   }
 }
 
-// Jirat + Napakhet + Panisara
-// Restores the session on page load/refresh (fixes: user had to log in
-// again every refresh). Re-validates the stored token against the
-// backend rather than trusting the cached user blindly.
+// Restores the session on page load/refresh
 async function restoreSession(){
   const token = localStorage.getItem('vase_token');
   if(!token) return;
