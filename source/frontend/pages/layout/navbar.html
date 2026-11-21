@@ -1,0 +1,57 @@
+  <!-- NAVBAR (replaces the old left sidebar) -->
+  <header class="navbar" id="navbar">
+    <div class="navbar-in">
+      <button class="brand" id="brand-home" type="button" aria-label="VASE home">
+        <div class="stamp-badge">V</div>
+        <div class="brand-text"><div class="name">VASE</div><div class="sub">Software Eng. Lab</div></div>
+      </button>
+
+      <div class="navbar-right">
+        <nav class="nav" id="main-nav">
+          <button class="nav-item active" data-view="home" aria-label="Home"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.8L12 3.5l8.5 7.3"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/></svg><span class="nl">Home</span></button>
+          <!-- admin + professor -->
+          <button class="nav-item req-staff-nav" data-view="dashboard" aria-label="Dashboard"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="4.5" rx="1.5"/><rect x="13" y="11.5" width="7" height="8.5" rx="1.5"/><rect x="4" y="14" width="7" height="6" rx="1.5"/></svg><span class="nl">Dashboard</span></button>
+          <!-- Resources (admin-only manage actions) -->
+          <button class="nav-item" data-view="resources" aria-label="Resources"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.2v9.6L12 21l-8-4.2V7.2L12 3z"/><path d="M4 7.2l8 4.3 8-4.3"/><path d="M12 11.5V21"/></svg><span class="nl">Resources</span></button>
+          <!-- Requests (students track own status, admin approves/rejects) -->
+          <button class="nav-item" data-view="bookings" aria-label="Requests"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4.5" width="14" height="16.5" rx="2.5"/><path d="M9 4.5V3.5h6v1"/><path d="M8.8 13l2.3 2.3 4.2-4.6"/></svg><span class="nl">Requests</span></button>
+          <!-- Calendar: when each resource is taken, every role -->
+          <button class="nav-item" data-view="calendar" aria-label="Resource Calendar"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span class="nl">Resource Calendar</span></button>
+          <!-- Maintenance (every role can report an issue, admin confirms/edits/resolves) -->
+          <button class="nav-item" data-view="maintenance" aria-label="Maintenance"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5a4 4 0 0 0-4.6 5.2L4.5 16.1a1.8 1.8 0 0 0 2.5 2.5l5.4-5.4a4 4 0 0 0 5.2-4.6l-2.4 2.4-2.3-.7-.7-2.3z"/></svg><span class="nl">Maintenance</span></button>
+          <!-- Check in / out : students only -->
+          <button class="nav-item req-booker-nav" data-view="checkin" aria-label="Check in/out"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M15 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/></svg><span class="nl">Check in/out</span></button>
+          <!-- Appointments: students ask, professors answer -->
+          <button class="nav-item req-appt-nav" data-view="appointments" aria-label="Appointments"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M8 3.5v4M16 3.5v4M4 10h16"/></svg><span class="nl">Appointments</span></button>
+          <!-- Activity log : admin + professor -->
+          <button class="nav-item req-staff-nav" data-view="activity" aria-label="Activity log"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h3.5l2.2-6 4.3 12 2.2-6H20"/></svg><span class="nl">Activity log</span></button>
+          <!-- Check-in / check-out history: admin only -->
+          <button class="nav-item req-admin-nav" data-view="history" aria-label="Check-in history"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><span class="nl">Check-in history</span></button>
+          <button class="nav-item req-admin-nav" data-view="access" aria-label="User and Access"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19c.6-3.2 2.9-5 5.5-5s4.9 1.8 5.5 5"/><path d="M16 5.6a3.1 3.1 0 010 5.8"/><path d="M17.5 14.3c1.7.6 2.7 2.2 3 4.7"/></svg><span class="nl">User &amp; Access</span></button>
+        </nav>
+
+        <!-- profile menu -->
+        <div class="profile role-select" id="role-select">
+          <button class="avatar-btn" id="role-chip" type="button" aria-label="Account menu"><span id="role-av">SA</span></button>
+          <!-- name + status: only visible while the side menu is expanded -->
+          <div class="profile-info" id="profile-info">
+            <div class="profile-info-in">
+              <div class="profile-name" id="profile-name">System Admin</div>
+              <div class="profile-status" id="profile-status">Administrator</div>
+            </div>
+          </div>
+          <div class="role-menu" id="role-menu">
+            <div class="menu-user"><b id="role-name">System Admin</b><span id="role-label">Administrator</span></div>
+            <div class="eyebrow">View as</div>
+            <button data-role="user"><b>Napakhet</b><span>Lab User (Student)</span></button>
+            <button data-role="professor"><b>Aj. Somchai</b><span>Professor (view-only)</span></button>
+            <button data-role="admin" class="active"><b>System Admin</b><span>Administrator</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-edge" aria-hidden="true"></div>
+    <button class="nav-handle" id="nav-handle" type="button" aria-label="Open menu">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M7.5 4.5L13 10l-5.5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </header>
