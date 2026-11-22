@@ -1,301 +1,595 @@
 # Vase - Lab Data Management System
 
-**Course :** Individual Software Development Process 2026
-**Team :** UltraSmooth
-**Challenge :** Project A - Lab Data Management
+**Course :** Individual Software Development Process 2026 **Team :**
+UltraSmooth **Challenge :** Project A - Lab Data Management
 
 ## Overview
 
-VASE Laboratory Resource Management System is a web application for managing laboratory resources, bookings, maintenance, activity history, and user access.
+VASE Laboratory Resource Management System is a web application for
+managing laboratory resources, bookings, maintenance, activity history,
+and user access.
 
-The main goal is to keep laboratory information in one system and make it easier for students, lab staff, and professors to use and manage laboratory resources.
+The main goal is to keep laboratory information in one system and make
+it easier for students, lab staff, and professors to use and manage
+laboratory resources.
 
 ### Target Users
 
-* **Ph.D. Students / Undergraduate Students** view resources, submit and track bookings, and check in/out resources
-* **Lab Administrators** manage resources, bookings, maintenance, activity history, dashboards, and user accounts
-* **Professor** view laboratory information with read-only access
+-   **Ph.D. Students / Undergraduate Students** view resources, submit,
+    track, and cancel bookings, check in/out resources, report issues,
+    and request appointments with professors
+-   **Lab Administrators** manage resources, bookings, maintenance, user
+    accounts and roles, and can read the activity log and dashboard
+-   **Professors** read the activity log and dashboard, post
+    announcements, and answer appointment requests
 
 ## Key Features
 
-### Completed
+### Iteration 1 - Authentication & Access (SRS-11, SRS-12)
 
-* Login with Google OAuth 2.0 or email/password
-* Student self-registration
-* Server-side role-based access control (RBAC)
-* Forgot and reset password
-* Time-limited and single-use password reset tokens
-* Resource search by name
-* Resource filtering by category, location, and status
-* Admin-only resource creation and editing
-* Required-field validation
-* Resource status validation
-* Admin-only resource archiving using soft-delete
-* Archived resources remain in the database but are hidden from the default resource list
-* **Booking requests** submitted by Ph.D. and Undergraduate students (US-3)
-* **Booking validation:** required fields, valid dates, end time after start time, no start time in the past, purpose up to 255 characters
-* **Resource availability check:** only existing, non-archived, `Available` resources can be booked
-* **Overlap (conflict) check** against Pending and Approved bookings on the same resource
-* **My Requests page** with Pending / Approved / Rejected status badges and automatic refresh every 30 seconds (US-4)
-* **Admin review of Pending requests** with approve / reject, recording the decision, the administrator ID, and the decision time (US-5)
-* **Announcements:** Professors and Administrators can post and pin/unpin announcements; all logged-in users can read them on the home page; only the author can delete an announcement
-* **Rate limiting** on login, signup, and password-reset endpoints
-* Application and database timezone set to `Asia/Bangkok`
+-   Login with Google OAuth 2.0 (verified on the backend) or
+    email/password
+-   Student self-registration with e-mail verification
+-   Server-side role-based access control (RBAC)
+-   Forgot and reset password with time-limited, single-use tokens
+-   Rate limiting on login, signup, and password-reset endpoints
 
-### In Progress
+### Iteration 2 - Resource Management (SRS-1, SRS-2)
 
-The following items are not fully completed yet:
+-   Resource search by name; filters by category, location, and status
+-   Admin-only resource creation and editing with required-field and
+    status validation
+-   Sorting on the resource list
+-   Admin-only archiving (soft-delete); archived resources stay in the
+    database but are hidden from the default list, and admins can show
+    archived resources
 
-* Automated tests for the booking workflow (overlap, back-to-back, rejected bookings, resource status checks, concurrent requests, already-decided requests)
-* Read-only view of all booking requests for Professors (access level not yet confirmed with the stakeholder)
-* Replacing the in-memory rate limiter with a shared store (e.g. Redis) before final deployment
-* Full sorting on the resource list, availability-specific filtering, and the admin "Show Archived" option (carried over from Iteration 2)
+### Iteration 3 - Booking & Request Management (SRS-3, SRS-4, SRS-5)
 
-### Planned for Later Iterations
+-   **US-3:** booking requests with validation (required fields, valid
+    dates, end after start, no start in the past, purpose up to 255
+    characters); only existing, non-archived, `Available` resources can
+    be booked; overlap check against Pending and Approved bookings
+    (back-to-back is allowed, rejected bookings free the slot)
+-   **US-4:** My Requests page with status badges and automatic refresh
+    every 30 seconds
+-   **US-5:** admin approve / reject, recording the decision, the
+    administrator ID, and the decision time
+-   Announcements: professors and admins post and pin/unpin; everyone
+    reads them on the home page; only the author deletes
 
-* **Iteration 4:** Check-in/check-out, issue reporting and maintenance tracking
-* **Iteration 5:** Activity history and operations dashboard
-* **Iteration 6:** User account and role management
+### Iteration 4 - Check-in/Check-out & Maintenance (SRS-10, SRS-6, SRS-7)
+
+-   **US-10:** check-in with a one-time code sent by e-mail, and
+    check-out
+-   **US-6:** every role can report a resource issue
+-   **US-7:** administrators edit, confirm, dismiss, and resolve
+    maintenance records
+
+### Iteration 5 - Activity Log, Dashboard & User Management (SRS-8, SRS-9, SRS-13)
+
+-   **US-8:** activity log (administrators and professors, read-only)
+    with filters by date range, user, action type, and resource; 20
+    entries per page, newest first; each row is saved in the same
+    transaction as the action; records older than 45 days are deleted by
+    default
+-   **US-9:** operations dashboard (administrators and professors):
+    resources by status, active bookings, pending requests, open issues,
+    and utilization per category over 7, 30, 90 days or a custom range
+-   **US-13:** administrators list, create, edit, deactivate, and
+    reactivate users and change roles. A deactivated account cannot log
+    in and its token stops working at once. An administrator cannot
+    deactivate or demote themselves, and the last active administrator
+    is always protected
+-   Added in this iteration without dropping a story:
+    -   **Automatic check-out** 20 minutes after the booking ends
+        (`AUTO_CHECKOUT_GRACE_MINUTES`, 0-240), with a notification and
+        a log entry
+    -   **Cancel a booking** by the student (Pending, or Approved and
+        not yet used)
+    -   Notification bell, resource detail page, and appointments with
+        professors
+
+### Iteration 6 - Code Refactoring
+
+No new features. The behaviour of the system is unchanged.
+
+-   Code reorganised into one folder per feature in `controllers/`,
+    `models/`, and `tests/`, and into `pages/` and `static/` in the
+    frontend
+-   Large files split into small, focused modules; shared helpers moved
+    to `services/`, `middleware/`, and `web/`
+-   Test files renamed to say what they check, and grouped by feature
+-   Maintainability Index checked for every `.py` file using the formula
+    from the course
+-   Documented the known limitations (see below)
+
+US-13 was moved into Iteration 5 so that the plan has five feature
+iterations plus this refactoring iteration.
+
+### Other
+
+-   Application and database timezone set to `Asia/Bangkok`
 
 ## Tech Stack
 
-| Layer        | Technology              |
-| ------------ | ----------------------- |
-| Frontend     | HTML, CSS, JavaScript   |
-| Backend      | Python / Flask          |
-| Architecture | MVC pattern             |
-| Database     | MySQL                   |
-| Environment  | Docker + Docker Compose |
+  Layer          Technology
+  -------------- -------------------------
+  Frontend       HTML, CSS, JavaScript
+  Backend        Python / Flask
+  Architecture   MVC pattern
+  Database       MySQL 8
+  Environment    Docker + Docker Compose
 
 ## Architecture
 
-The system uses a modular monolithic architecture with the MVC pattern.
+The system uses a modular monolithic architecture with the MVC pattern,
+organised by feature.
 
-* **View** - Web application in `frontend/index.html`
-* **Controllers** - Handle authentication, resource, booking, and announcement requests
-* **Models** - Handle business logic and database operations. All booking rules (validation, resource availability, conflict check) live in the Booking Model
-* **Persistence** - MySQL database
-* **Authentication & Authorization** - Shared middleware for authentication and role checking, used by the booking and announcement endpoints
+-   **View** - `frontend/index.html` loads page fragments from
+    `frontend/pages/` and scripts and styles from `frontend/static/`
+-   **Controllers** - `backend/controllers/<feature>/` handle HTTP
+    requests
+-   **Models** - `backend/models/<feature>/` hold business rules and
+    database operations
+-   **Services** - `backend/services/`: `mailer`, `locking`, `events`
+    (activity log helper), `housekeeping` (automatic check-out and
+    old-record cleanup)
+-   **Middleware** - `backend/middleware/`: authentication, role
+    checking, rate limiting
+-   **Web helpers** - `backend/web/`: security headers and error
+    handlers
+-   **Persistence** - MySQL; `backend/database/` holds `schema.sql`,
+    `seed.sql`, and `migrations/`
 
-Booking creation runs inside a database transaction that locks the selected resource row, so the conflict check and the insert happen together. Approve/reject updates a booking only while its status is still `Pending`.
+All modules lock the resource row first, then the booking (and
+administrator rows first for user changes), so concurrent actions cannot
+create a double booking or leave the lab without an administrator.
+Approve/reject only updates a booking while its status is still
+`Pending`.
 
 ## Getting Started
 
-### 1. Clone the Repository
+This guide explains how to set up, run, configure, and test the VASE Lab
+Data Management System.
 
-```bash
+## 1. Quick Start
+
+Follow these steps to run the application locally.
+
+### Prerequisites
+
+-   Git
+-   Docker Desktop (make sure Docker Engine is running)
+
+### Step 1: Clone the Repository
+
+``` bash
 git clone https://github.com/Ultrasmoot/Ultrasmooth.git
 cd Ultrasmooth
 ```
 
-### 2. Set Up Environment Variables
+### Step 2: Set Up Environment Variables
 
-Create a local `.env` file in the backend folder.
+Navigate to the backend directory and create your local environment
+file:
 
-```bash
+``` bash
 cd source/backend
 cp .env.example .env
 ```
 
-The `.env` file is ignored by Git and should not be committed.
+Open `.env` in a text editor and check the following settings:
 
-In production (`APP_ENV=production`), the app refuses to start if `SECRET_KEY` is missing or still a placeholder.
-
-By default, `SMTP_HOST` is empty. Password reset links are therefore printed in the container log instead of being sent by email. This is enough for local development and testing.
-
-To send real emails, configure the following values in your local `.env` file:
-
-```text
-SMTP_HOST
-SMTP_USER
-SMTP_PASSWORD
-SMTP_FROM
+``` env
+APP_ENV=development
+SECRET_KEY=change-me-to-a-long-random-string
+DB_HOST=db
+DB_PORT=3306
+DB_USER=vase_user
+DB_PASSWORD=vase_pass
+DB_NAME=vase_lab
 ```
 
-### 3. Start the Application
+The default values copied from `.env.example` work for local development
+without changes. With `APP_ENV=development`, the placeholder `SECRET_KEY`
+is accepted. If `APP_ENV` is not set, it defaults to `production`, and the
+application refuses to start while `SECRET_KEY` is missing or still a
+placeholder. If you change the database settings, make sure they match
+the corresponding `MYSQL_*` values in `source/docker-compose.yml`.
 
-Make sure Docker Desktop is running, then:
+Save the file before proceeding.
 
-```bash
-cd source
+### Step 3: Start the Application
+
+Navigate to the `source` directory:
+
+``` bash
+cd ..
 docker compose up --build
 ```
 
-The database is created and seeded automatically on the first run.
+Wait until the database is healthy and the Flask application starts
+successfully.
 
-If the database volume already exists and does not contain the latest seed data (including the Iteration 3 `bookings` and `announcements` tables), reset it with:
+### Step 4: Open the Application
 
-```bash
+Open the application in your browser:
+
+[**http://localhost:5000**](http://localhost:5000)
+
+### Step 5: Sign In
+
+Use one of the demo accounts listed at the top of:
+
+`source/backend/database/seed.sql`
+
+These accounts are for local demonstration and testing only.
+
+------------------------------------------------------------------------
+
+## 2. Configuration
+
+This section explains optional settings for customizing the local
+environment.
+
+### Environment Variables
+
+The environment file is located at:
+
+`source/backend/.env`
+
+  -----------------------------------------------------------------------
+  Variable                            Description
+  ----------------------------------- -----------------------------------
+  `APP_ENV`                           Application environment
+                                      (`development` or `production`)
+
+  `SECRET_KEY`                        Secret key used by the application
+
+  `DB_HOST`, `DB_PORT`, `DB_USER`,    Database connection settings; must
+  `DB_PASSWORD`, `DB_NAME`            match the `MYSQL_*` values in
+                                      `source/docker-compose.yml`
+
+  `ALLOWED_EMAIL_DOMAIN`              E-mail domain allowed for
+                                      registration (default: `ku.th`)
+
+  `AUTO_CHECKOUT_GRACE_MINUTES`       Minutes after a booking ends before
+                                      automatic check-out (default: `20`,
+                                      range: 0--240)
+
+  `ACTIVITY_RETENTION_DAYS`,          Retention periods for activity logs
+  `NOTIFICATION_RETENTION_DAYS`       and notifications (default: `45`;
+                                      `0` keeps everything)
+
+  `APP_BASE_URL`                      Base address used in e-mail links
+                                      (default: `http://localhost:5000`)
+
+  `GOOGLE_CLIENT_ID`                  Optional Google OAuth client ID
+
+  `SMTP_HOST`, `SMTP_PORT`,           Optional SMTP settings for sending
+  `SMTP_USER`, `SMTP_PASSWORD`,       e-mails
+  `SMTP_FROM`                         
+  -----------------------------------------------------------------------
+
+The `.env` file contains sensitive configuration values. Do not commit
+or share it.
+
+For production, set a strong random `SECRET_KEY`. You can generate one
+with:
+
+``` bash
+python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+### E-mail Configuration
+
+By default, `SMTP_HOST` is empty. The application does not send real
+e-mails; instead, verification links, password reset links, and check-in
+codes are printed in the application logs.
+
+To send e-mails using Gmail:
+
+1.  Enable 2-Step Verification for the Google account.
+2.  Create an App password in the Google account security settings.
+3.  Configure the following values in `source/backend/.env`:
+
+``` text
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-address@gmail.com
+SMTP_PASSWORD=the-16-character-app-password
+SMTP_FROM=your-address@gmail.com
+```
+
+Use the App password, not the normal Gmail password.
+
+After changing the SMTP settings, restart the application from the
+`source` directory:
+
+``` bash
+docker compose up -d --force-recreate app
+```
+
+### Google Sign-in Configuration
+
+To enable Google sign-in:
+
+1.  Create an OAuth client ID with the type **Web application** in
+    Google Cloud Console.
+2.  Add the application address (for example, `http://localhost:5000`)
+    under **Authorized JavaScript origins**.
+3.  Set `GOOGLE_CLIENT_ID` in `source/backend/.env`.
+
+Leave `GOOGLE_CLIENT_ID` empty to disable Google sign-in.
+
+------------------------------------------------------------------------
+
+## 3. Application Management
+
+### View Application Logs
+
+To view the latest application logs, open a separate terminal and
+navigate to the repository's `source` directory:
+
+``` bash
+cd path/to/Ultrasmooth/source
+```
+
+Replace `path/to/Ultrasmooth` with the actual location of your cloned
+repository.
+
+Run:
+
+``` bash
+docker compose logs app --tail 50
+```
+
+To continuously monitor new log messages:
+
+``` bash
+docker compose logs -f app
+```
+
+Press `Ctrl + C` to stop viewing logs without stopping the application.
+
+Logs are useful for checking application errors and retrieving
+verification links, password reset links, and check-in codes when SMTP
+is not configured.
+
+### Stop the Application
+
+If the application is running in the foreground, press:
+
+``` text
+Ctrl + C
+```
+
+Then, from the `source` directory, run:
+
+``` bash
+docker compose down
+```
+
+This stops and removes the application containers and network while
+preserving the database volume.
+
+### Reset the Database
+
+To recreate the database from scratch, run the following commands from
+the `source` directory:
+
+``` bash
 docker compose down -v
 docker compose up --build
 ```
 
-> **Warning:** `docker compose down -v` removes the existing database volume.
+**Warning:** `docker compose down -v` permanently deletes the database
+volume and all data stored in it. Only use this command when the
+existing data is no longer needed.
 
-### 4. Open the Application
+To preserve existing data, apply the files in
+`backend/database/migrations/` in numeric order. Follow the instructions
+at the top of each migration file.
 
-Open the following address in your browser:
+### Change the Application Port
 
-**http://localhost:5000**
-
-If port `5000` is already in use, change the host-side port in `docker-compose.yml`.
+If port `5000` is already in use, edit the port mapping in
+`source/docker-compose.yml`.
 
 For example:
 
-```yaml
-"5001:5000"
+``` yaml
+ports:
+  - "5001:5000"
 ```
 
-Then open:
+Then restart the application and open:
 
 **http://localhost:5001**
 
 The container-side port remains `5000`.
 
-## Project Status
+### Troubleshooting
 
-The project is currently in **Iteration 3 (Booking & Request Management)**, covering **SRS-3**, **SRS-4** and **SRS-5**.
+**Docker Engine is not running**
 
-### Iteration 1 (Authentication & Role-Based Access)
+If you see an error such as:
 
-Iteration 1 has been completed.
+``` text
+failed to connect to the docker API
+```
 
-The implemented features include:
+Open Docker Desktop and wait until the Docker Engine is ready. Then
+retry the Docker Compose command.
 
-* Email/password login
-* Google OAuth login with backend verification
-* Student self-registration
-* Server-side role-based access control
-* Forgot and reset password
+**Database container is unhealthy**
 
-### Iteration 2 (Resource Management)
+Inspect the database logs:
 
-Iteration 2 has been completed (SRS-1 and SRS-2).
+``` bash
+docker compose logs db --tail 100
+```
 
-* **US-1:** Users can search resources by name and filter by category, location, and status.
-* **US-2:** Administrators can create, edit, validate, and archive resources. Archiving uses soft-delete.
+If the error indicates an incompatible MySQL data directory, check the
+MySQL image version and existing database volume. Do not attempt to
+downgrade the database. For a fresh local setup where existing data can
+be deleted, use the Reset the Database instructions above.
 
-### Iteration 3 (Booking & Request Management)
+**Application fails to start**
 
-The team completed all three planned user stories. Capacity was three stories, one more than in Iterations 1 and 2, because all three share the same `bookings` table and Booking Model.
+If the application reports `ModuleNotFoundError`, check that the module
+or package exists and that its directory and file names match the Python
+import statements. If the problem persists, report it to the project
+maintainers.
 
-#### US-3: Submit a Booking Request
+------------------------------------------------------------------------
 
-Ph.D. and Undergraduate students can choose a resource, start time, end time, and purpose.
+## 4. Testing
 
-The system rejects:
+Backend tests are divided into unit tests and MySQL integration tests.
 
-* Empty required fields
-* An end time that is not after the start time
-* A start time in the past
-* A purpose longer than 255 characters
-* A resource that does not exist, is archived, or is not `Available`
-* A request that overlaps a Pending or Approved booking on the same resource
+### Backend Unit Tests
 
-Rejected bookings do not block a slot, and back-to-back bookings are allowed. Other roles are refused. The form shows the error message returned by the server.
+These tests do not require a MySQL database. Tests that need a real
+MySQL database are skipped.
 
-#### US-4: Track My Bookings/Requests
+From the repository root:
 
-Students can view only their own booking requests with Pending, Approved, or Rejected badges. The list is sorted by start time, latest first. It can be refreshed manually and reloads automatically every 30 seconds while the Requests page is open and visible.
+``` bash
+cd source/backend
+python -m unittest discover -s tests -v
+```
 
-#### US-5: Review and Approve/Reject Requests
+### MySQL Integration Tests
 
-Administrators can view Pending requests (resource name, requester name and email, earliest start time first) and approve or reject each one. The system records the decision, the administrator ID, and the decision time. A request that has already been decided cannot be decided again, even if two administrators act at the same moment.
+Tests that require a real MySQL database, such as row locking,
+`lastrowid`, and the demo seed, run in a separate test database.
 
-#### Scope Addition: Announcements
+From the repository root, navigate to the `source` directory:
 
-Added as a small extension with no user story removed. Professors and Administrators can post and pin/unpin announcements, all logged-in users can read them on the home page (pinned first), and only the author can delete an announcement.
+``` bash
+cd source
+```
 
-### Future Iterations
+Run the integration tests:
 
-The following iterations have not started yet:
+``` bash
+docker compose -f docker-compose.test.yml up --build --abort-on-container-exit --exit-code-from tests
+```
 
-* **Iteration 4:** Check-in/Check-out & Maintenance
-* **Iteration 5:** Activity History & Operations Dashboard
-* **Iteration 6:** User Management
+After the tests finish, remove the test containers and database volume:
 
-Detailed sprint information, Gantt charts, retrospective results, and the risk register are included in the Iteration Report in the `docs/` folder.
+``` bash
+docker compose -f docker-compose.test.yml down -v
+```
+
+**Warning:** This cleanup command removes the test database volume. Do
+not use it to clean up the main application database.
+
+Backend tests are grouped by feature in
+`backend/tests/<feature>_tests/`. The Iteration 5 report (section 5)
+describes the test coverage.
 
 ## Known Limitations
 
-The current open issues are:
+  ------------------------------------------------------------------------------
+  ID                 Issue                          Status
+  ------------------ ------------------------------ ----------------------------
+  R-01               **Double booking / double      Open
+                     confirmation.** Row locks      
+                     should prevent it, but no test 
+                     sends parallel requests. The   
+                     locking tests run on SQLite,   
+                     which has no real row locks.   
+                     Two-thread tests on real MySQL 
+                     are needed before deployment.  
 
-| ID   | Issue                                                                                                                                      | Status     |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| R-01 | Double booking: concurrency tests are still needed to confirm simultaneous requests cannot create conflicting bookings.                    | Open       |
-| R-02 | Professors have no read-only view of all booking requests, and the access level each role needs is not yet confirmed.                      | Open       |
-| R-03 | Availability checks are not yet tested against resources that are In Use, under Maintenance, or archived.                                  | Open       |
-| R-04 | The rate limiter keeps counters in memory (per process, reset on restart). A shared store such as Redis is needed before final deployment. | Open       |
-| R-05 | Date/time values without a timezone offset are treated as server-local time. `TZ=Asia/Bangkok` must be kept in Docker settings.            | Monitoring |
+  R-02               **Rate limiter.** Counters are Open
+                     kept in memory (per process,   
+                     reset on restart, not shared   
+                     between workers). Use Redis or 
+                     Flask-Limiter before a         
+                     multi-worker deployment. The   
+                     3-attempt check-in limit is    
+                     already stored in the          
+                     database.                      
 
-## Testing
+  R-03               **Check-in depends on SMTP.**  Open
+                     If the mail server is down,    
+                     students cannot check in.      
 
-Automated tests are in `backend/tests/test_security.py`. They cover Google sign-in validation, rate limiting, signup input validation, password-reset token handling, and production secret-key configuration. **They do not yet cover the booking workflow.**
+  R-05               **Log retention.** Old log and Open
+                     notification rows are deleted  
+                     after 45 days (changeable in   
+                     settings, 0 keeps everything). 
+                     The required retention time is 
+                     still to be confirmed with the 
+                     stakeholder.                   
 
-The Iteration 3 implementation was reviewed by the team for input validation, resource availability, conflict detection, and transaction handling.
+  R-07               **`lastrowid`.** The code      Open
+                     reads `cursor.lastrowid` right 
+                     after `INSERT`. The regression 
+                     tests use a fake DB, so this   
+                     has not been checked on real   
+                     MySQL.                         
 
-### US-3 Review
+  R-08               **Background worker.**         By design
+                     Automatic check-out starts     
+                     inside the web process         
+                     (`start_background_worker()`   
+                     in `app.py`) and the           
+                     Dockerfile runs one            
+                     `python app.py`. Run the app   
+                     with **one worker**. With      
+                     several workers each one runs  
+                     the job; this is safe because  
+                     every booking is locked and    
+                     checked again, but it is not   
+                     clean.                         
 
-* Missing or blank fields, invalid dates, end times not after start times, past start times, and purposes over 255 characters are rejected.
-* The selected resource must exist, not be archived, and have an `Available` status.
-* Date/time values with a timezone offset are converted to server time; values without an offset are treated as server-local time.
-* Only Pending and Approved bookings count as conflicts.
+  R-09               **Timezone.** Date/time values Monitoring
+                     without a timezone offset are  
+                     treated as server-local time.  
+                     Keep `TZ=Asia/Bangkok` in the  
+                     Docker settings.               
+  ------------------------------------------------------------------------------
 
-### US-4 Review
+Closed risks: R-04 (forgotten check-out, handled by automatic check-out)
+and R-06 (lab left without an administrator, handled by the server rules
+above).
 
-* The system returns only bookings that belong to the logged-in user.
-
-### US-5 Review
-
-* Only administrators can open the Pending list and the decide endpoint.
-* Only `approve` or `reject` are accepted as a decision.
-* An already-decided request cannot be decided again.
-
-### Announcements Review
-
-* Empty title or body is rejected.
-* Only the author can delete an announcement.
-
-### Planned Tests (before Iteration 4)
-
-* Booking validation
-* Overlap check: partial overlap, back-to-back, and a rejected booking freeing the slot
-* Resource availability: In Use, Maintenance, archived
-* Concurrent booking requests
-* Approve/reject, including an already-decided request
+Detailed sprint information, Gantt charts, retrospectives, and the full
+risk register are in the iteration reports in the `docs/` folder.
 
 ## Project Structure
 
-```text
-source/
-├── .gitignore
-├── docker-compose.yml
-├── backend/
-│   ├── app.py
-│   ├── config.py
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   ├── .env.example
-│   ├── controllers/
-│   │   ├── auth_controller.py
-│   │   ├── resource_controller.py
-│   │   ├── booking_controller.py
-│   │   └── announcement_controller.py
-│   ├── middleware/
-│   │   └── auth_middleware.py
-│   ├── models/
-│   │   ├── user_model.py
-│   │   ├── resource_model.py
-│   │   ├── booking_model.py
-│   │   └── announcement_model.py
-│   ├── tests/
-│   │   └── test_security.py
-│   └── database/
-│       ├── db.py
-│       ├── schema.sql
-│       └── seed.sql
-└── frontend/
-    └── index.html
+``` text
+Ultrasmooth/
+├── README.md
+├── docs/                         SRS, proposal, iteration reports, diagrams
+└── source/
+    ├── docker-compose.yml
+    ├── docker-compose.test.yml
+    ├── backend/
+    │   ├── app.py
+    │   ├── config.py
+    │   ├── Dockerfile
+    │   ├── requirements.txt
+    │   ├── .env.example
+    │   ├── controllers/<feature>/   activity, announcement, appointment, auth, booking,
+    │   │                            calendar, checkin, dashboard, history, maintenance,
+    │   │                            notification, resource, user_admin
+    │   ├── models/<feature>/        same features + resource_detail, user
+    │   ├── services/                events, housekeeping, locking, mailer
+    │   ├── middleware/              authentication, roles, rate limiting
+    │   ├── web/                     security headers, error handlers
+    │   ├── database/                db.py, schema.sql, seed.sql, migrations/
+    │   └── tests/                   <feature>_tests/ and support/
+    └── frontend/
+        ├── index.html
+        ├── pages/                   auth, layout, views
+        └── static/                  css, js
 ```
 
 ## Team Members
