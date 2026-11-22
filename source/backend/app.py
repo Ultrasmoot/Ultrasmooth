@@ -47,7 +47,7 @@ def create_app():
 
     @app.get("/")
     def index():
-        # One-time value that lets the single inline <script> in index.html run under the CSP
+        # One-time value that lets the single inline <script> in index.html run under the CSP.
         g.csp_nonce = secrets.token_urlsafe(16)
         return render_template("index.html", google_client_id=Config.GOOGLE_CLIENT_ID, csp_nonce=g.csp_nonce)
 
@@ -77,7 +77,7 @@ app = create_app()
 
 if __name__ == "__main__":
     # Background jobs (auto check-out, old-row cleanup). With the debug reloader the code runs
-    # twice only the child process that serves requests starts the worker.
+    # twice; only the child process that serves requests starts the worker.
     import os
     from services.housekeeping.service import start_background_worker
 
