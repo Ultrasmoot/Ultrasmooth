@@ -113,13 +113,13 @@ iterations plus this refactoring iteration.
 
 ## Tech Stack
 
-  Layer          Technology
-  -------------- -------------------------
-  Frontend       HTML, CSS, JavaScript
-  Backend        Python / Flask
-  Architecture   MVC pattern
-  Database       MySQL 8
-  Environment    Docker + Docker Compose
+| Layer        | Technology              |
+| ------------ | ----------------------- |
+| Frontend     | HTML, CSS, JavaScript   |
+| Backend      | Python / Flask          |
+| Architecture | MVC pattern             |
+| Database     | MySQL 8                 |
+| Environment  | Docker + Docker Compose |
 
 ## Architecture
 
@@ -239,38 +239,17 @@ The environment file is located at:
 
 `source/backend/.env`
 
-  -----------------------------------------------------------------------
-  Variable                            Description
-  ----------------------------------- -----------------------------------
-  `APP_ENV`                           Application environment
-                                      (`development` or `production`)
-
-  `SECRET_KEY`                        Secret key used by the application
-
-  `DB_HOST`, `DB_PORT`, `DB_USER`,    Database connection settings; must
-  `DB_PASSWORD`, `DB_NAME`            match the `MYSQL_*` values in
-                                      `source/docker-compose.yml`
-
-  `ALLOWED_EMAIL_DOMAIN`              E-mail domain allowed for
-                                      registration (default: `ku.th`)
-
-  `AUTO_CHECKOUT_GRACE_MINUTES`       Minutes after a booking ends before
-                                      automatic check-out (default: `20`,
-                                      range: 0--240)
-
-  `ACTIVITY_RETENTION_DAYS`,          Retention periods for activity logs
-  `NOTIFICATION_RETENTION_DAYS`       and notifications (default: `45`;
-                                      `0` keeps everything)
-
-  `APP_BASE_URL`                      Base address used in e-mail links
-                                      (default: `http://localhost:5000`)
-
-  `GOOGLE_CLIENT_ID`                  Optional Google OAuth client ID
-
-  `SMTP_HOST`, `SMTP_PORT`,           Optional SMTP settings for sending
-  `SMTP_USER`, `SMTP_PASSWORD`,       e-mails
-  `SMTP_FROM`                         
-  -----------------------------------------------------------------------
+| Variable | Description |
+| -------- | ----------- |
+| `APP_ENV` | Application environment (`development` or `production`) |
+| `SECRET_KEY` | Secret key used by the application |
+| `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` | Database connection settings; must match the `MYSQL_*` values in `source/docker-compose.yml` |
+| `ALLOWED_EMAIL_DOMAIN` | E-mail domain allowed for registration (default: `ku.th`) |
+| `AUTO_CHECKOUT_GRACE_MINUTES` | Minutes after a booking ends before automatic check-out (default: `20`, range: 0-240) |
+| `ACTIVITY_RETENTION_DAYS`, `NOTIFICATION_RETENTION_DAYS` | Retention periods for activity logs and notifications (default: `45`; `0` keeps everything) |
+| `APP_BASE_URL` | Base address used in e-mail links (default: `http://localhost:5000`) |
+| `GOOGLE_CLIENT_ID` | Optional Google OAuth client ID |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM` | Optional SMTP settings for sending e-mails |
 
 The `.env` file contains sensitive configuration values. Do not commit
 or share it.
@@ -493,67 +472,15 @@ describes the test coverage.
 
 ## Known Limitations
 
-  ------------------------------------------------------------------------------
-  ID                 Issue                          Status
-  ------------------ ------------------------------ ----------------------------
-  R-01               **Double booking / double      Open
-                     confirmation.** Row locks      
-                     should prevent it, but no test 
-                     sends parallel requests. The   
-                     locking tests run on SQLite,   
-                     which has no real row locks.   
-                     Two-thread tests on real MySQL 
-                     are needed before deployment.  
-
-  R-02               **Rate limiter.** Counters are Open
-                     kept in memory (per process,   
-                     reset on restart, not shared   
-                     between workers). Use Redis or 
-                     Flask-Limiter before a         
-                     multi-worker deployment. The   
-                     3-attempt check-in limit is    
-                     already stored in the          
-                     database.                      
-
-  R-03               **Check-in depends on SMTP.**  Open
-                     If the mail server is down,    
-                     students cannot check in.      
-
-  R-05               **Log retention.** Old log and Open
-                     notification rows are deleted  
-                     after 45 days (changeable in   
-                     settings, 0 keeps everything). 
-                     The required retention time is 
-                     still to be confirmed with the 
-                     stakeholder.                   
-
-  R-07               **`lastrowid`.** The code      Open
-                     reads `cursor.lastrowid` right 
-                     after `INSERT`. The regression 
-                     tests use a fake DB, so this   
-                     has not been checked on real   
-                     MySQL.                         
-
-  R-08               **Background worker.**         By design
-                     Automatic check-out starts     
-                     inside the web process         
-                     (`start_background_worker()`   
-                     in `app.py`) and the           
-                     Dockerfile runs one            
-                     `python app.py`. Run the app   
-                     with **one worker**. With      
-                     several workers each one runs  
-                     the job; this is safe because  
-                     every booking is locked and    
-                     checked again, but it is not   
-                     clean.                         
-
-  R-09               **Timezone.** Date/time values Monitoring
-                     without a timezone offset are  
-                     treated as server-local time.  
-                     Keep `TZ=Asia/Bangkok` in the  
-                     Docker settings.               
-  ------------------------------------------------------------------------------
+| ID   | Issue | Status |
+| ---- | ----- | ------ |
+| R-01 | **Double booking / double confirmation.** Row locks should prevent it, but no test sends parallel requests. The locking tests run on SQLite, which has no real row locks. Two-thread tests on real MySQL are needed before deployment. | Open |
+| R-02 | **Rate limiter.** Counters are kept in memory (per process, reset on restart, not shared between workers). Use Redis or Flask-Limiter before a multi-worker deployment. The 3-attempt check-in limit is already stored in the database. | Open |
+| R-03 | **Check-in depends on SMTP.** If the mail server is down, students cannot check in. | Open |
+| R-05 | **Log retention.** Old log and notification rows are deleted after 45 days (changeable in settings, 0 keeps everything). The required retention time is still to be confirmed with the stakeholder. | Open |
+| R-07 | **`lastrowid`.** The code reads `cursor.lastrowid` right after `INSERT`. The regression tests use a fake DB, so this has not been checked on real MySQL. | Open |
+| R-08 | **Background worker.** Automatic check-out starts inside the web process (`start_background_worker()` in `app.py`) and the Dockerfile runs one `python app.py`. Run the app with **one worker**. With several workers each one runs the job; this is safe because every booking is locked and checked again, but it is not clean. | By design |
+| R-09 | **Timezone.** Date/time values without a timezone offset are treated as server-local time. Keep `TZ=Asia/Bangkok` in the Docker settings. | Monitoring |
 
 Closed risks: R-04 (forgotten check-out, handled by automatic check-out)
 and R-06 (lab left without an administrator, handled by the server rules
