@@ -1,7 +1,8 @@
 # Vase - Lab Data Management System
 
-**Course :** Individual Software Development Process 2026 **Team :**
-UltraSmooth **Challenge :** Project A - Lab Data Management
+- **Course :** Individual Software Development Process 2026 
+- **Team :** UltraSmooth 
+- **Challenge :** Project A - Lab Data Management
 
 ## Overview
 
